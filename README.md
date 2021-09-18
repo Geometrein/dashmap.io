@@ -4,7 +4,7 @@
 
 DashMap is an open source web platform that gathers, analyses and visualizes urban data.
 
-![Demo](website/static/images/002.gif) 
+![Demo](website/static/images/notebook.gif) 
 
 
 ## Data 
