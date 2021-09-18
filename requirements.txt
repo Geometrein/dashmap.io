@@ -13,6 +13,7 @@ Fiona==1.8.20
 Flask==2.0.1
 Flask-Compress==1.10.1
 geopandas==0.9.0
+gunicorn==20.1.0
 itsdangerous==2.0.1
 Jinja2==3.0.1
 MarkupSafe==2.0.1
