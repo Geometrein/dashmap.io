@@ -602,6 +602,31 @@ accord_re_renting = dbc.Card(
     ],
     color="#1E1E1E"
 )
+
+accord_re_asd = dbc.Card(
+    [
+        dbc.CardHeader(
+            html.H2(
+                dbc.Button(
+                    "Rentals",
+                    color="#303030",
+                    id=f"tab-2-group-4-toggle",
+                    n_clicks=0,
+                )
+            )
+        ),
+        dbc.Collapse(
+            dbc.CardBody(
+                id='id_re_asd',
+                children=[]
+            ),
+            id=f"tab-2-collapse-4",
+            is_open=False,
+        ),
+    ],
+    color="#1E1E1E"
+)
+
 forecasts_card = dbc.Card(
     [
         dbc.CardImg(src="assets/nasa.png", top=True),
@@ -653,8 +678,9 @@ census_households_accordion = html.Div(
 real_estate_accordion = html.Div(
     [
         accordion_re_basics,
-        accord_re_owning,
         accord_re_renting,
+        accord_re_owning,
+        accord_re_asd
     ],
     className="accordion"
 )
@@ -681,6 +707,11 @@ census_tab_content = dbc.Card(
                     className="card-text"
                   ),
             html.H4("Individuals", style={'marginBottom': 10, 'marginTop': 20}),
+            html.P(
+                    """
+                    A census is the procedure of systematically calculating, acquiring and recording information about the members of a given population.
+                    """
+            ),
             html.Div(census_individuals_accordion),
             html.H4("Households", style={'marginBottom': 10, 'marginTop': 20}),
             html.P(
@@ -707,8 +738,24 @@ real_estate_tab_content = dbc.Card(
                 className="card-text"
             ),
             html.H4("Residential", style={'marginBottom': 10, 'marginTop': 20}),
+            html.P(
+                """
+                Real estate is property consisting of land and the buildings on it, along with its natural resources such as crops, minerals or water.
+                It can be used for residential, commercial, or industrial purposes. 
+                Often the value of real estate is one of the key indicators of an economy’s health.
+                """,
+                className="card-text"
+            ),
             html.Div(real_estate_accordion),
             html.H4("Commercial", style={'marginBottom': 10, 'marginTop': 20}),
+            html.P(
+                """
+                Real estate is property consisting of land and the buildings on it, along with its natural resources such as crops, minerals or water.
+                It can be used for residential, commercial, or industrial purposes. 
+                Often the value of real estate is one of the key indicators of an economy’s health.
+                """,
+                className="card-text"
+            ),
             html.Div(),
 
         ]
@@ -776,7 +823,7 @@ environment_tab_content = dbc.Card(
 tabs = dbc.Tabs(
     [
         dbc.Tab(census_tab_content, label="Census", disabled=False),
-        dbc.Tab(real_estate_tab_content, label="Real Estate", disabled=True),
+        dbc.Tab(real_estate_tab_content, label="Real Estate", disabled=False),
         dbc.Tab(services_tab_content, label="Services", disabled=True),
         dbc.Tab(mobility_tab_content, label="Mobility", disabled=True),
     ]

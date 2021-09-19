@@ -39,9 +39,15 @@ def load_datum():
     datum.set_index('postal_code', inplace=True)
     #print(len(datum.index), len(datum), datum.head())
 
-    return datum
+    #rentals = pd.read_csv('website/data/real-estate/rentals.csv')
+    #selling = pd.read_csv('website/data/real-estate/selling.csv')
+    real_estate = pd.read_csv('website/data/real-estate/real-estate.csv')
+    real_estate.set_index('postcode', inplace=True)
 
-datum = load_datum()
+
+    return datum, real_estate
+
+datum, real_estate  = load_datum()
 
 #####################################################################################################################
 #                                                      CallBacks                                                    #
@@ -1213,5 +1219,195 @@ def init_callbacks(dash_app):
                 html.P(no_data_text),
                 html.P("Check out the other areas!")
             ]
+
+        return children
+
+    #####################################################################################################################
+    #                                                       Rent                                                        #
+    #####################################################################################################################
+    
+    @dash_app.callback(
+        Output('id_re_renting', 'children'),
+        Input('choropleth-map', 'clickData'))
+    def display_click_data(clickData):
+        """
+        #TODO if there are no enough records don't show anything
+        """
+        try:
+            postal_code = str(clickData["points"][0]['location'])
+        except TypeError:
+            postal_code = '00180' # Kamppi Postal code
+
+        rentals = real_estate[real_estate['deal_type']=='rent']
+
+        rentals['price_per_square'] = (rentals['price'] / rentals['area'])
+
+        # get df row based on postal number
+        df = rentals.loc[postal_code]
+        neighborhood = df['neighborhood'].values[0]
+
+        price_per_square = df['price_per_square'].mean()
+        average_area = df['area'].mean()
+        hels_avg_price_per_square = rentals['price_per_square'].mean()
+        hels_avg_re_area = rentals['area'].mean()
+
+        rent_indicators = go.Figure()
+
+        rent_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = price_per_square,
+            number = {'prefix': "€", "font":{"size":50}},
+            title = {"text": f"Rent per m² in {neighborhood}<br><span style='font-size:0.8em;color:gray'>Average monthly rent by square meter</span><br>"},
+            domain = {'x': [0, 0.5], 'y': [0.5, 1]}
+            )
+        )
+
+        rent_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = hels_avg_price_per_square,
+            number = {'prefix': "€", "font":{"size":50}},
+            title = {"text": "Average Rent in Helsinki<br><span style='font-size:0.8em;color:gray'>Average monthly rent by square meter for Helsinki </span><br>"},
+            domain = {'x': [0.5, 1], 'y': [0.5, 1]},
+            )
+        )
+
+        rent_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = hels_avg_re_area,
+            number = {'suffix': " m²", "font":{"size":50}},
+            title = {"text": "Average Area in Helsinki<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
+            domain = {'x': [0.5, 1], 'y': [0, .5]},
+            )
+        )
+        rent_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = average_area,
+            number = {'suffix': " m²", "font":{"size":50}},
+            title = {"text": f"Average area in {neighborhood}<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
+            domain = {'x': [0, 0.5], 'y': [0, 0.5]},
+            )
+        )
+
+        rent_indicators.update_layout(
+                paper_bgcolor='#1E1E1E',
+                plot_bgcolor='#1E1E1E',
+                margin={"r":0,"t":0,"l":0,"b":0},
+                autosize=True,
+                font=dict(color="white")
+            )
+        
+        children=[
+            html.H5("Rental Apartments"),
+            html.P(
+                """
+                Residential rental property refers to homes that are purchased by an 
+                investor and inhabited by tenants on a lease or other type of rental agreement. 
+                Residential property is property zoned specifically for living or dwelling for 
+                individuals or households; it may include standalone single-family dwellings to large, 
+                multi-unit apartment buildings.
+                """
+            ),
+            dcc.Graph(id='injected', figure=rent_indicators, config={'displayModeBar': False}),
+            html.P(
+                """
+                Above you can see the comparison of rental prices 
+                """
+            ),
+        ]
+
+        return children
+
+    #####################################################################################################################
+    #                                                       Ownership                                                   #
+    #####################################################################################################################
+    
+    @dash_app.callback(
+        Output('id_re_owning', 'children'),
+        Input('choropleth-map', 'clickData'))
+    def display_click_data(clickData):
+        """
+        #TODO if there are no enough records don't show anything
+        """
+        try:
+            postal_code = str(clickData["points"][0]['location'])
+        except TypeError:
+            postal_code = '00180' # Kamppi Postal code
+
+        selling = real_estate[real_estate['deal_type']=='sell']
+
+        selling['price_per_square'] = (selling['price'] / selling['area'])
+
+        # get df row based on postal number
+        df = selling.loc[postal_code]
+        neighborhood = df['neighborhood'].values[0]
+
+        price_per_square = df['price_per_square'].mean()
+        average_area = df['area'].mean()
+        hels_avg_price_per_square = selling['price_per_square'].mean()
+        hels_avg_re_area = selling['area'].mean()
+
+        sell_indicators = go.Figure()
+
+        sell_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = price_per_square,
+            number = {'prefix': "€", "font":{"size":50}},
+            title = {"text": f"Rent per m² in {neighborhood}<br><span style='font-size:0.8em;color:gray'>Average monthly rent by square meter</span><br>"},
+            domain = {'x': [0, 0.5], 'y': [0.5, 1]}
+            )
+        )
+
+        sell_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = hels_avg_price_per_square,
+            number = {'prefix': "€", "font":{"size":50}},
+            title = {"text": "Average Rent in Helsinki<br><span style='font-size:0.8em;color:gray'>Average monthly rent by square meter for Helsinki </span><br>"},
+            domain = {'x': [0.5, 1], 'y': [0.5, 1]},
+            )
+        )
+
+        sell_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = hels_avg_re_area,
+            number = {'suffix': " m²", "font":{"size":50}},
+            title = {"text": "Average Area in Helsinki<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
+            domain = {'x': [0.5, 1], 'y': [0, .5]},
+            )
+        )
+        sell_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = average_area,
+            number = {'suffix': " m²", "font":{"size":50}},
+            title = {"text": f"Average area in {neighborhood}<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
+            domain = {'x': [0, 0.5], 'y': [0, 0.5]},
+            )
+        )
+
+        sell_indicators.update_layout(
+                paper_bgcolor='#1E1E1E',
+                plot_bgcolor='#1E1E1E',
+                margin={"r":0,"t":0,"l":0,"b":0},
+                autosize=True,
+                font=dict(color="white")
+            )
+        
+        children=[
+            html.H5("Rental Apartments"),
+            html.P(
+                """
+                Residential rental property refers to homes that are purchased by an 
+                investor and inhabited by tenants on a lease or other type of rental agreement. 
+                Residential property is property zoned specifically for living or dwelling for 
+                individuals or households; it may include standalone single-family dwellings to large, 
+                multi-unit apartment buildings.
+                """
+            ),
+            dcc.Graph(id='injected', figure=sell_indicators, config={'displayModeBar': False}),
+            html.P(
+                """
+                Above you can see the comparison of rental prices 
+                """
+            ),
+        ]
 
         return children
