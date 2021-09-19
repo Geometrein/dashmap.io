@@ -24,13 +24,13 @@ def home():
     """
     return render_template("home.html")
 
-@views.route('/support')
+@views.route('/about')
 def about():
     """
-    Loads the support html template
+    Loads the about html template
     Args: None
 
     Returns: 
-        support.html (str): support html template
+        about.html (str): about html template
     """
-    return render_template("support.html")
+    return render_template("about.html")

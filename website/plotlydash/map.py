@@ -240,7 +240,7 @@ navbar = dbc.NavbarSimple(
             children=[
 
                 dbc.NavItem(dbc.NavLink("Home", href="/", external_link=True)),
-                dbc.NavItem(dbc.NavLink("Support Us", href="/support", external_link=True)),
+                dbc.NavItem(dbc.NavLink("About", href="/about", external_link=True)),
                 dbc.Button(
                     "Help", 
                     id="help-open-centered",
@@ -800,7 +800,7 @@ def init_dashboard(server):
         __name__,
         title="Dashmap",
         server=server,
-        url_base_pathname='/map/'   
+        url_base_pathname='/helsinki/'
     )
 
     # Create the App Layout
