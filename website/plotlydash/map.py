@@ -43,10 +43,13 @@ def load_datum():
     datum.set_index('postal_code', inplace=True)
     #print(len(datum.index), len(datum), datum.head())
 
-    return datum
+    real_estate = pd.read_csv('website/data/real-estate/real-estate.csv')
+    real_estate.set_index('postcode', inplace=True)
+
+    return datum, real_estate
     
 # Load the main GeoDataFrame.
-datum = load_datum()
+datum, real_estate = load_datum()
 #####################################################################################################################
 #                                           Choropleth MAP                                                          #
 #####################################################################################################################
@@ -232,6 +235,85 @@ def init_choropleth():
 
 # Initialize the main choropleth map.
 choropleth = init_choropleth()
+
+def real_estate_scatter(real_estate):
+    """
+    """
+    df = real_estate[real_estate['deal_type']=='rent']
+    df = df[df['price']<5000]
+    df = df[df['area']<310]
+
+    y = df['price']
+    x = df['area']
+
+    scatter_chart_rent = go.Figure(
+        data=go.Scattergl(
+            x = x,
+            y = y,
+            mode='markers',
+            marker=dict(
+                size=8,
+                color=df['rooms'],
+                colorscale='OrYel', # one of plotly colorscales
+                showscale= True,
+                
+            ),
+        )
+    )
+
+    scatter_chart_rent.update_layout(
+        showlegend=False,
+        paper_bgcolor='#1E1E1E',
+        plot_bgcolor='#1E1E1E',
+        margin={"r":50,"t":50,"l":50,"b":50},
+        autosize=True,
+    )
+    scatter_chart_rent.update_traces(marker=dict(line=dict(color='#1E1E1E', width=3)))
+    scatter_chart_rent.update_xaxes(color='#fff', gridcolor='#D3D3D3')
+    scatter_chart_rent.update_yaxes(color='#fff', gridcolor='#D3D3D3')
+
+    df = real_estate[real_estate['deal_type']=='sell']
+    df = df[df['price']<2000000]
+    df = df[df['area']<310]
+
+    y = df['price']
+    x = df['area']
+    scatter_chart_sell = go.Figure(
+        data=go.Scattergl(
+            x = x,
+            y = y,
+            mode='markers',
+            marker=dict(
+                size=8,
+                color=df['rooms'],
+                colorscale='tealgrn', # one of plotly colorscales
+                showscale= True,
+            )
+        )
+    )
+
+    scatter_chart_sell.update_layout(showlegend=False, paper_bgcolor='#1E1E1E', plot_bgcolor='#1E1E1E', margin={"r":50,"t":50,"l":50,"b":50}, autosize=True,)
+    scatter_chart_sell.update_traces(marker=dict(line=dict(color='#1E1E1E', width=3)))
+    scatter_chart_sell.update_xaxes(color='#fff', gridcolor='#D3D3D3')
+    scatter_chart_sell.update_yaxes(color='#fff', gridcolor='#D3D3D3')
+
+    children=[
+        html.H5("Price vs Square Meters"),
+        html.P(
+            """
+            Scatterplots below hels us understand the relationships between Apartment area and its price.
+            """
+        ),
+        html.H5("Rental Apartments"),
+        dcc.Graph(id='real_estate_scatter_rent', figure=scatter_chart_rent, config={'displayModeBar': False}),
+        html.H5("Owned Apartments"),
+        dcc.Graph(id='real_estate_scatter_sell', figure=scatter_chart_sell, config={'displayModeBar': False}),
+    ]
+
+    return children
+
+real_estate_scatter = real_estate_scatter(real_estate)
+
 #####################################################################################################################
 #                                              NAVIGATION                                                           #
 #####################################################################################################################
@@ -531,30 +613,6 @@ accord_household_dwell= dbc.Card(
 #                                         Tab-Real-Estate-accordions                                                #
 #####################################################################################################################
 
-accordion_re_basics = dbc.Card(
-    [
-        dbc.CardHeader(
-            html.H2(
-                dbc.Button(
-                    "Fundamentals",
-                    color="#303030",
-                    id=f"tab-2-group-1-toggle",
-                    n_clicks=0,
-                )
-            )
-        ),
-        dbc.Collapse(
-            dbc.CardBody(
-                id='id_re_basics',
-                children=[]
-            ),
-            id=f"tab-2-collapse-1",
-            is_open=False,
-        ),
-    ],
-    color="#1E1E1E"
-)
-
 accord_re_owning = dbc.Card(
     [
         dbc.CardHeader(
@@ -677,7 +735,6 @@ census_households_accordion = html.Div(
 
 real_estate_accordion = html.Div(
     [
-        accordion_re_basics,
         accord_re_renting,
         accord_re_owning,
         accord_re_sauna
@@ -746,6 +803,7 @@ real_estate_tab_content = dbc.Card(
                 """,
                 className="card-text"
             ),
+            html.Div(real_estate_scatter),
             html.Div(real_estate_accordion),
         ]
     ),

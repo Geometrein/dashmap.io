@@ -39,8 +39,6 @@ def load_datum():
     datum.set_index('postal_code', inplace=True)
     #print(len(datum.index), len(datum), datum.head())
 
-    #rentals = pd.read_csv('website/data/real-estate/rentals.csv')
-    #selling = pd.read_csv('website/data/real-estate/selling.csv')
     real_estate = pd.read_csv('website/data/real-estate/real-estate.csv')
     real_estate.set_index('postcode', inplace=True)
 
@@ -167,11 +165,11 @@ def init_callbacks(dash_app):
     #####################################################################################################################
 
     @dash_app.callback(
-        [Output(f"tab-2-collapse-{i}", "is_open") for i in range(1, 5)],
-        [Input(f"tab-2-group-{i}-toggle", "n_clicks") for i in range(1, 5)],
-        [State(f"tab-2-collapse-{i}", "is_open") for i in range(1, 5)],
+        [Output(f"tab-2-collapse-{i}", "is_open") for i in range(2, 5)],
+        [Input(f"tab-2-group-{i}-toggle", "n_clicks") for i in range(2, 5)],
+        [State(f"tab-2-collapse-{i}", "is_open") for i in range(2, 5)],
     )
-    def toggle_accordion(n1, n2, n3, n4, is_open1, is_open2, is_open3, is_open4):
+    def toggle_accordion( n2, n3, n4, is_open2, is_open3, is_open4):
         """
         Toggle accordion collapse & expand.
         ---
@@ -185,20 +183,18 @@ def init_callbacks(dash_app):
         ctx = dash.callback_context
 
         if not ctx.triggered:
-            return False, False, False, False
+            return False, False, False
         else:
             button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
-        if button_id == "tab-2-group-1-toggle" and n1:
-            return not is_open1, False, False , False
-        elif button_id == "tab-2-group-2-toggle" and n2:
-            return False, not is_open2, False, False
+        if button_id == "tab-2-group-2-toggle" and n2:
+            return  not is_open2, False, False
         elif button_id == "tab-2-group-3-toggle" and n3:
-            return False, False, not is_open3, False
+            return  False, not is_open3, False
         elif button_id == "tab-2-group-4-toggle" and n4:
-            return False, False, False, not is_open4
+            return  False, False, not is_open4
 
-        return False, False, False, False
+        return  False, False, False
 
     #####################################################################################################################
     #                                      Tab 1 Section 1 Age Distribution CallBack                                    #
@@ -1225,90 +1221,7 @@ def init_callbacks(dash_app):
     #####################################################################################################################
     #                                                       Basics                                                      #
     #####################################################################################################################
-    @dash_app.callback(
-        Output('id_re_basics', 'children'),
-        Input('choropleth-map', 'clickData'))
-    def display_click_data(clickData):
-        """
-        #TODO if there are no enough records don't show anything
-        """
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
 
-        df = real_estate[real_estate['deal_type']=='rent']
-        df = df[df['price']<5000]
-        df = df[df['area']<310]
-
-        y = df['price']
-        x = df['area']
-
-        scatter_chart_rent = go.Figure(
-            data=go.Scattergl(
-                x = x,
-                y = y,
-                mode='markers',
-                marker=dict(
-                    size=8,
-                    color=df['rooms'],
-                    colorscale='OrYel', # one of plotly colorscales
-                    showscale= True,
-                    
-                ),
-            )
-        )
-
-        scatter_chart_rent.update_layout(
-            showlegend=False,
-            paper_bgcolor='#1E1E1E',
-            plot_bgcolor='#1E1E1E',
-            margin={"r":50,"t":50,"l":50,"b":50},
-            autosize=True,
-        )
-        scatter_chart_rent.update_traces(marker=dict(line=dict(color='#1E1E1E', width=3)))
-        scatter_chart_rent.update_xaxes(color='#fff', gridcolor='#D3D3D3')
-        scatter_chart_rent.update_yaxes(color='#fff', gridcolor='#D3D3D3')
-
-        df = real_estate[real_estate['deal_type']=='sell']
-        df = df[df['price']<2000000]
-        df = df[df['area']<310]
-
-        y = df['price']
-        x = df['area']
-        scatter_chart_sell = go.Figure(
-            data=go.Scattergl(
-                x = x,
-                y = y,
-                mode='markers',
-                marker=dict(
-                    size=8,
-                    color=df['rooms'],
-                    colorscale='tealgrn', # one of plotly colorscales
-                    showscale= True,
-                )
-            )
-        )
-
-        scatter_chart_sell.update_layout(showlegend=False, paper_bgcolor='#1E1E1E', plot_bgcolor='#1E1E1E', margin={"r":50,"t":50,"l":50,"b":50}, autosize=True,)
-        scatter_chart_sell.update_traces(marker=dict(line=dict(color='#1E1E1E', width=3)))
-        scatter_chart_sell.update_xaxes(color='#fff', gridcolor='#D3D3D3')
-        scatter_chart_sell.update_yaxes(color='#fff', gridcolor='#D3D3D3')
-
-        children=[
-            html.H5("Price vs Square Meters"),
-            html.P(
-                """
-                Scatterplots below hels us understand the relationships between Apartment area and its price.
-                """
-            ),
-            html.H5("Rental Apartments"),
-            dcc.Graph(id='injected', figure=scatter_chart_rent, config={'displayModeBar': False}),
-            html.H5("Owned Apartments"),
-            dcc.Graph(id='injected', figure=scatter_chart_sell, config={'displayModeBar': False}),
-        ]
-
-        return children
 
     #####################################################################################################################
     #                                                       Rent                                                        #
