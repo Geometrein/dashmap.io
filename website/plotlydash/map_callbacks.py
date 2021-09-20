@@ -20,7 +20,7 @@ colors = ['#4182C8', '#2E94B2', '#39A791',
             '#6FB26C', '#C0C15C', '#F9BD24',
             '#F3903F', '#EC6546', '#7D4C94',
             '#5B61AE']
-
+pd.options.mode.chained_assignment = None
 #####################################################################################################################
 #                                                      Data                                                         #
 #####################################################################################################################
@@ -1223,6 +1223,94 @@ def init_callbacks(dash_app):
         return children
 
     #####################################################################################################################
+    #                                                       Basics                                                      #
+    #####################################################################################################################
+    @dash_app.callback(
+        Output('id_re_basics', 'children'),
+        Input('choropleth-map', 'clickData'))
+    def display_click_data(clickData):
+        """
+        #TODO if there are no enough records don't show anything
+        """
+        try:
+            postal_code = str(clickData["points"][0]['location'])
+        except TypeError:
+            postal_code = '00180' # Kamppi Postal code
+
+        df = real_estate[real_estate['deal_type']=='rent']
+        df = df[df['price']<5000]
+        df = df[df['area']<310]
+
+        y = df['price']
+        x = df['area']
+
+        scatter_chart_rent = go.Figure(
+            data=go.Scattergl(
+                x = x,
+                y = y,
+                mode='markers',
+                marker=dict(
+                    size=8,
+                    color=df['rooms'],
+                    colorscale='OrYel', # one of plotly colorscales
+                    showscale= True,
+                    
+                ),
+            )
+        )
+
+        scatter_chart_rent.update_layout(
+            showlegend=False,
+            paper_bgcolor='#1E1E1E',
+            plot_bgcolor='#1E1E1E',
+            margin={"r":50,"t":50,"l":50,"b":50},
+            autosize=True,
+        )
+        scatter_chart_rent.update_traces(marker=dict(line=dict(color='#1E1E1E', width=3)))
+        scatter_chart_rent.update_xaxes(color='#fff', gridcolor='#D3D3D3')
+        scatter_chart_rent.update_yaxes(color='#fff', gridcolor='#D3D3D3')
+
+        df = real_estate[real_estate['deal_type']=='sell']
+        df = df[df['price']<2000000]
+        df = df[df['area']<310]
+
+        y = df['price']
+        x = df['area']
+        scatter_chart_sell = go.Figure(
+            data=go.Scattergl(
+                x = x,
+                y = y,
+                mode='markers',
+                marker=dict(
+                    size=8,
+                    color=df['rooms'],
+                    colorscale='tealgrn', # one of plotly colorscales
+                    showscale= True,
+                )
+            )
+        )
+
+        scatter_chart_sell.update_layout(showlegend=False, paper_bgcolor='#1E1E1E', plot_bgcolor='#1E1E1E', margin={"r":50,"t":50,"l":50,"b":50}, autosize=True,)
+        scatter_chart_sell.update_traces(marker=dict(line=dict(color='#1E1E1E', width=3)))
+        scatter_chart_sell.update_xaxes(color='#fff', gridcolor='#D3D3D3')
+        scatter_chart_sell.update_yaxes(color='#fff', gridcolor='#D3D3D3')
+
+        children=[
+            html.H5("Price vs Square Meters"),
+            html.P(
+                """
+                Scatterplots below hels us understand the relationships between Apartment area and its price.
+                """
+            ),
+            html.H5("Rental Apartments"),
+            dcc.Graph(id='injected', figure=scatter_chart_rent, config={'displayModeBar': False}),
+            html.H5("Owned Apartments"),
+            dcc.Graph(id='injected', figure=scatter_chart_sell, config={'displayModeBar': False}),
+        ]
+
+        return children
+
+    #####################################################################################################################
     #                                                       Rent                                                        #
     #####################################################################################################################
     
@@ -1243,8 +1331,19 @@ def init_callbacks(dash_app):
         rentals['price_per_square'] = (rentals['price'] / rentals['area'])
 
         # get df row based on postal number
-        df = rentals.loc[postal_code]
-        neighborhood = df['neighborhood'].values[0]
+        if postal_code in rentals.index:
+            df = rentals.loc[postal_code]
+        else:
+            df = pd.DataFrame(0.0, columns=rentals.columns, index=rentals.index)
+            
+        try:
+            neighborhood = df['neighborhood'].values[0]
+
+        except AttributeError:
+            neighborhood = df['neighborhood']
+
+        finally:
+            neighborhood = ""
 
         price_per_square = df['price_per_square'].mean()
         average_area = df['area'].mean()
@@ -1295,7 +1394,7 @@ def init_callbacks(dash_app):
                 autosize=True,
                 font=dict(color="white")
             )
-        
+
         children=[
             html.H5("Rental Apartments"),
             html.P(
@@ -1334,16 +1433,28 @@ def init_callbacks(dash_app):
             postal_code = '00180' # Kamppi Postal code
 
         selling = real_estate[real_estate['deal_type']=='sell']
-
         selling['price_per_square'] = (selling['price'] / selling['area'])
 
         # get df row based on postal number
-        df = selling.loc[postal_code]
-        neighborhood = df['neighborhood'].values[0]
+        if postal_code in selling.index:
+            df = selling.loc[postal_code]
+        else:
+            df = pd.DataFrame(0.0, columns=selling.columns, index=selling.index)
+            
+        try:
+            neighborhood = df['neighborhood'].values[0]
+
+        except AttributeError:
+            neighborhood = df['neighborhood']
+
+        finally:
+            neighborhood = ""
 
         price_per_square = df['price_per_square'].mean()
         average_area = df['area'].mean()
         hels_avg_price_per_square = selling['price_per_square'].mean()
+        hels_med_price_per_square = selling['price_per_square'].median()
+
         hels_avg_re_area = selling['area'].mean()
 
         sell_indicators = go.Figure()
@@ -1351,25 +1462,23 @@ def init_callbacks(dash_app):
         sell_indicators.add_trace(go.Indicator(
             mode = "number",
             value = price_per_square,
-            number = {'prefix': "€", "font":{"size":50}},
+            number = {'prefix': "€", "font":{"size":40}},
             title = {"text": f"Rent per m² in {neighborhood}<br><span style='font-size:0.8em;color:gray'>Average monthly rent by square meter</span><br>"},
             domain = {'x': [0, 0.5], 'y': [0.5, 1]}
             )
         )
-
         sell_indicators.add_trace(go.Indicator(
             mode = "number",
             value = hels_avg_price_per_square,
-            number = {'prefix': "€", "font":{"size":50}},
+            number = {'prefix': "€", "font":{"size":40}},
             title = {"text": "Average Rent in Helsinki<br><span style='font-size:0.8em;color:gray'>Average monthly rent by square meter for Helsinki </span><br>"},
             domain = {'x': [0.5, 1], 'y': [0.5, 1]},
             )
         )
-
         sell_indicators.add_trace(go.Indicator(
             mode = "number",
             value = hels_avg_re_area,
-            number = {'suffix': " m²", "font":{"size":50}},
+            number = {'suffix': " m²", "font":{"size":40}},
             title = {"text": "Average Area in Helsinki<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
             domain = {'x': [0.5, 1], 'y': [0, .5]},
             )
@@ -1377,18 +1486,17 @@ def init_callbacks(dash_app):
         sell_indicators.add_trace(go.Indicator(
             mode = "number",
             value = average_area,
-            number = {'suffix': " m²", "font":{"size":50}},
+            number = {'suffix': " m²", "font":{"size":40}},
             title = {"text": f"Average area in {neighborhood}<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
             domain = {'x': [0, 0.5], 'y': [0, 0.5]},
             )
         )
-
         sell_indicators.update_layout(
-                paper_bgcolor='#1E1E1E',
-                plot_bgcolor='#1E1E1E',
-                margin={"r":0,"t":0,"l":0,"b":0},
-                autosize=True,
-                font=dict(color="white")
+            paper_bgcolor='#1E1E1E',
+            plot_bgcolor='#1E1E1E',
+            margin={"r":0,"t":0,"l":0,"b":0},
+            autosize=True,
+            font=dict(color="white")
             )
         
         children=[
@@ -1402,12 +1510,92 @@ def init_callbacks(dash_app):
                 multi-unit apartment buildings.
                 """
             ),
-            dcc.Graph(id='injected', figure=sell_indicators, config={'displayModeBar': False}),
+            dcc.Graph(id='injected',
+                figure=sell_indicators,
+                config={'displayModeBar': False}
+            ),
             html.P(
                 """
                 Above you can see the comparison of rental prices 
                 """
             ),
         ]
+
+        return children
+
+    #####################################################################################################################
+    #                                                       Saunas                                                      #
+    #####################################################################################################################
+    
+    @dash_app.callback(
+        Output('id_re_sauna', 'children'),
+        Input('choropleth-map', 'clickData'))
+    def display_click_data(clickData):
+        """
+        #TODO if there are no enough records don't show anything
+        """
+        try:
+            postal_code = str(clickData["points"][0]['location'])
+        except TypeError:
+            postal_code = '00180' # Kamppi Postal code
+
+
+        # get df row based on postal number
+        if postal_code in real_estate.index:
+            df = real_estate.loc[postal_code]
+        else:
+            df = pd.DataFrame(0.0, columns=real_estate.columns, index=real_estate.index)
+            
+        try:
+            neighborhood = real_estate['neighborhood'].values[0]
+
+        except AttributeError:
+            neighborhood = real_estate['neighborhood']
+
+        finally:
+            neighborhood = ""
+
+        number_of_saunas = len(df[df['sauna']==True])
+        sauna = go.Figure()
+
+        sauna.add_trace(go.Indicator(
+            mode = "number",
+            value = number_of_saunas,
+            number = {'prefix': "#",},
+            title = {"text": f"Sauna index{neighborhood}<br><span style='font-size:0.8em;color:gray'>Number of known saunas in the area</span><br>"},
+            )
+        )
+        sauna.update_layout(
+            paper_bgcolor='#1E1E1E',
+            plot_bgcolor='#1E1E1E',
+            margin={"r":0,"t":0,"l":0,"b":0},
+            autosize=True,
+            font=dict(color="white")
+            )
+
+        private_list = ['00230', '02290', '01770']
+        if postal_code not in private_list:
+            children=[
+                html.H5("Dashmap Sauna Index"),
+                html.P(
+                    """
+                    Dashmap Sauna index is a cutting edge urban metrics that highlights the number of available saunas in the postal code area.
+                    If leveraged properly this revolutionary metrics can boost your productivity.
+                    """
+                ),
+                dcc.Graph(id='injected', figure=sauna, config={'displayModeBar': False},),
+
+            ]
+        else:
+            no_data_text=f"""
+            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
+            Additionally the data representing such a small population will not yield any meaningful insights.
+            For these reason the data available for {neighborhood} neighborhood will not be displayed.
+            """
+            children=[
+                html.H5("Age Distribution"),
+                html.P(no_data_text),
+                html.P("Check out the other areas!")
+            ]
 
         return children

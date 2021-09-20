@@ -603,12 +603,12 @@ accord_re_renting = dbc.Card(
     color="#1E1E1E"
 )
 
-accord_re_asd = dbc.Card(
+accord_re_sauna = dbc.Card(
     [
         dbc.CardHeader(
             html.H2(
                 dbc.Button(
-                    "Rentals",
+                    "Sauna Index 🛁",
                     color="#303030",
                     id=f"tab-2-group-4-toggle",
                     n_clicks=0,
@@ -617,7 +617,7 @@ accord_re_asd = dbc.Card(
         ),
         dbc.Collapse(
             dbc.CardBody(
-                id='id_re_asd',
+                id='id_re_sauna',
                 children=[]
             ),
             id=f"tab-2-collapse-4",
@@ -680,7 +680,7 @@ real_estate_accordion = html.Div(
         accordion_re_basics,
         accord_re_renting,
         accord_re_owning,
-        accord_re_asd
+        accord_re_sauna
     ],
     className="accordion"
 )
@@ -747,17 +747,6 @@ real_estate_tab_content = dbc.Card(
                 className="card-text"
             ),
             html.Div(real_estate_accordion),
-            html.H4("Commercial", style={'marginBottom': 10, 'marginTop': 20}),
-            html.P(
-                """
-                Real estate is property consisting of land and the buildings on it, along with its natural resources such as crops, minerals or water.
-                It can be used for residential, commercial, or industrial purposes. 
-                Often the value of real estate is one of the key indicators of an economy’s health.
-                """,
-                className="card-text"
-            ),
-            html.Div(),
-
         ]
     ),
     className="mt-3",
