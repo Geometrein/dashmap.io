@@ -1,10 +1,5 @@
 import os
 from flask import Flask
-from flask import render_template
-
-# Environment Variables
-from dotenv import load_dotenv
-load_dotenv()
 
 # Create the Flask app
 def create_app():
@@ -24,7 +19,7 @@ def create_app():
     app.register_blueprint(views, url_prefix='/')
 
     # Initiate the Dash app
-    from .plotlydash.map import init_dashboard
+    from .dashmap.map import init_dashboard
     app = init_dashboard(app)
 
     return app

@@ -1,6 +1,5 @@
-import os
 import pandas as pd
-import geopandas as gpd
+pd.options.mode.chained_assignment = None
 
 # Dash & Plotly
 import dash
@@ -11,40 +10,10 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
 
-# Environment Variables
-from dotenv import load_dotenv
-load_dotenv()
+# Plotly Graph Objects
+from .map_graphs import *
 
-# Colors used by graphs
-colors = ['#4182C8', '#2E94B2', '#39A791',
-            '#6FB26C', '#C0C15C', '#F9BD24',
-            '#F3903F', '#EC6546', '#7D4C94',
-            '#5B61AE']
-pd.options.mode.chained_assignment = None
-#####################################################################################################################
-#                                                      Data                                                         #
-#####################################################################################################################
-
-def load_datum():
-    """
-    Load the main GeoDataFrame.
-    Args: None
-
-    Returns: 
-        choropleth (object): Plotly Graph Object
-
-    """
-    datum = gpd.read_file(open("website/data/datum/datum.geojson"), crs="WGS84")
-    datum.rename(columns = {'index': 'postal_code'}, inplace = True)
-    datum.set_index('postal_code', inplace=True)
-    #print(len(datum.index), len(datum), datum.head())
-
-    real_estate = pd.read_csv('website/data/real-estate/real-estate.csv')
-    real_estate.set_index('postcode', inplace=True)
-
-
-    return datum, real_estate
-
+# Load datasets
 datum, real_estate  = load_datum()
 
 #####################################################################################################################
@@ -311,8 +280,6 @@ def init_callbacks(dash_app):
             ]
 
         return children
-
-
 
 
     #####################################################################################################################
@@ -994,8 +961,6 @@ def init_callbacks(dash_app):
         Returns: 
             children (list): List of html components to be displayed.
         """
-        section_title = "Household Income"
-
 
         try:
             postal_code = str(clickData["points"][0]['location'])
@@ -1219,12 +1184,7 @@ def init_callbacks(dash_app):
         return children
 
     #####################################################################################################################
-    #                                                       Basics                                                      #
-    #####################################################################################################################
-
-
-    #####################################################################################################################
-    #                                                       Rent                                                        #
+    #                                           Tab 2 Section 1 Rental Dwellings                                        #
     #####################################################################################################################
     
     @dash_app.callback(
@@ -1330,7 +1290,7 @@ def init_callbacks(dash_app):
         return children
 
     #####################################################################################################################
-    #                                                       Ownership                                                   #
+    #                                           Tab 2 Section 1 Owned Dwellings                                         #
     #####################################################################################################################
     
     @dash_app.callback(
@@ -1437,7 +1397,7 @@ def init_callbacks(dash_app):
         return children
 
     #####################################################################################################################
-    #                                                       Saunas                                                      #
+    #                                            Tab 2 Section 1 Sauna Index                                            #
     #####################################################################################################################
     
     @dash_app.callback(
