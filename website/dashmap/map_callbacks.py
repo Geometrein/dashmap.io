@@ -222,7 +222,7 @@ def init_callbacks(dash_app):
         # Average age distribution in Helsinki
         age_dist_hist.add_trace(
             go.Bar(
-                name= 'Helsinki Average',
+                name='Helsinki Average',
                 x=x,
                 y=y2,
                 marker_color='#F3903F',
@@ -254,10 +254,14 @@ def init_callbacks(dash_app):
         )
         
         text=f"""
-            Age distribution, also called Age Composition, is the proportionate numbers of persons in successive age categories in a given population.
-            The graph above illustrates the age distribution in {neighborhood} neighborhood. The average age of the inhabitant in {neighborhood} area is {mean_age}.
-            Age distributions differs among postal areas. Factors such as fertility, popularity of the area among certain age groups can affect the age composition of the area.
-            If the right side of the histogram is bigger it means that the population is shrinking and aging. 
+            Age distribution, also called Age Composition, is the proportionate numbers 
+            of persons in successive age categories in a given population.
+            The graph above illustrates the age distribution in {neighborhood} neighborhood. 
+            The average age of the inhabitant in {neighborhood} area is {mean_age}.
+            Age distributions might differ dramatically among different postal areas.
+            Factors such as fertility, popularity of the area among certain age groups can affect the age composition of the area.
+            If the bins on the right side of the histogram are higher it means that the population is shrinking and aging.
+            If the bins on the left side are higher it means that the population is young and growing. 
             """
         # list of postcodes where the data should be private
         private_list = ['00230', '02290', '01770']
@@ -270,15 +274,14 @@ def init_callbacks(dash_app):
         else:
             no_data_text=f"""
             The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield any meaningful insights.
+            Additionally the data representing such a small population will not yield statistically significant insights.
             For these reason the data available for {neighborhood} neighborhood will not be displayed.
             """
             children=[
                 html.H5(section_title),
                 html.P(no_data_text),
-                html.P("Check out the other areas!")
+                html.P("Check out the other postal areas!")
             ]
-
         return children
 
 
@@ -299,6 +302,9 @@ def init_callbacks(dash_app):
         Returns: 
             children (list): List of html components to be displayed.
         """
+
+        section_title = "Gender Composition"
+
         try:
             postal_code = str(clickData["points"][0]['location'])
         except TypeError:
@@ -314,7 +320,6 @@ def init_callbacks(dash_app):
         # Get gender columns
         gender_pie_chart_values = [males, females ]
         gender_pie_chart_labels = ["Males", "Females"]
-        #print(gender_pie_chart_values)
 
         # Create pie chart figure
         gender_pie_chart = go.Figure(
@@ -347,7 +352,7 @@ def init_callbacks(dash_app):
         )
         gender_pie_chart.update_traces(
             hoverinfo='label+percent+value',
-            marker=dict(colors=['#4182C8', '#2E94B2'],#['#4fc1e9','#48cfad'],
+            marker=dict(colors=['#4182C8', '#2E94B2'],
                 line=dict(
                     color='#1E1E1E',
                     width=2
@@ -358,7 +363,6 @@ def init_callbacks(dash_app):
             The graph above illustrates the distribution of males and females in {neighborhood} neighborhood.  
             Gender distribution has a measurable and proven impact on a wide range of societal, demographic, and the economic processes within the city.
             This distribution is not constant. It is affected by biological, social, cultural, and economic forces.
-            From the graph above we can see that 
             """
 
         #print(gender_pie_chart_values[0],gender_pie_chart_values[1])
@@ -373,20 +377,20 @@ def init_callbacks(dash_app):
         private_list = ['00230', '02290', '01770']
         if postal_code not in private_list:
             children=[
-                html.H5("Gender Composition"),
+                html.H5(section_title),
                 dcc.Graph(id='injected', figure=gender_pie_chart, config={'displayModeBar': False},),
                 html.P(text),
             ]
         else:
             no_data_text=f"""
             The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield any meaningful insights.
+            Additionally the data representing such a small population will not yield statistically significant insights.
             For these reason the data available for {neighborhood} neighborhood will not be displayed.
             """
             children=[
-                html.H5("Age Distribution"),
+                html.H5(section_title),
                 html.P(no_data_text),
-                html.P("Check out the other areas!")
+                html.P("Check out the other postal areas!")
             ]
 
         return children
@@ -408,6 +412,8 @@ def init_callbacks(dash_app):
         Returns: 
             children (list): List of html components to be displayed.
         """
+        section_title = "Education"
+
         try:
             postal_code = str(clickData["points"][0]['location'])
         except TypeError: # If postal code is not found
@@ -433,16 +439,16 @@ def init_callbacks(dash_app):
                 go.Pie(
                     labels=education_labels, 
                     values=education_values, 
-                    hole=.7
+                    hole=0
                 )
             ]
         )
         education_pie_chart.update_layout(
-            showlegend=False,
+            showlegend=True,
             legend=dict(
                 orientation="h",
-                yanchor="bottom",
-                y=0,
+                yanchor="middle",
+                y=-.5,
                 xanchor="center",
                 x=.5
             ),
@@ -464,28 +470,30 @@ def init_callbacks(dash_app):
                 )
             )
         )
+
         text=f"""
-            The graph above illustrates the distribution of education {neighborhood} neighborhood.  
+            The graph above illustrates the distribution of individuals by their level of education in {neighborhood} neighborhood.  
 
             """
 
         private_list = ['00230', '02290', '01770']
+
         if postal_code not in private_list:
             children=[
-                html.H5("Education"),
+                html.H5(section_title),
                 dcc.Graph(id='injected', figure=education_pie_chart, config={'displayModeBar': False},),
                 html.P(text),
             ]
         else:
             no_data_text=f"""
             The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield any meaningful insights.
+            Additionally the data representing such a small population will not yield statistically significant insights.
             For these reason the data available for {neighborhood} neighborhood will not be displayed.
             """
             children=[
-                html.H5("Age Distribution"),
+                html.H5(section_title),
                 html.P(no_data_text),
-                html.P("Check out the other areas!")
+                html.P("Check out the other postal areas!")
             ]
 
         return children
@@ -507,7 +515,8 @@ def init_callbacks(dash_app):
         Returns: 
             children (list): List of html components to be displayed.
         """
-        
+        section_title = "Income"
+
         try:
             postal_code = str(clickData["points"][0]['location'])
         except TypeError:
@@ -541,6 +550,7 @@ def init_callbacks(dash_app):
                 )
             ]
         )
+
         income_pie_chart.update_layout(
             showlegend=True,
             legend=dict(
@@ -559,6 +569,7 @@ def init_callbacks(dash_app):
             margin={"r":30,"t":30,"l":30,"b":30}, 
             autosize=True
         )
+
         income_pie_chart.update_traces(
             hoverinfo='label+percent+value',
             marker=dict(colors=colors,
@@ -572,20 +583,34 @@ def init_callbacks(dash_app):
         income_indicators = go.Figure()
 
         income_indicators.add_trace(go.Indicator(
-            mode = "number+delta",
+            mode = "number",
             value = int(mean_income),
             number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Average Income<br><span style='font-size:0.8em;color:gray'>Compared to Average income in Helsinki </span><br>"},
-            domain = {'x': [0, 1], 'y': [.5, 1]},
+            title = {"text": "Average Income<br><span style='font-size:0.8em;color:gray'>Average individual income in selected postal area</span><br>"},
+            domain = {'x': [0, 0.5], 'y': [.5, 1]},
             delta = {'reference': mean_income_helsinki, 'relative': True, 'position' : "top"}))
 
         income_indicators.add_trace(go.Indicator(
-            mode = "number+delta",
+            mode = "number",
             value = int(median_income),
             number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
+            title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Average individual income in Helsinki Metropolitan area</span><br>"},
             delta = {'reference': median_income_helsinki, 'relative': True, 'position' : "top"},
-            domain = {'x': [0, 1], 'y': [0, .5]}))
+            domain = {'x': [0, 0.5], 'y': [0, .5]}))
+
+        income_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = int(mean_income_helsinki),
+            number = {'prefix': "€", "font":{"size":50}},
+            title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Median individual income in selected postal area</span><br>"},
+            domain = {'x': [0.5, 1], 'y': [0.5, 1]}))
+        
+        income_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = int(median_income_helsinki),
+            number = {'prefix': "€", "font":{"size":50}},
+            title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Average individual income in Helsinki Metropolitan area</span><br>"},
+            domain = {'x': [0.5, 1], 'y': [0, .5]}))
 
         income_indicators.update_layout(
                 paper_bgcolor='#1E1E1E',
@@ -597,20 +622,20 @@ def init_callbacks(dash_app):
 
         text_1=f"""
             The graph above illustrates the class distribution of individuals in {neighborhood} neighborhood.
-            This distribution is not constant. It is affected by biological, social, cultural, and economic forces.
+            This distribution is not constant. It is affected by a multitude social and economic forces.
             """
         text_2 = f"""
         The average income of an individual in {neighborhood} is {mean_income}€ per year.
         While the median income is {median_income}€ per year.
-        The percentages illustrate the difference between mean and median income in Helsinki metropolitan area.
         """
         no_data_text=f"""
             The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield any meaningful insights.
+            Additionally the data representing such a small population will not yield statistically significant insights.
             For these reason the data available for {neighborhood} neighborhood will not be displayed.
             """
         # list of postcodes where the data should be private
         private_list = ['00230', '02290', '01770']
+
         if postal_code not in private_list:
             children=[
                 html.H5("Individual Income levels"),
@@ -621,9 +646,9 @@ def init_callbacks(dash_app):
             ]
         else:
             children=[
-                html.H5("Income Distribution"),
+                html.H5("Individual Income levels"),
                 html.P(no_data_text),
-                html.P("Check out the other areas!")
+                html.P("Check out the other postal areas!")
             ]
 
         return children
@@ -659,8 +684,6 @@ def init_callbacks(dash_app):
         students = result['Students, 2018 (PT)']
         pensioners = result['Pensioners, 2018 (PT)']
         other = result['Others, 2018 (PT)']
-        children_under_14 = ['Children aged 0 to 14, 2018 (PT)']
-
 
         # Get gender columns
         emploment_level_values = [employed,unemployed, pensioners, students, other]
@@ -707,16 +730,18 @@ def init_callbacks(dash_app):
         )
 
         text_1=f"""
-            The graph above illustrates the class employment status of individuals in {neighborhood} neighborhood.
+            The graph above illustrates the employment status of individuals in {neighborhood} neighborhood.
             This distribution is not constant. It is affected by biological, social, cultural, and economic forces.
             """
+
         no_data_text=f"""
             The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield any meaningful insights.
+            Additionally the data representing such a small population will not yield statistically significant insights.
             For these reason the data available for {neighborhood} neighborhood will not be displayed.
             """
         # list of postcodes where the data should be private
         private_list = ['00230', '02290', '01770']
+
         if postal_code not in private_list:
             children=[
                 html.H5("Employment Status"),
@@ -725,7 +750,7 @@ def init_callbacks(dash_app):
             ]
         else:
             children=[
-                html.H5("Income Distribution"),
+                html.H5("Employment Status"),
                 html.P(no_data_text),
                 html.P("Check out the other areas!")
             ]
@@ -748,8 +773,8 @@ def init_callbacks(dash_app):
         Returns: 
             children (list): List of html components to be displayed.
         """
-        section_title = "Household Size"
 
+        section_title = "Household Size"
 
         try:
             postal_code = str(clickData["points"][0]['location'])
@@ -766,21 +791,19 @@ def init_callbacks(dash_app):
         mean_household_size = result['Average size of households, 2019 (TE)']
         occupancy_rate = result['Occupancy rate, 2019 (TE)']
         
-
-
         household_basic_indicators = go.Figure()
 
         household_basic_indicators.add_trace(go.Indicator(
             mode = "number+delta",
             value = int(households_total),
             number = {"font":{"size":50}},
-            title = {"text": "Total Households<br><span style='font-size:0.8em;color:gray'>In Helsinki metropolitan area</span><br>"},
+            title = {"text": "Total Households<br><span style='font-size:0.8em;color:gray'>In Selected postal area</span><br>"},
             domain = {'x': [0, 1], 'y': [.5, 1]},
             )
         )
 
         household_basic_indicators.add_trace(go.Indicator(
-            mode = "number+delta",
+            mode = "number",
             value = float(mean_household_size),
             number = {"font":{"size":50}},
             title = {"text": "Average Household Size<br><span style='font-size:0.8em;color:gray'>Average number of people in a single household</span><br>"},
@@ -790,7 +813,7 @@ def init_callbacks(dash_app):
         )
 
         household_basic_indicators.add_trace(go.Indicator(
-            mode = "number+delta",
+            mode = "number",
             value = float(occupancy_rate),
             number = {'suffix': ' m²',"font":{"size":50}},
             title = {"text": "Occupancy Rate<br><span style='font-size:0.8em;color:gray'>Total floor area / number of inhabitants.</span><br>"},
@@ -808,27 +831,38 @@ def init_callbacks(dash_app):
             )
 
         text_1=f"""
-            The indicators above illustrates the class distribution of individuals in {neighborhood} neighborhood.
-            This distribution is not constant. It is affected by biological, social, cultural, and economic forces.
+            The indicators above illustrates the key household size metrics in {neighborhood} neighborhood.
+            There are {households_total:.2F} households in {neighborhood} neighborhood.
+            The average household size is {mean_household_size} people and Occupancy rate is {occupancy_rate}
             """
+
         no_data_text=f"""
             The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
             Additionally the data representing such a small population will not yield any meaningful insights.
             For these reason the data available for {neighborhood} neighborhood will not be displayed.
             """
+
         # list of postcodes where the data should be private
         private_list = ['00230', '02290', '01770']
+
         if postal_code not in private_list:
             children=[
-                html.H5("Household Size"),
+                html.H5(section_title),
+                html.P("""
+                Household Size is the number of persons (irrespective of age) living as an economic unit.
+                This is very much a function of the age profile of the population.
+                Younger populations invariably have a larger average household size than older populations. It is also influenced by the birth rates. 
+                The lower the birth rates the smaller the number of people in the household.
+                This is typically an important metrics for understing the demographic profile of a population.
+                """),
                 dcc.Graph(id='injected-indicators', figure=household_basic_indicators, config={'displayModeBar': False},),
                 html.P(text_1),
             ]
         else:
             children=[
-                html.H5("Income Distribution"),
+                html.H5(section_title),
                 html.P(no_data_text),
-                html.P("Check out the other areas!")
+                html.P("Check out the other postal areas!")
             ]
 
         return children
@@ -875,16 +909,16 @@ def init_callbacks(dash_app):
         household_structure = go.Figure()
 
         household_structure.add_trace(go.Indicator(
-            mode = "number+delta",
+            mode = "number",
             value = int(one_person),
             number = {"font":{"size":40}},
             title = {"text": "One Person Households<br><span style='font-size:0.8em;color:gray'>All single person households</span><br>"},
-            delta = {'reference': int(one_person_mean), 'relative': True, 'position' : "top"},
             domain = {'x': [0, 0.5], 'y': [0.5, 1]},
             )
         )
+
         household_structure.add_trace(go.Indicator(
-            mode = "number+delta",
+            mode = "number",
             value = int(young_single),
             number = {"font":{"size":40}},
             title = {"text": "Young Single Person<br><span style='font-size:0.8em;color:gray'>All single person households</span><br>"},
@@ -892,8 +926,9 @@ def init_callbacks(dash_app):
             domain = {'x': [0.5, 1], 'y': [0.5, 1]},
             )
         )
+
         household_structure.add_trace(go.Indicator(
-            mode = "number+delta",
+            mode = "number",
             value = int(young_couples_no_children),
             number = {"font":{"size":40}},
             title = {"text": "Young couples whitout children<br><span style='font-size:0.8em;color:gray'>Aged under 35 (Highest earner)</span><br>"},
@@ -901,8 +936,9 @@ def init_callbacks(dash_app):
             domain = {'x': [0, 0.5], 'y': [0, 0.5]},
             )
         )
+
         household_structure.add_trace(go.Indicator(
-            mode = "number+delta",
+            mode = "number",
             value = int(households_with_children),
             number = {"font":{"size":40}},
             title = {"text": "Young couples whit children<br><span style='font-size:0.8em;color:gray'>Aged under 35(Highest earner)</span><br>"},
@@ -921,8 +957,10 @@ def init_callbacks(dash_app):
 
         text_1=f"""
             The indicators above illustrates the structure of Househods in {neighborhood} neighborhood.
-            This distribution is not constant. It is affected by biological, social, cultural, and economic forces.
+            This structure is changing at a slow rate but it is not constant.
+            It is affected by a multitude of social, cultural, and economic forces.
             """
+
         no_data_text=f"""
             The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
             Additionally the data representing such a small population will not yield any meaningful insights.
@@ -930,15 +968,21 @@ def init_callbacks(dash_app):
             """
         # list of postcodes where the data should be private
         private_list = ['00230', '02290', '01770']
+
         if postal_code not in private_list:
             children=[
-                html.H5("Household Structure"),
+                html.H5(section_title),
+                html.P("""
+                Household structure refers to the generational contours and the extent of nucleation in the household.
+                Nuclear arrangements(One person, young couple with children) often provide a glimpse into macro trends within the population.
+                """
+                ),
                 dcc.Graph(id='injected-indicators', figure=household_structure, config={'displayModeBar': False},),
                 html.P(text_1),
             ]
         else:
             children=[
-                html.H5("Income Distribution"),
+                html.H5(section_title),
                 html.P(no_data_text),
                 html.P("Check out the other areas!")
             ]
@@ -961,6 +1005,7 @@ def init_callbacks(dash_app):
         Returns: 
             children (list): List of html components to be displayed.
         """
+        section_title = "Household Income Levels"
 
         try:
             postal_code = str(clickData["points"][0]['location'])
@@ -982,7 +1027,6 @@ def init_callbacks(dash_app):
         # Get gender columns
         income_level_values = [lower_class, middle_class, upper_class]
         income_level_labels = ["Lower Class", "Middle Class", "Upper Class"]
-        #print(gender_pie_chart_values)
 
         # Create pie chart figure
         income_pie_chart = go.Figure(
@@ -1026,22 +1070,38 @@ def init_callbacks(dash_app):
         income_indicators = go.Figure()
 
         income_indicators.add_trace(go.Indicator(
-            mode = "number+delta",
+            mode = "number",
             value = int(mean_income),
             number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Average Household Income<br><span style='font-size:0.8em;color:gray'>Compared to Average income in Helsinki </span><br>"},
-            domain = {'x': [0, 1], 'y': [.5, 1]},
-            delta = {'reference': mean_income_helsinki, 'relative': True, 'position' : "top"}
+            title = {"text": "Average Household Income<br><span style='font-size:0.8em;color:gray'>Average Household income in selected postal area</span><br>"},
+            domain = {'x': [0, 0.5], 'y': [.5, 1]},
             )
         )
 
         income_indicators.add_trace(go.Indicator(
-            mode = "number+delta",
+            mode = "number",
             value = int(median_income),
             number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Median Household Income<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
-            delta = {'reference': median_income_helsinki, 'relative': True, 'position' : "top"},
-            domain = {'x': [0, 1], 'y': [0, .5]}
+            title = {"text": "Median Household Income<br><span style='font-size:0.8em;color:gray'>Average Household income in Helsinki metropolitan area</span><br>"},
+            domain = {'x': [0, 0.5], 'y': [0, .5]}
+            )
+        )
+
+        income_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = int(mean_income_helsinki),
+            number = {'prefix': "€", "font":{"size":50}},
+            title = {"text": "Average Household Income<br><span style='font-size:0.8em;color:gray'>Median Household income in selected postal area</span><br>"},
+            domain = {'x': [0.5, 1], 'y': [0.5, 1]}
+            )
+        )
+
+        income_indicators.add_trace(go.Indicator(
+            mode = "number",
+            value = int(median_income_helsinki),
+            number = {'prefix': "€", "font":{"size":50}},
+            title = {"text": "Median Household Income<br><span style='font-size:0.8em;color:gray'>Median Household income in Helsinki metropolitan area</span><br>"},
+            domain = {'x': [0.5, 1], 'y': [0, .5]}
             )
         )
 
@@ -1054,8 +1114,8 @@ def init_callbacks(dash_app):
             )
 
         text_1=f"""
-            The graph above illustrates the class distribution of individuals in {neighborhood} neighborhood.
-            This distribution is not constant. It is affected by biological, social, cultural, and economic forces.
+            The graph above illustrates the Household income levels in {neighborhood} neighborhood.
+            This distribution is not constant. It is affected by a multitude of social, cultural, and economic forces.
             """
         text_2 = f"""
         The average income of an individual in {neighborhood} is {mean_income}€ per year.
@@ -1071,7 +1131,12 @@ def init_callbacks(dash_app):
         private_list = ['00230', '02290', '01770']
         if postal_code not in private_list:
             children=[
-                html.H5("Household Income Levels"),
+                html.H5(section_title),
+                html.P("""
+                Household income is generally defined as the combined gross income of all members of a household.
+                Note that individuals do not have to be related in any way to be considered members of the same household.
+                Household income is an important risk measure used by lenders for underwriting loans and is a useful economic indicator of an area's standard of living.
+                """),
                 dcc.Graph(id='injected-indicators', figure=income_indicators, config={'displayModeBar': False},),
                 html.P(text_2),
                 dcc.Graph(id='injected', figure=income_pie_chart, config={'displayModeBar': False},),
@@ -1079,7 +1144,7 @@ def init_callbacks(dash_app):
             ]
         else:
             children=[
-                html.H5("Income Distribution"),
+                html.H5(section_title),
                 html.P(no_data_text),
                 html.P("Check out the other areas!")
             ]
@@ -1122,7 +1187,7 @@ def init_callbacks(dash_app):
         labels = ['Own House', 'Renting', 'Other']
 
         # Create pie chart figure
-        education_pie_chart = go.Figure(
+        dwellings_pie_chart = go.Figure(
             data=
             [
                 go.Pie(
@@ -1132,7 +1197,7 @@ def init_callbacks(dash_app):
                 )
             ]
         )
-        education_pie_chart.update_layout(
+        dwellings_pie_chart.update_layout(
             showlegend=False,
             legend=dict(
                 orientation="h",
@@ -1150,7 +1215,7 @@ def init_callbacks(dash_app):
             margin={"r":30,"t":30,"l":30,"b":30}, 
             autosize=True
         )
-        education_pie_chart.update_traces(
+        dwellings_pie_chart.update_traces(
             hoverinfo='label+percent+value',
             marker=dict(colors=colors,
                 line=dict(
@@ -1160,13 +1225,17 @@ def init_callbacks(dash_app):
             )
         )
         text=f"""
-            The graph above illustrates the distribution of education {neighborhood} neighborhood.  
+            The graph above illustrates the ratio of rented and owned households in {neighborhood} neighborhood.  
             """
         private_list = ['00230', '02290', '01770']
         if postal_code not in private_list:
             children=[
-                html.H5("Households by dwellings"),
-                dcc.Graph(id='injected', figure=education_pie_chart, config={'displayModeBar': False},),
+                html.H5(section_title),
+                html.P("""
+                Due to a number of economic and cultural factors some households live in rental apartments while other own an apartment.
+                This section illustrates the ratio of households that own or rent their primary residence.
+                """),
+                dcc.Graph(id='injected', figure=dwellings_pie_chart, config={'displayModeBar': False},),
                 html.P(text),
             ]
         else:
@@ -1176,7 +1245,7 @@ def init_callbacks(dash_app):
             For these reason the data available for {neighborhood} neighborhood will not be displayed.
             """
             children=[
-                html.H5("Households by dwellings"),
+                html.H5(section_title),
                 html.P(no_data_text),
                 html.P("Check out the other areas!")
             ]
@@ -1192,8 +1261,8 @@ def init_callbacks(dash_app):
         Input('choropleth-map', 'clickData'))
     def display_click_data(clickData):
         """
-        #TODO if there are no enough records don't show anything
         """
+        section_title = "Rental Apartments"
         try:
             postal_code = str(clickData["points"][0]['location'])
         except TypeError:
@@ -1269,20 +1338,27 @@ def init_callbacks(dash_app):
             )
 
         children=[
-            html.H5("Rental Apartments"),
+            html.H5(section_title),
             html.P(
                 """
                 Residential rental property refers to homes that are purchased by an 
-                investor and inhabited by tenants on a lease or other type of rental agreement. 
-                Residential property is property zoned specifically for living or dwelling for 
+                individual and inhabited by tenants on a lease or other type of rental agreement. 
+                Residential property is property dedicated specifically for living or dwelling for 
                 individuals or households; it may include standalone single-family dwellings to large, 
                 multi-unit apartment buildings.
                 """
             ),
             dcc.Graph(id='injected', figure=rent_indicators, config={'displayModeBar': False}),
             html.P(
-                """
-                Above you can see the comparison of rental prices 
+                f"""
+                Indicators above demonstrate the Average monthly rent per square meter in the chosen 
+                postal area compared to average monthly rent per square meter in Helsinki.
+                Average monthly rent per square meter in {neighborhood} is {price_per_square:.2f}€. 
+                This means that the average monthly rent of a 30m² apartment will be approximately {(price_per_square * 35):.2f}€, 
+                60m² apartment will cost {(price_per_square * 65):.2f}€ and 90m² apartment will cost {(price_per_square * 95):.2f}€.
+                If there is not enough data on the neighborhood all values will be 0.
+                Average square meters of the apartment can be used to compare the average size of the
+                apartments in {neighborhood} to the average size of apartment is Helsinki metropolitan region.
                 """
             ),
         ]
@@ -1388,8 +1464,15 @@ def init_callbacks(dash_app):
                 config={'displayModeBar': False}
             ),
             html.P(
-                """
-                Above you can see the comparison of rental prices 
+                f"""
+                Indicators above demonstrate the Average buying price per square meter in {neighborhood} neighborhood
+                compared to average monthly rent per square meter in Helsinki metropolitan region. 
+                Average price per square meter in {neighborhood} is {price_per_square:.2f}€. 
+                This means that the average price of a 30m² apartment will be approximately {(price_per_square * 35):.2f}€, 
+                60m² apartment will cost {(price_per_square * 65):.2f}€ and 90m² apartment will cost {(price_per_square * 95):.2f}€.
+                If there is not enough data on the neighborhood all values will be 0.
+                Average square meters of the apartment can be used to compare the average size of the
+                apartments in {neighborhood} to the average size of apartment is Helsinki metropolitan region.
                 """
             ),
         ]
@@ -1407,6 +1490,8 @@ def init_callbacks(dash_app):
         """
         #TODO if there are no enough records don't show anything
         """
+        section_title = "Sauna Index"
+
         try:
             postal_code = str(clickData["points"][0]['location'])
         except TypeError:
@@ -1426,16 +1511,17 @@ def init_callbacks(dash_app):
             neighborhood = real_estate['neighborhood']
 
         finally:
-            neighborhood = ""
+            neighborhood = "" 
 
         number_of_saunas = len(df[df['sauna']==True])
+
         sauna = go.Figure()
 
         sauna.add_trace(go.Indicator(
             mode = "number",
             value = number_of_saunas,
             number = {'prefix': "#",},
-            title = {"text": f"Sauna index{neighborhood}<br><span style='font-size:0.8em;color:gray'>Number of known saunas in the area</span><br>"},
+            title = {"text": f"Sauna Index{neighborhood}<br><span style='font-size:0.8em;color:gray'>Number of known saunas in the area</span><br>"},
             )
         )
         sauna.update_layout(
@@ -1449,14 +1535,21 @@ def init_callbacks(dash_app):
         private_list = ['00230', '02290', '01770']
         if postal_code not in private_list:
             children=[
-                html.H5("Dashmap Sauna Index"),
+                html.H5(section_title),
                 html.P(
                     """
                     Dashmap Sauna index is a cutting edge urban metrics that highlights the number of available saunas in the postal code area.
-                    If leveraged properly this revolutionary metrics can boost your productivity.
+                    These are the saunas present in the apartments that are currently on the market.
+                    If leveraged properly this revolutionary metrics can boost your productivity and reduce stress.
                     """
                 ),
-                dcc.Graph(id='injected', figure=sauna, config={'displayModeBar': False},),
+                dcc.Graph(id='injected', figure=sauna, config={'displayModeBar': False}),
+                html.P(
+                    """
+                    *This is an experimental metric. The actual number of saunas is dramatically higher!
+                    however due to limited availability of data a precise estimate cannot be made.
+                    """
+                ),
 
             ]
         else:
@@ -1466,7 +1559,7 @@ def init_callbacks(dash_app):
             For these reason the data available for {neighborhood} neighborhood will not be displayed.
             """
             children=[
-                html.H5("Age Distribution"),
+                html.H5(section_title),
                 html.P(no_data_text),
                 html.P("Check out the other areas!")
             ]

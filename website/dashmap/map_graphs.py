@@ -78,6 +78,32 @@ def init_choropleth(datum):
         )
     )
 
+    # Adding Population
+    choropleth.add_trace(
+        go.Choroplethmapbox(
+            name="Population",
+            geojson=json.loads(datum.to_json()), 
+            locations=datum.index, z=datum['Inhabitants, total, 2019 (HE)'],
+            colorscale='blues',
+            colorbar=dict(
+                len=1, 
+                x=0.95,
+                y=0.5, 
+                tickfont=dict(
+                    size=10, 
+                    color= "white"
+                )
+            ),
+            marker_line_width=1,
+            marker_opacity=.4,
+            marker_line_color= '#fff',
+            visible='legendonly',
+            hovertext = datum.index,
+            text = datum['neighborhood'],
+            hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Population:</b> %{z}<br><extra></extra>"
+        )
+    )
+
     # Adding Average income by postal code trace
     choropleth.add_trace(
         go.Choroplethmapbox(
@@ -95,12 +121,12 @@ def init_choropleth(datum):
                 )
             ),
             marker_line_width=1,
-            marker_opacity=.2,
+            marker_opacity=.4,
             marker_line_color= '#fff',
             visible='legendonly',
             hovertext = datum.index,
             text = datum['neighborhood'],
-            hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><extra></extra>"
+            hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Avg. Individual Income:</b> %{z}<br><extra><extra></extra>"
         )
     )
 
@@ -126,7 +152,7 @@ def init_choropleth(datum):
             visible='legendonly',
             hovertext = datum.index,
             text = datum['neighborhood'],
-            hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><extra></extra>"
+            hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Avg. Households Income:</b> %{z}<br><extra></extra>"
         )
     )
 
@@ -136,7 +162,7 @@ def init_choropleth(datum):
             name="Avg. Inhabitant Age",
             geojson=json.loads(datum.to_json()), 
             locations=datum.index, z=datum['Average age of inhabitants, 2019 (HE)'],
-            colorscale="hot",
+            colorscale="tealgrn",
             colorbar=dict(
                 len=1, 
                 x=0.95,
@@ -152,7 +178,7 @@ def init_choropleth(datum):
             visible='legendonly',
             hovertext = datum.index,
             text = datum['neighborhood'],
-            hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><extra></extra>"
+            hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Avg. Age:</b> %{z}<br><extra></extra>"
         )
     )
 
@@ -162,7 +188,7 @@ def init_choropleth(datum):
             name="Avg. Household Size",
             geojson=json.loads(datum.to_json()), 
             locations=datum.index, z=datum['Average size of households, 2019 (TE)'],
-            colorscale="hot",
+            colorscale="aggrnyl",
             colorbar=dict(
                 len=1, 
                 x=0.95,
@@ -178,7 +204,7 @@ def init_choropleth(datum):
             visible='legendonly',
             hovertext = datum.index,
             text = datum['neighborhood'],
-            hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><extra></extra>"
+            hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Avg. Household size:</b> %{z}<br><extra></extra>"
         )
     )
 
@@ -242,6 +268,9 @@ def real_estate_scatter_plots(dataframe):
             x = x,
             y = y,
             mode='markers',
+            hovertemplate =
+            '<b>Price</b>: €%{y:.2f}'+
+            '<br><b>Area</b>: %{x}m²<br>',
             marker=dict(
                 size=8,
                 color=df['rooms'],
@@ -275,6 +304,9 @@ def real_estate_scatter_plots(dataframe):
             x = x,
             y = y,
             mode='markers',
+            hovertemplate =
+            '<b>Price</b>: €%{y:.2f}'+
+            '<br><b>Area</b>: %{x}m²<br>',
             marker=dict(
                 size=8,
                 color=df['rooms'],
@@ -290,16 +322,27 @@ def real_estate_scatter_plots(dataframe):
     scatter_chart_sell.update_yaxes(color='#fff', gridcolor='#D3D3D3')
 
     children=[
-        html.H5("Price vs Square Meters"),
+
+        html.Br(),
+        html.H4("Rental Apartments"),
+        html.Hr(),
+        dcc.Graph(id='real_estate_scatter_rent', figure=scatter_chart_rent, config={'displayModeBar': False}),
         html.P(
             """
-            Scatterplots below hels us understand the relationships between Apartment area and its price.
+            Scatterplots above illustrates the relationships between apartment square meters and monthly rent in Helsinki Metropolitan area.
+            The graph helps us understand how the change in apartment square meters affects the monthly rent.
             """
         ),
-        html.H5("Rental Apartments"),
-        dcc.Graph(id='real_estate_scatter_rent', figure=scatter_chart_rent, config={'displayModeBar': False}),
+        html.Br(),
         html.H5("Owned Apartments"),
+        html.Hr(),
         dcc.Graph(id='real_estate_scatter_sell', figure=scatter_chart_sell, config={'displayModeBar': False}),
+        html.P(
+            """
+            Scatterplots above illustrates the relationships between apartment square meters and apartment price in Helsinki Metropolitan area.
+            The graph helps us understand how the change in apartment square meters affects the buying/selling price of the apartments.
+            """
+        ),
     ]
 
     return children

@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 # Plotly Graph Objects
 from .map_graphs import *
 
-
+data_licence = """Data Source: PAAVO, Statistics Finland, Creative Commons Attribution 4.0 Internationa"""
 
 def init_navbar():
     """
@@ -391,7 +391,7 @@ def init_real_estate_accordion():
             dbc.CardHeader(
                 html.H2(
                     dbc.Button(
-                        "Sauna Index 🛁",
+                        "Sauna Index",
                         color="#303030",
                         id=f"tab-2-group-4-toggle",
                         n_clicks=0,
@@ -477,6 +477,23 @@ def init_mobility_accordion():
     )
     return mobility_accordion
 
+def init_environment_accordion():
+    """
+    Initialize the environment accordion for environment tab.
+    Args: None
+
+    Returns: 
+        environment_accordion (object): dash html.Div that contains individual accordions
+    """
+
+    environment_accordion = html.Div(
+        [
+
+        ],
+        className="accordion"
+    )
+    return environment_accordion
+
 def tab_census(census_individuals_accordion, census_households_accordion):
     """
     Initialize the census tab.
@@ -493,24 +510,31 @@ def tab_census(census_individuals_accordion, census_households_accordion):
                 html.H2("Census", style={'marginBottom': 10, 'marginTop':1}),
                 html.P(
                         """
-                        A census is the procedure of systematically calculating, acquiring and recording information about the members of a given population.
+                        A census is a complete enumeration of population and its vital characteristics.
+                        Censuses are created by systematic recording and aggregation of data about the members of a given population.
+                        The purpose populations census is to understand the basic structure of the society and identify emerging patterns and trends.
                         """,
                         className="card-text"
                     ),
                 html.H4("Individuals", style={'marginBottom': 10, 'marginTop': 20}),
                 html.P(
                         """
-                        A census is the procedure of systematically calculating, acquiring and recording information about the members of a given population.
+                        In this section information is aggregated on a level of an individuals. 
+                        Members of the population are grouped by their Age, Gender, Education level, Emploment status and income levels.
                         """
                 ),
                 html.Div(census_individuals_accordion),
                 html.H4("Households", style={'marginBottom': 10, 'marginTop': 20}),
                 html.P(
                         """
-                        A census is the procedure of systematically calculating, acquiring and recording information about the members of a given population.
+                        In this section information is aggregated on a level of Households.
+                        Members of the population are grouped by their Households Size, household Structure,
+                        Household income and Household Dwelling type.
                         """
                 ),
                 html.Div(census_households_accordion),
+                html.Hr(),
+                html.P(data_licence),
             ]
         ),
         className="mt-3",
@@ -533,65 +557,29 @@ def tab_real_estate(real_estate_accordion, real_estate_scatter):
                 html.H2("Real Estate", style={'marginBottom': 10, 'marginTop':1}),
                 html.P(
                     """
-                    Real estate is property consisting of land and the buildings on it, along with its natural resources such as crops, minerals or water.
-                    It can be used for residential, commercial, or industrial purposes. 
+                    Real estate is a type of real property consisting of land along with any permanent improvements attached to the land.
+                    The included resources can be mane made or natural. They can include water, trees, crops minerals and built structures. 
                     Often the value of real estate is one of the key indicators of an economy’s health.
                     """,
                     className="card-text"
                 ),
-                html.H4("Residential", style={'marginBottom': 10, 'marginTop': 20}),
+                html.H3("Residential", style={'marginBottom': 10, 'marginTop': 20}),
                 html.P(
                     """
-                    Real estate is property consisting of land and the buildings on it, along with its natural resources such as crops, minerals or water.
-                    It can be used for residential, commercial, or industrial purposes. 
-                    Often the value of real estate is one of the key indicators of an economy’s health.
+                    Residential real estate is broadly defined as real property used for residential purposes. 
+                    The most common examples of residential property are blocks of flats and single-family homes.
                     """,
                     className="card-text"
                 ),
                 html.Div(real_estate_scatter),
                 html.Div(real_estate_accordion),
+                html.Hr(),
+                html.P(data_licence),
             ]
         ),
         className="mt-3",
     )
-
     return real_estate_tab_content
-
-def tab_mobility(mobility_accordion):
-    """
-    Initialize the mobility tab.
-    Args: 
-        mobility_accordion (object): mobility accordion contents
-
-    Returns: 
-        mobility_tab_content (object): dash dbc.Card() that contains all relevant accordions
-    """
-    mobility_tab_content = dbc.Card(
-        dbc.CardBody(
-            [
-                html.H2("Mobility", style={'marginBottom': 10, 'marginTop':1}),
-                html.P(
-                    """
-                    Geographic mobility is the measure of how populations and goods move over time.
-                    Mobility is also a statistic that measures migration within
-                    a population. Geographic mobility has a large impact on many sociological factors in a community and is a
-                    current topic of academic research. Population mobility has implications ranging
-                    from administrative changes in government and impacts on local economic growth to housing markets and demand for regional
-                    services.
-                    -Car accidents
-                    -bike paths
-                    -high flow of people
-                    -advertizement
-                    -points of interest 
-                    """,
-                    className="card-text"
-                ),
-                html.Div(mobility_accordion),
-            ]
-        ),
-        className="mt-3",
-    )
-    return mobility_tab_content
 
 def tab_services(service_accordion):
     """
@@ -609,11 +597,15 @@ def tab_services(service_accordion):
                 html.P(
                     """
                     A service is a transaction in which no physical goods are transferred from the seller to the buyer.
-                    The benefits of such a service are held to be demonstrated by the buyer's willingness to make the exchange.
-                    Public services are those that society as a whole pays for.
-                    Using resources, skill, ingenuity, and experience, service providers benefit service consumers.
-                    Service is intangible in nature. Services may be defined as acts or performances whereby the service provider provides value to the customer.
+                    Services may be defined as acts or performances whereby the service provider provides value to the customer
+                    using resources, skill, ingenuity or experience.
                     """
+                ),
+                html.H5(
+                    """
+                    Comming Soon!
+                    """,
+                    className="card-text"
                 ),
                 html.Div(),
             ]
@@ -621,6 +613,40 @@ def tab_services(service_accordion):
         className="mt-3",
     )
     return services_tab_content
+
+def tab_mobility(mobility_accordion):
+    """
+    Initialize the mobility tab.
+    Args: 
+        mobility_accordion (object): mobility accordion contents
+
+    Returns: 
+        mobility_tab_content (object): dash dbc.Card() that contains all relevant accordions
+    """
+    mobility_tab_content = dbc.Card(
+        dbc.CardBody(
+            [
+                html.H2("Mobility", style={'marginBottom': 10, 'marginTop':1}),
+                html.P(
+                    """
+                    Geographic mobility is the measure of how populations and goods move over time.
+                    Population mobility has a large impact on many sociological factors in a society and has implications ranging
+                    from impacts on local economic growth to housing markets and demand for regional services.
+                    """,
+                    className="card-text"
+                ),
+                html.H5(
+                    """
+                    Comming Soon!
+                    """,
+                    className="card-text"
+                ),
+                html.Div(mobility_accordion),
+            ]
+        ),
+        className="mt-3",
+    )
+    return mobility_tab_content
 
 def tab_environment(environment_accordion):
     """
@@ -633,8 +659,19 @@ def tab_environment(environment_accordion):
     """
     environment_tab_content = dbc.Card(
         dbc.CardBody(
-            [
-                html.P("Constructions, pollution, noise, crime", className="card-text"),
+            [   
+                html.H2("Environment", style={'marginBottom': 10, 'marginTop':1}),
+                html.P("""
+                The  environment refers to the environmental conditions created as byproduct of manmade and natural processes.
+                It includes metrics like pollution, noise, wind patterns and radiation levels.
+                """
+                , className="card-text"),
+                html.H5(
+                    """
+                    Comming Soon!
+                    """,
+                    className="card-text"
+                ),
                 html.Div(),
             ]
         ),
@@ -705,12 +742,16 @@ def main():
     mobility_accordion = init_mobility_accordion()
     mobility_tab_content = tab_mobility(mobility_accordion)
 
+    environment_accordion = init_environment_accordion()
+    environment_tab_content = tab_environment(environment_accordion)
+
     tabs = dbc.Tabs(
         [
             dbc.Tab(census_tab_content, label="Census", disabled=False),
             dbc.Tab(real_estate_tab_content, label="Real Estate", disabled=False),
-            dbc.Tab(services_tab_content, label="Services", disabled=True),
-            dbc.Tab(mobility_tab_content, label="Mobility", disabled=True),
+            dbc.Tab(services_tab_content, label="Services", disabled=False),
+            dbc.Tab(mobility_tab_content, label="Mobility", disabled=False),
+            dbc.Tab(environment_tab_content, label="Environment", disabled=False),
         ]
     )
 
