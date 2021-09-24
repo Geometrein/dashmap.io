@@ -16,10 +16,74 @@ from .map_graphs import *
 # Load datasets
 datum, real_estate  = load_datum()
 
-#####################################################################################################################
-#                                                      CallBacks                                                    #
-#####################################################################################################################
+def get_postal_code(clickData):
+    """
+    Helper function for the callbacks
+    Gets postal code from map clickdata.
+    ---
+    Args: 
+        clickData (dict): user click information 
 
+    Returns: 
+        postal_code (str): Area postal code. '00180' by default.
+    """
+
+    # try to find the area by postcode
+    try: 
+        postal_code = str(clickData["points"][0]['location'])
+    except:
+        postal_code = '00180' # Kamppi Postal code
+
+    return postal_code
+
+def privacy_check(postal_code):
+    """
+    Helper function for the callbacks.
+    Checks if postal code is private.
+    ---
+    Args: 
+        postal_code (str): Area postal code.
+
+    Returns: 
+        True (bool): When postal code is in the private_list
+        False (bool): When postal code is not found in the private_list
+    """
+    # List of private area postcodes
+    private_list = ['00230', '02290', '01770']
+
+    if postal_code in private_list:
+        return True
+    else:
+        return False
+
+def privacy_notice(section_title, neighborhood):
+    """
+    Helper function for the callbacks.
+    ---
+    Args: 
+        section_title (str): Title of a sections
+        neighborhood (str): name of the neighborhood 
+
+    Returns: 
+        children (list): List of html components to be displayed.
+    """
+
+    privacy_notice=f"""
+            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
+            Additionally the data representing such a small population will not yield statistically significant insights.
+            For these reason the data available for {neighborhood} neighborhood will not be displayed.
+            """
+
+    children=[
+        html.H5(section_title),
+        html.P(privacy_notice),
+        html.P("Check out the other postal areas!")
+    ]
+
+    return children
+
+
+# CallBacks
 def init_callbacks(dash_app):
     """
     Initialize Dash callbacks.
@@ -50,10 +114,7 @@ def init_callbacks(dash_app):
             return not is_open
         return is_open
 
-    #####################################################################################################################
-    #                                      Tab Census Section individuals Accordion CallBacks                           #
-    #####################################################################################################################
-
+    # Tab Census Section individuals Accordion CallBacks
     @dash_app.callback(
         [Output(f"tab-1-collapse-{i}", "is_open") for i in range(1, 6)],
         [Input(f"tab-1-group-{i}-toggle", "n_clicks") for i in range(1, 6)],
@@ -91,10 +152,7 @@ def init_callbacks(dash_app):
 
         return False, False, False, False, False
 
-    #####################################################################################################################
-    #                                      Tab Census Section Households Accordion CallBacks                            #
-    #####################################################################################################################
-
+    # Tab Census Section Households Accordion CallBacks
     @dash_app.callback(
         [Output(f"tab-1-2-collapse-{i}", "is_open") for i in range(1, 5)],
         [Input(f"tab-1-2-group-{i}-toggle", "n_clicks") for i in range(1, 5)],
@@ -129,10 +187,7 @@ def init_callbacks(dash_app):
 
         return False, False, False, False
 
-    #####################################################################################################################
-    #                                      Tab Real Estate Accordion CallBacks                                          #
-    #####################################################################################################################
-
+    # Tab Real Estate Accordion CallBacks
     @dash_app.callback(
         [Output(f"tab-2-collapse-{i}", "is_open") for i in range(2, 5)],
         [Input(f"tab-2-group-{i}-toggle", "n_clicks") for i in range(2, 5)],
@@ -165,10 +220,8 @@ def init_callbacks(dash_app):
 
         return  False, False, False
 
-    #####################################################################################################################
-    #                                      Tab 1 Section 1 Age Distribution CallBack                                    #
-    #####################################################################################################################
 
+    # Tab 1 Section 1 Age Distribution CallBack
     @dash_app.callback(
         Output('id_age_dist_hist', 'children'),
         Input('choropleth-map', 'clickData'))
@@ -184,10 +237,8 @@ def init_callbacks(dash_app):
         """
         section_title = "Age Distribution"
 
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
         # get df row based on postal number
         result = datum.loc[postal_code]
@@ -219,6 +270,7 @@ def init_callbacks(dash_app):
                 
             ]
         )
+
         # Average age distribution in Helsinki
         age_dist_hist.add_trace(
             go.Bar(
@@ -263,6 +315,7 @@ def init_callbacks(dash_app):
             If the bins on the right side of the histogram are higher it means that the population is shrinking and aging.
             If the bins on the left side are higher it means that the population is young and growing. 
             """
+
         # list of postcodes where the data should be private
         private_list = ['00230', '02290', '01770']
         if postal_code not in private_list:
@@ -284,11 +337,7 @@ def init_callbacks(dash_app):
             ]
         return children
 
-
-    #####################################################################################################################
-    #                                       Tab 1 Section 1 Gender Distribution CallBack                                #
-    #####################################################################################################################
-
+    #  Tab 1 Section 1 Gender Distribution CallBack
     @dash_app.callback(
         Output('id_gender_pie_chart', 'children'),
         Input('choropleth-map', 'clickData'))
@@ -302,29 +351,31 @@ def init_callbacks(dash_app):
         Returns: 
             children (list): List of html components to be displayed.
         """
-
+        # Title of this section
         section_title = "Gender Composition"
 
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
-        # get df row based on postal number
+        # Get df row based on postal number
         result = datum.loc[postal_code]
         neighborhood = result['neighborhood']
 
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
+
+        # Get number of males and females in a district
         males = result['Males, 2019 (HE)']
         females = result['Females, 2019 (HE)']
 
-        # Get gender columns
+        # Get gender pie chart values and labels
         gender_pie_chart_values = [males, females ]
         gender_pie_chart_labels = ["Males", "Females"]
 
-        # Create pie chart figure
+        # Create pie chart figure object
         gender_pie_chart = go.Figure(
-            data=
-            [
+            data=[
                 go.Pie(
                     labels=gender_pie_chart_labels, 
                     values=gender_pie_chart_values, 
@@ -332,6 +383,7 @@ def init_callbacks(dash_app):
                 )
             ]
         )
+
         gender_pie_chart.update_layout(
             showlegend=True,
             legend=dict(
@@ -347,9 +399,10 @@ def init_callbacks(dash_app):
             ),
             paper_bgcolor='#1E1E1E', 
             plot_bgcolor='#1E1E1E', 
-            margin={"r":30,"t":30,"l":30,"b":30}, 
+            margin={"r":30, "t":30, "l":30, "b":30},
             autosize=True
         )
+
         gender_pie_chart.update_traces(
             hoverinfo='label+percent+value',
             marker=dict(colors=['#4182C8', '#2E94B2'],
@@ -359,13 +412,15 @@ def init_callbacks(dash_app):
                 )
             )
         )
+
+        # Default text body
         text=f"""
             The graph above illustrates the distribution of males and females in {neighborhood} neighborhood.  
             Gender distribution has a measurable and proven impact on a wide range of societal, demographic, and the economic processes within the city.
             This distribution is not constant. It is affected by biological, social, cultural, and economic forces.
             """
 
-        #print(gender_pie_chart_values[0],gender_pie_chart_values[1])
+        # Conditionally formating text based on data
         if int(gender_pie_chart_values[0]) > int(gender_pie_chart_values[1]):
             text +=  f"men outnumber women in {neighborhood} neighborhood."
         elif int(gender_pie_chart_values[0]) < int(gender_pie_chart_values[1]):
@@ -373,32 +428,15 @@ def init_callbacks(dash_app):
         else:
             text += f" the distribution of men and women in the {neighborhood} neighborhood is roughly equal."
 
-        # list of postcodes where the data should be private
-        private_list = ['00230', '02290', '01770']
-        if postal_code not in private_list:
-            children=[
-                html.H5(section_title),
-                dcc.Graph(id='injected', figure=gender_pie_chart, config={'displayModeBar': False},),
-                html.P(text),
-            ]
-        else:
-            no_data_text=f"""
-            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield statistically significant insights.
-            For these reason the data available for {neighborhood} neighborhood will not be displayed.
-            """
-            children=[
-                html.H5(section_title),
-                html.P(no_data_text),
-                html.P("Check out the other postal areas!")
-            ]
+        children=[
+            html.H5(section_title),
+            dcc.Graph(id='injected', figure=gender_pie_chart, config={'displayModeBar': False},),
+            html.P(text),
+        ]
 
         return children
 
-    #####################################################################################################################
-    #                                       Tab 1 Section 1 Education Pie chart CallBack                                #
-    #####################################################################################################################
-
+    # Tab 1 Section 1 Education Pie chart CallBack
     @dash_app.callback(
         Output('id_education_pie_chart', 'children'),
         Input('choropleth-map', 'clickData'))
@@ -414,14 +452,16 @@ def init_callbacks(dash_app):
         """
         section_title = "Education"
 
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError: # If postal code is not found
-            postal_code = '00180' # Kamppi Postal code
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
-        # get df row based on postal number
+        # Get df row based on postal number
         result = datum.loc[postal_code]
         neighborhood = result['neighborhood']
+
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
 
         education_values = result.tolist()[28:34]
         education_values.pop(1) # remove "With Education" column
@@ -430,7 +470,6 @@ def init_callbacks(dash_app):
         education_labels = result.index.tolist()[28:34]
         education_labels.pop(1)
         education_labels = [i.split(',')[0] for i in education_labels]
-        #print(education_labels)
 
         # Create pie chart figure
         education_pie_chart = go.Figure(
@@ -443,6 +482,7 @@ def init_callbacks(dash_app):
                 )
             ]
         )
+
         education_pie_chart.update_layout(
             showlegend=True,
             legend=dict(
@@ -461,6 +501,7 @@ def init_callbacks(dash_app):
             margin={"r":30,"t":30,"l":30,"b":30}, 
             autosize=True
         )
+
         education_pie_chart.update_traces(
             hoverinfo='label+percent+value',
             marker=dict(colors=colors,
@@ -476,32 +517,15 @@ def init_callbacks(dash_app):
 
             """
 
-        private_list = ['00230', '02290', '01770']
-
-        if postal_code not in private_list:
-            children=[
-                html.H5(section_title),
-                dcc.Graph(id='injected', figure=education_pie_chart, config={'displayModeBar': False},),
-                html.P(text),
-            ]
-        else:
-            no_data_text=f"""
-            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield statistically significant insights.
-            For these reason the data available for {neighborhood} neighborhood will not be displayed.
-            """
-            children=[
-                html.H5(section_title),
-                html.P(no_data_text),
-                html.P("Check out the other postal areas!")
-            ]
+        children=[
+            html.H5(section_title),
+            dcc.Graph(id='injected', figure=education_pie_chart, config={'displayModeBar': False},),
+            html.P(text),
+        ]
 
         return children
 
-    #####################################################################################################################
-    #                                           Tab 1 Section 1 Income CallBack                                         #
-    #####################################################################################################################
-
+    # Tab 1 Section 1 Income CallBack
     @dash_app.callback(
         Output('id_income_pie_chart', 'children'),
         Input('choropleth-map', 'clickData'))
@@ -515,16 +539,19 @@ def init_callbacks(dash_app):
         Returns: 
             children (list): List of html components to be displayed.
         """
-        section_title = "Income"
+        section_title = "Individual Income Levels"
 
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
         # get df row based on postal number
         result = datum.loc[postal_code]
         neighborhood = result['neighborhood']
+
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
+        
         mean_income_helsinki = datum['Average income of inhabitants, 2019 (HR)'].astype(int).mean()
         median_income_helsinki = datum['Average income of inhabitants, 2019 (HR)'].astype(int).median()
 
@@ -580,38 +607,49 @@ def init_callbacks(dash_app):
             )
         )
 
+        # Create Graph Object
         income_indicators = go.Figure()
 
-        income_indicators.add_trace(go.Indicator(
-            mode = "number",
-            value = int(mean_income),
-            number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Average Income<br><span style='font-size:0.8em;color:gray'>Average individual income in selected postal area</span><br>"},
-            domain = {'x': [0, 0.5], 'y': [.5, 1]},
-            delta = {'reference': mean_income_helsinki, 'relative': True, 'position' : "top"}))
+        income_indicators.add_trace(
+            go.Indicator(
+                mode = "number",
+                value = int(mean_income),
+                number = {'prefix': "€", "font":{"size":50}},
+                title = {"text": "Average Income<br><span style='font-size:0.8em;color:gray'>Average individual income in selected postal area</span><br>"},
+                domain = {'x': [0, 0.5], 'y': [.5, 1]},
+            )
+        )
 
-        income_indicators.add_trace(go.Indicator(
-            mode = "number",
-            value = int(median_income),
-            number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Average individual income in Helsinki Metropolitan area</span><br>"},
-            delta = {'reference': median_income_helsinki, 'relative': True, 'position' : "top"},
-            domain = {'x': [0, 0.5], 'y': [0, .5]}))
+        income_indicators.add_trace(
+            go.Indicator(
+                mode = "number",
+                value = int(median_income),
+                number = {'prefix': "€", "font":{"size":50}},
+                title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Average individual income in Helsinki Metropolitan area</span><br>"},
+                domain = {'x': [0, 0.5], 'y': [0, .5]}
+            )
+        )
 
-        income_indicators.add_trace(go.Indicator(
-            mode = "number",
-            value = int(mean_income_helsinki),
-            number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Median individual income in selected postal area</span><br>"},
-            domain = {'x': [0.5, 1], 'y': [0.5, 1]}))
+        income_indicators.add_trace(
+            go.Indicator(
+                mode = "number",
+                value = int(mean_income_helsinki),
+                number = {'prefix': "€", "font":{"size":50}},
+                title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Median individual income in selected postal area</span><br>"},
+                domain = {'x': [0.5, 1], 'y': [0.5, 1]}
+            )
+        )
         
-        income_indicators.add_trace(go.Indicator(
-            mode = "number",
-            value = int(median_income_helsinki),
-            number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Average individual income in Helsinki Metropolitan area</span><br>"},
-            domain = {'x': [0.5, 1], 'y': [0, .5]}))
-
+        income_indicators.add_trace(
+            go.Indicator(
+                mode = "number",
+                value = int(median_income_helsinki),
+                number = {'prefix': "€", "font":{"size":50}},
+                title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Average individual income in Helsinki Metropolitan area</span><br>"},
+                domain = {'x': [0.5, 1], 'y': [0, .5]}
+            )
+        )
+        # Update layout 
         income_indicators.update_layout(
                 paper_bgcolor='#1E1E1E',
                 plot_bgcolor='#1E1E1E',
@@ -620,6 +658,7 @@ def init_callbacks(dash_app):
                 font=dict(color="white")
             )
 
+        # Default texts
         text_1=f"""
             The graph above illustrates the class distribution of individuals in {neighborhood} neighborhood.
             This distribution is not constant. It is affected by a multitude social and economic forces.
@@ -633,30 +672,21 @@ def init_callbacks(dash_app):
             Additionally the data representing such a small population will not yield statistically significant insights.
             For these reason the data available for {neighborhood} neighborhood will not be displayed.
             """
-        # list of postcodes where the data should be private
-        private_list = ['00230', '02290', '01770']
 
-        if postal_code not in private_list:
-            children=[
-                html.H5("Individual Income levels"),
-                dcc.Graph(id='injected-indicators', figure=income_indicators, config={'displayModeBar': False},),
-                html.P(text_2),
-                dcc.Graph(id='injected', figure=income_pie_chart, config={'displayModeBar': False},),
-                html.P(text_1),
-            ]
-        else:
-            children=[
-                html.H5("Individual Income levels"),
-                html.P(no_data_text),
-                html.P("Check out the other postal areas!")
-            ]
+
+
+
+        children=[
+            html.H5(section_title),
+            dcc.Graph(id='injected-indicators', figure=income_indicators, config={'displayModeBar': False},),
+            html.P(text_2),
+            dcc.Graph(id='injected', figure=income_pie_chart, config={'displayModeBar': False},),
+            html.P(text_1),
+        ]
 
         return children
 
-    #####################################################################################################################
-    #                                        Tab 1 Section 1 Employment CallBack                                        #
-    #####################################################################################################################
-
+    # Tab 1 Section 1 Employment CallBack
     @dash_app.callback(
         Output('id_employment_pie_chart', 'children'),
         Input('choropleth-map', 'clickData'))
@@ -670,15 +700,21 @@ def init_callbacks(dash_app):
         Returns: 
             children (list): List of html components to be displayed.
         """
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
+
+        section_title = "Employment Status"
+
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
         # get df row based on postal number
         result = datum.loc[postal_code]
         neighborhood = result['neighborhood']
 
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
+        
+        # get relevant data
         employed = result['Employed, 2018 (PT)']
         unemployed = result['Unemployed, 2018 (PT)']
         students = result['Students, 2018 (PT)']
@@ -701,6 +737,7 @@ def init_callbacks(dash_app):
                 )
             ]
         )
+
         income_pie_chart.update_layout(
             showlegend=True,
             legend=dict(
@@ -719,6 +756,7 @@ def init_callbacks(dash_app):
             margin={"r":30,"t":30,"l":30,"b":30}, 
             autosize=True
         )
+
         income_pie_chart.update_traces(
             hoverinfo='label+percent+value',
             marker=dict(colors=colors,
@@ -734,32 +772,15 @@ def init_callbacks(dash_app):
             This distribution is not constant. It is affected by biological, social, cultural, and economic forces.
             """
 
-        no_data_text=f"""
-            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield statistically significant insights.
-            For these reason the data available for {neighborhood} neighborhood will not be displayed.
-            """
-        # list of postcodes where the data should be private
-        private_list = ['00230', '02290', '01770']
-
-        if postal_code not in private_list:
-            children=[
-                html.H5("Employment Status"),
-                dcc.Graph(id='injected', figure=income_pie_chart, config={'displayModeBar': False},),
-                html.P(text_1),
-            ]
-        else:
-            children=[
-                html.H5("Employment Status"),
-                html.P(no_data_text),
-                html.P("Check out the other areas!")
-            ]
+        children=[
+            html.H5(section_title),
+            dcc.Graph(id='injected', figure=income_pie_chart, config={'displayModeBar': False},),
+            html.P(text_1),
+        ]
 
         return children
 
-    #####################################################################################################################
-    #                                          Tab 1 Section 2 Household Size                                      #
-    #####################################################################################################################
+    # Tab 1 Section 2 Household Size
     @dash_app.callback(
         Output('id_household_size', 'children'),
         Input('choropleth-map', 'clickData'))
@@ -776,14 +797,17 @@ def init_callbacks(dash_app):
 
         section_title = "Household Size"
 
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
         # get df row based on postal number
         result = datum.loc[postal_code]
         neighborhood = result['neighborhood']
+
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
+        
         helsinki_mean_household_size = datum['Average size of households, 2019 (TE)'].astype(float).mean()
         helsinki_mean_occupancy_rate = datum['Occupancy rate, 2019 (TE)'].astype(float).mean()
 
@@ -836,41 +860,23 @@ def init_callbacks(dash_app):
             The average household size is {mean_household_size} people and Occupancy rate is {occupancy_rate}
             """
 
-        no_data_text=f"""
-            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield any meaningful insights.
-            For these reason the data available for {neighborhood} neighborhood will not be displayed.
-            """
 
-        # list of postcodes where the data should be private
-        private_list = ['00230', '02290', '01770']
-
-        if postal_code not in private_list:
-            children=[
-                html.H5(section_title),
-                html.P("""
-                Household Size is the number of persons (irrespective of age) living as an economic unit.
-                This is very much a function of the age profile of the population.
-                Younger populations invariably have a larger average household size than older populations. It is also influenced by the birth rates. 
-                The lower the birth rates the smaller the number of people in the household.
-                This is typically an important metrics for understing the demographic profile of a population.
-                """),
-                dcc.Graph(id='injected-indicators', figure=household_basic_indicators, config={'displayModeBar': False},),
-                html.P(text_1),
-            ]
-        else:
-            children=[
-                html.H5(section_title),
-                html.P(no_data_text),
-                html.P("Check out the other postal areas!")
-            ]
+        children=[
+            html.H5(section_title),
+            html.P("""
+            Household Size is the number of persons (irrespective of age) living as an economic unit.
+            This is very much a function of the age profile of the population.
+            Younger populations invariably have a larger average household size than older populations. It is also influenced by the birth rates. 
+            The lower the birth rates the smaller the number of people in the household.
+            This is typically an important metrics for understing the demographic profile of a population.
+            """),
+            dcc.Graph(id='injected-indicators', figure=household_basic_indicators, config={'displayModeBar': False},),
+            html.P(text_1),
+        ]
 
         return children
 
-    #####################################################################################################################
-    #                                          Tab 1 Section 2 Household Structure                                      #
-    #####################################################################################################################
-
+    # Tab 1 Section 2 Household Structure
     @dash_app.callback(
         Output('id_household_structure', 'children'),
         Input('choropleth-map', 'clickData'))
@@ -886,14 +892,16 @@ def init_callbacks(dash_app):
         """
         section_title = "Household Structure"
         
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
         # get df row based on postal number
         result = datum.loc[postal_code]
         neighborhood = result['neighborhood']
+
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
 
         # mean values
         one_person_mean = datum['One-person households, 2019 (TE)'].astype(int).mean()
@@ -961,37 +969,20 @@ def init_callbacks(dash_app):
             It is affected by a multitude of social, cultural, and economic forces.
             """
 
-        no_data_text=f"""
-            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield any meaningful insights.
-            For these reason the data available for {neighborhood} neighborhood will not be displayed.
+        children=[
+            html.H5(section_title),
+            html.P("""
+            Household structure refers to the generational contours and the extent of nucleation in the household.
+            Nuclear arrangements(One person, young couple with children) often provide a glimpse into macro trends within the population.
             """
-        # list of postcodes where the data should be private
-        private_list = ['00230', '02290', '01770']
-
-        if postal_code not in private_list:
-            children=[
-                html.H5(section_title),
-                html.P("""
-                Household structure refers to the generational contours and the extent of nucleation in the household.
-                Nuclear arrangements(One person, young couple with children) often provide a glimpse into macro trends within the population.
-                """
-                ),
-                dcc.Graph(id='injected-indicators', figure=household_structure, config={'displayModeBar': False},),
-                html.P(text_1),
-            ]
-        else:
-            children=[
-                html.H5(section_title),
-                html.P(no_data_text),
-                html.P("Check out the other areas!")
-            ]
+            ),
+            dcc.Graph(id='injected-indicators', figure=household_structure, config={'displayModeBar': False},),
+            html.P(text_1),
+        ]
 
         return children
 
-    #####################################################################################################################
-    #                                          Tab 1 Section 2 Household Income                                         #
-    #####################################################################################################################
+    # Tab 1 Section 2 Household Income
     @dash_app.callback(
         Output('id_household_income', 'children'),
         Input('choropleth-map', 'clickData'))
@@ -1007,14 +998,17 @@ def init_callbacks(dash_app):
         """
         section_title = "Household Income Levels"
 
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
         # get df row based on postal number
         result = datum.loc[postal_code]
         neighborhood = result['neighborhood']
+
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
+
         mean_income_helsinki = datum['Average income of households, 2019 (TR)'].astype(int).mean()
         median_income_helsinki = datum['Median income of households, 2019 (TR)'].astype(int).median()
 
@@ -1039,6 +1033,7 @@ def init_callbacks(dash_app):
                 )
             ]
         )
+
         income_pie_chart.update_layout(
             showlegend=True,
             legend=dict(
@@ -1057,6 +1052,7 @@ def init_callbacks(dash_app):
             margin={"r":30,"t":30,"l":30,"b":30}, 
             autosize=True
         )
+
         income_pie_chart.update_traces(
             hoverinfo='label+percent+value',
             marker=dict(colors=colors,
@@ -1122,39 +1118,23 @@ def init_callbacks(dash_app):
         While the median income is {median_income}€ per year.
         The percentages illustrate the difference between mean and median income in Helsinki metropolitan area.
         """
-        no_data_text=f"""
-            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield any meaningful insights.
-            For these reason the data available for {neighborhood} neighborhood will not be displayed.
-            """
-        # list of postcodes where the data should be private
-        private_list = ['00230', '02290', '01770']
-        if postal_code not in private_list:
-            children=[
-                html.H5(section_title),
-                html.P("""
-                Household income is generally defined as the combined gross income of all members of a household.
-                Note that individuals do not have to be related in any way to be considered members of the same household.
-                Household income is an important risk measure used by lenders for underwriting loans and is a useful economic indicator of an area's standard of living.
-                """),
-                dcc.Graph(id='injected-indicators', figure=income_indicators, config={'displayModeBar': False},),
-                html.P(text_2),
-                dcc.Graph(id='injected', figure=income_pie_chart, config={'displayModeBar': False},),
-                html.P(text_1),
-            ]
-        else:
-            children=[
-                html.H5(section_title),
-                html.P(no_data_text),
-                html.P("Check out the other areas!")
-            ]
 
+        children=[
+            html.H5(section_title),
+            html.P("""
+            Household income is generally defined as the combined gross income of all members of a household.
+            Note that individuals do not have to be related in any way to be considered members of the same household.
+            Household income is an important risk measure used by lenders for underwriting loans and is a useful economic indicator of an area's standard of living.
+            """),
+            dcc.Graph(id='injected-indicators', figure=income_indicators, config={'displayModeBar': False},),
+            html.P(text_2),
+            dcc.Graph(id='injected', figure=income_pie_chart, config={'displayModeBar': False},),
+            html.P(text_1),
+        ]
 
         return children
 
-    #####################################################################################################################
-    #                                          Tab 1 Section 2 Household Dwellings                                      #
-    #####################################################################################################################
+    # Tab 1 Section 2 Household Dwellings
     @dash_app.callback(
         Output('id_household_dwellings', 'children'),
         Input('choropleth-map', 'clickData'))
@@ -1170,14 +1150,16 @@ def init_callbacks(dash_app):
         """
         section_title = "Household Dwellings"
         
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
         # get df row based on postal number
         result = datum.loc[postal_code]
         neighborhood = result['neighborhood']
+
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
 
         owner_occupied = result['Households living in owner-occupied dwellings, 2019 (TE)']
         rental_occupied = result['Households living in rented dwellings, 2019 (TE)']
@@ -1227,46 +1209,37 @@ def init_callbacks(dash_app):
         text=f"""
             The graph above illustrates the ratio of rented and owned households in {neighborhood} neighborhood.  
             """
-        private_list = ['00230', '02290', '01770']
-        if postal_code not in private_list:
-            children=[
-                html.H5(section_title),
-                html.P("""
-                Due to a number of economic and cultural factors some households live in rental apartments while other own an apartment.
-                This section illustrates the ratio of households that own or rent their primary residence.
-                """),
-                dcc.Graph(id='injected', figure=dwellings_pie_chart, config={'displayModeBar': False},),
-                html.P(text),
-            ]
-        else:
-            no_data_text=f"""
-            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield any meaningful insights.
-            For these reason the data available for {neighborhood} neighborhood will not be displayed.
-            """
-            children=[
-                html.H5(section_title),
-                html.P(no_data_text),
-                html.P("Check out the other areas!")
-            ]
+
+        children=[
+            html.H5(section_title),
+            html.P("""
+            Due to a number of economic and cultural factors some households live in rental apartments while other own an apartment.
+            This section illustrates the ratio of households that own or rent their primary residence.
+            """),
+            dcc.Graph(id='injected', figure=dwellings_pie_chart, config={'displayModeBar': False},),
+            html.P(text),
+        ]
 
         return children
 
-    #####################################################################################################################
-    #                                           Tab 2 Section 1 Rental Dwellings                                        #
-    #####################################################################################################################
-    
+    # Tab 2 Section 1 Rental Dwellings
     @dash_app.callback(
         Output('id_re_renting', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(clickData):
         """
+        Generates the graphs for rental Dwellings section.
+        ---
+        Args: 
+            clickData (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
+
+        Returns: 
+            children (list): List of html components to be displayed.
         """
         section_title = "Rental Apartments"
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
+
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
         rentals = real_estate[real_estate['deal_type']=='rent']
 
@@ -1365,21 +1338,22 @@ def init_callbacks(dash_app):
 
         return children
 
-    #####################################################################################################################
-    #                                           Tab 2 Section 1 Owned Dwellings                                         #
-    #####################################################################################################################
-    
+    # Tab 2 Section 1 Owned Dwellings
     @dash_app.callback(
         Output('id_re_owning', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(clickData):
         """
-        #TODO if there are no enough records don't show anything
+        Generates the graphs for owned dwellings section.
+        ---
+        Args: 
+            clickData (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
+
+        Returns: 
+            children (list): List of html components to be displayed.
         """
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
         selling = real_estate[real_estate['deal_type']=='sell']
         selling['price_per_square'] = (selling['price'] / selling['area'])
@@ -1402,10 +1376,9 @@ def init_callbacks(dash_app):
         price_per_square = df['price_per_square'].mean()
         average_area = df['area'].mean()
         hels_avg_price_per_square = selling['price_per_square'].mean()
-        hels_med_price_per_square = selling['price_per_square'].median()
-
         hels_avg_re_area = selling['area'].mean()
 
+        # Create graph object
         sell_indicators = go.Figure()
 
         sell_indicators.add_trace(go.Indicator(
@@ -1416,6 +1389,7 @@ def init_callbacks(dash_app):
             domain = {'x': [0, 0.5], 'y': [0.5, 1]}
             )
         )
+
         sell_indicators.add_trace(go.Indicator(
             mode = "number",
             value = hels_avg_price_per_square,
@@ -1424,6 +1398,7 @@ def init_callbacks(dash_app):
             domain = {'x': [0.5, 1], 'y': [0.5, 1]},
             )
         )
+
         sell_indicators.add_trace(go.Indicator(
             mode = "number",
             value = hels_avg_re_area,
@@ -1432,6 +1407,7 @@ def init_callbacks(dash_app):
             domain = {'x': [0.5, 1], 'y': [0, .5]},
             )
         )
+
         sell_indicators.add_trace(go.Indicator(
             mode = "number",
             value = average_area,
@@ -1440,6 +1416,7 @@ def init_callbacks(dash_app):
             domain = {'x': [0, 0.5], 'y': [0, 0.5]},
             )
         )
+
         sell_indicators.update_layout(
             paper_bgcolor='#1E1E1E',
             plot_bgcolor='#1E1E1E',
@@ -1479,24 +1456,25 @@ def init_callbacks(dash_app):
 
         return children
 
-    #####################################################################################################################
-    #                                            Tab 2 Section 1 Sauna Index                                            #
-    #####################################################################################################################
-    
+    # Tab 2 Section 1 Sauna Index
     @dash_app.callback(
         Output('id_re_sauna', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(clickData):
         """
-        #TODO if there are no enough records don't show anything
+        Generates the graphs for sauna index section.
+        ---
+        Args: 
+            clickData (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
+
+        Returns: 
+            children (list): List of html components to be displayed.
         """
+        # Section title
         section_title = "Sauna Index"
 
-        try:
-            postal_code = str(clickData["points"][0]['location'])
-        except TypeError:
-            postal_code = '00180' # Kamppi Postal code
-
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
 
         # get df row based on postal number
         if postal_code in real_estate.index:
@@ -1513,8 +1491,14 @@ def init_callbacks(dash_app):
         finally:
             neighborhood = "" 
 
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
+
+        # Get number of saunas
         number_of_saunas = len(df[df['sauna']==True])
 
+        # Create Graph Object
         sauna = go.Figure()
 
         sauna.add_trace(go.Indicator(
@@ -1524,44 +1508,35 @@ def init_callbacks(dash_app):
             title = {"text": f"Sauna Index{neighborhood}<br><span style='font-size:0.8em;color:gray'>Number of known saunas in the area</span><br>"},
             )
         )
+        
         sauna.update_layout(
             paper_bgcolor='#1E1E1E',
             plot_bgcolor='#1E1E1E',
             margin={"r":0,"t":0,"l":0,"b":0},
             autosize=True,
             font=dict(color="white")
-            )
+        )
 
-        private_list = ['00230', '02290', '01770']
-        if postal_code not in private_list:
-            children=[
-                html.H5(section_title),
-                html.P(
-                    """
-                    Dashmap Sauna index is a cutting edge urban metrics that highlights the number of available saunas in the postal code area.
-                    These are the saunas present in the apartments that are currently on the market.
-                    If leveraged properly this revolutionary metrics can boost your productivity and reduce stress.
-                    """
-                ),
-                dcc.Graph(id='injected', figure=sauna, config={'displayModeBar': False}),
-                html.P(
-                    """
-                    *This is an experimental metric. The actual number of saunas is dramatically higher!
-                    however due to limited availability of data a precise estimate cannot be made.
-                    """
-                ),
-
-            ]
-        else:
-            no_data_text=f"""
-            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield any meaningful insights.
-            For these reason the data available for {neighborhood} neighborhood will not be displayed.
-            """
-            children=[
-                html.H5(section_title),
-                html.P(no_data_text),
-                html.P("Check out the other areas!")
-            ]
+        children=[
+            html.H5(section_title),
+            html.P(
+                """
+                Dashmap Sauna index is a cutting edge urban metrics that highlights the number of available saunas in the postal code area.
+                These are the saunas present in the apartments that are currently on the market.
+                If leveraged properly this revolutionary metrics can boost your productivity and reduce stress.
+                """
+            ),
+            dcc.Graph(
+                id='injected',
+                figure=sauna,
+                config={'displayModeBar': False}
+            ),
+            html.P(
+                """
+                *This is an experimental metric. The actual number of saunas is dramatically higher!
+                however due to limited availability of data a precise estimate cannot be made.
+                """
+            ),
+        ]
 
         return children

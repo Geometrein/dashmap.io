@@ -14,7 +14,7 @@ def init_navbar():
     Args: None
 
     Returns: 
-        navbar (object): dash bootstrap component NavbarSimple
+        navbar (object): dash bootstrap component NavbarSimple()
     """
     navbar = dbc.NavbarSimple(
                 children=[
@@ -218,7 +218,7 @@ def init_census_individual_accordion():
 
 def init_census_household_accordion():
     """
-    Initialize the second accordion for census tab.
+    Initialize the household accordion for census tab.
     Args: None
 
     Returns: 
@@ -681,6 +681,14 @@ def tab_environment(environment_accordion):
 
 def layout_main(navbar, tabs, choropleth):
     """
+    Create the main app layout.
+    Args: 
+        navbar (object): dash bootstrap component NavbarSimple() with navigation components
+        tabs (object): dash bootstrap component dbc.Tabs() with all content tabs
+        choropleth (object): Plotly Graph Object go.Choroplethmapbox()
+        
+    Returns: 
+        layout (object): dash html.Div() that contains all components for dash app layout
     """
     layout = html.Div(
         [   
@@ -755,8 +763,6 @@ def main():
         ]
     )
 
-    layout = layout_main(navbar, tabs, choropleth)
-
-    return layout
+    return layout_main(navbar, tabs, choropleth)
 
 layout = main()
