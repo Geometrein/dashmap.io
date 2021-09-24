@@ -38,5 +38,5 @@ Quick install:
 ```
 pip install -r requirements.txt
 ```
-# **Licence**
-[![MIT](https://img.shields.io/badge/MIT-Licence-0088CC?style=for-the-badge&logo=&logoColor=white)](https://www.openstreetmap.org/#map=6/65.453/26.069)
+# **License**
+[![MIT](https://img.shields.io/badge/MIT-License-0088CC?style=for-the-badge&logo=&logoColor=white)](https://github.com/Geometrein/dashmap.io/blob/main/LICENSE)
