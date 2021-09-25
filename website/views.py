@@ -24,7 +24,7 @@ def home():
     """
     return render_template("home.html")
 
-@views.route('/about')
+@views.route('/support')
 def about():
     """
     Loads the about html template
@@ -33,4 +33,4 @@ def about():
     Returns: 
         about.html (str): about html template
     """
-    return render_template("about.html")
+    return render_template("support.html")

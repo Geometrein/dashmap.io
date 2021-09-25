@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 # Environment Variables
 from dotenv import load_dotenv
 load_dotenv()
-token = os.getenv('MAPBOX_TOKEN')
+MAPBOX_TOKEN = os.getenv('MAPBOX_TOKEN')
 
 # Colors used by graphs
 colors = [
@@ -58,7 +58,8 @@ def init_choropleth(datum):
         go.Choroplethmapbox(
             name="Postal Areas",
             geojson=json.loads(datum.to_json()), 
-            locations=datum.index, z=datum['Inhabitants, total, 2019 (HE)'],
+            locations=datum.index,
+            z=datum['Inhabitants, total, 2019 (HE)'],
             colorscale=["#A9A9A9", "#A9A9A9"],
             colorbar=dict(
                 len=1, 
@@ -83,7 +84,8 @@ def init_choropleth(datum):
         go.Choroplethmapbox(
             name="Population",
             geojson=json.loads(datum.to_json()), 
-            locations=datum.index, z=datum['Inhabitants, total, 2019 (HE)'],
+            locations=datum.index,
+            z=datum['Inhabitants, total, 2019 (HE)'],
             colorscale='blues',
             colorbar=dict(
                 len=1, 
@@ -109,7 +111,8 @@ def init_choropleth(datum):
         go.Choroplethmapbox(
             name="Avg. Individual Income",
             geojson=json.loads(datum.to_json()), 
-            locations=datum.index, z=datum['Average income of inhabitants, 2019 (HR)'],
+            locations=datum.index,
+            z=datum['Average income of inhabitants, 2019 (HR)'],
             colorscale="Bluered",
             colorbar=dict(
                 len=1, 
@@ -135,7 +138,8 @@ def init_choropleth(datum):
         go.Choroplethmapbox(
             name="Avg. Households Income",
             geojson=json.loads(datum.to_json()), 
-            locations=datum.index, z=datum['Average income of households, 2019 (TR)'],
+            locations=datum.index,
+            z=datum['Average income of households, 2019 (TR)'],
             colorscale="hot",
             colorbar=dict(
                 len=1, 
@@ -161,7 +165,8 @@ def init_choropleth(datum):
         go.Choroplethmapbox(
             name="Avg. Inhabitant Age",
             geojson=json.loads(datum.to_json()), 
-            locations=datum.index, z=datum['Average age of inhabitants, 2019 (HE)'],
+            locations=datum.index,
+            z=datum['Average age of inhabitants, 2019 (HE)'],
             colorscale="tealgrn",
             colorbar=dict(
                 len=1, 
@@ -187,7 +192,8 @@ def init_choropleth(datum):
         go.Choroplethmapbox(
             name="Avg. Household Size",
             geojson=json.loads(datum.to_json()), 
-            locations=datum.index, z=datum['Average size of households, 2019 (TE)'],
+            locations=datum.index,
+            z=datum['Average size of households, 2019 (TE)'],
             colorscale="aggrnyl",
             colorbar=dict(
                 len=1, 
@@ -228,7 +234,7 @@ def init_choropleth(datum):
             )
         ),
         mapbox=dict(   
-            accesstoken=token,
+            accesstoken=MAPBOX_TOKEN,
             bearing=0,
             center=dict(lat=60.192059, lon=24.945831),
             pitch=3,
@@ -240,8 +246,8 @@ def init_choropleth(datum):
     choropleth.update_traces(
         showlegend=True,
         selector=dict(type='choroplethmapbox'),
-        unselected= dict(marker={'opacity': 0.15}),
-        selected= dict(marker={'opacity': 0.4})
+        unselected= dict(marker={'opacity': 0.2}),
+        selected= dict(marker={'opacity': 0.5})
     )
 
     return choropleth
@@ -310,7 +316,7 @@ def real_estate_scatter_plots(dataframe):
             marker=dict(
                 size=8,
                 color=df['rooms'],
-                colorscale='tealgrn', # one of plotly colorscales
+                colorscale='tealgrn',
                 showscale= True,
             )
         )
@@ -326,7 +332,11 @@ def real_estate_scatter_plots(dataframe):
         html.Br(),
         html.H4("Rental Apartments"),
         html.Hr(),
-        dcc.Graph(id='real_estate_scatter_rent', figure=scatter_chart_rent, config={'displayModeBar': False}),
+        dcc.Graph(
+            id='real_estate_scatter_rent',
+            figure=scatter_chart_rent,
+            config={'displayModeBar': False}
+        ),
         html.P(
             """
             Scatterplots above illustrates the relationships between apartment square meters and monthly rent in Helsinki Metropolitan area.
@@ -336,7 +346,11 @@ def real_estate_scatter_plots(dataframe):
         html.Br(),
         html.H5("Owned Apartments"),
         html.Hr(),
-        dcc.Graph(id='real_estate_scatter_sell', figure=scatter_chart_sell, config={'displayModeBar': False}),
+        dcc.Graph(
+            id='real_estate_scatter_sell',
+            figure=scatter_chart_sell,
+            config={'displayModeBar': False}
+        ),
         html.P(
             """
             Scatterplots above illustrates the relationships between apartment square meters and apartment price in Helsinki Metropolitan area.
