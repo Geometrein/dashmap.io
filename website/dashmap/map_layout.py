@@ -19,7 +19,8 @@ def init_navbar():
     navbar = dbc.NavbarSimple(
                 children=[
                     dbc.NavItem(dbc.NavLink("Home", href="/", external_link=True)),
-                    dbc.NavItem(dbc.NavLink("About", href="/about", external_link=True)),
+                    dbc.NavItem(dbc.NavLink("Support", href="/support", external_link=True)),
+                    
                     dbc.Button(
                         "Help", 
                         id="help-open-centered",

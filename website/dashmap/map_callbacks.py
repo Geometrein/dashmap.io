@@ -220,7 +220,6 @@ def init_callbacks(dash_app):
 
         return  False, False, False
 
-
     # Tab 1 Section 1 Age Distribution CallBack
     @dash_app.callback(
         Output('id_age_dist_hist', 'children'),
@@ -614,8 +613,8 @@ def init_callbacks(dash_app):
             go.Indicator(
                 mode = "number",
                 value = int(mean_income),
-                number = {'prefix': "€", "font":{"size":50}},
-                title = {"text": "Average Income<br><span style='font-size:0.8em;color:gray'>Average individual income in selected postal area</span><br>"},
+                number = {'prefix': "€", "font":{"size":40}},
+                title = {"text": "Average Income<br><span style='font-size:0.8em;color:gray'>Avg. individual income in postal area</span><br>"},
                 domain = {'x': [0, 0.5], 'y': [.5, 1]},
             )
         )
@@ -624,8 +623,8 @@ def init_callbacks(dash_app):
             go.Indicator(
                 mode = "number",
                 value = int(median_income),
-                number = {'prefix': "€", "font":{"size":50}},
-                title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Average individual income in Helsinki Metropolitan area</span><br>"},
+                number = {'prefix': "€", "font":{"size":40}},
+                title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Median individual income in whole Helsinki</span><br>"},
                 domain = {'x': [0, 0.5], 'y': [0, .5]}
             )
         )
@@ -634,8 +633,8 @@ def init_callbacks(dash_app):
             go.Indicator(
                 mode = "number",
                 value = int(mean_income_helsinki),
-                number = {'prefix': "€", "font":{"size":50}},
-                title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Median individual income in selected postal area</span><br>"},
+                number = {'prefix': "€", "font":{"size":40}},
+                title = {"text": "Average Income Helsinki<br><span style='font-size:0.8em;color:gray'>Avg. individual income in postal area</span><br>"},
                 domain = {'x': [0.5, 1], 'y': [0.5, 1]}
             )
         )
@@ -644,8 +643,8 @@ def init_callbacks(dash_app):
             go.Indicator(
                 mode = "number",
                 value = int(median_income_helsinki),
-                number = {'prefix': "€", "font":{"size":50}},
-                title = {"text": "Median Income<br><span style='font-size:0.8em;color:gray'>Average individual income in Helsinki Metropolitan area</span><br>"},
+                number = {'prefix': "€", "font":{"size":40}},
+                title = {"text": "Median Income in Helsinki<br><span style='font-size:0.8em;color:gray'>Median individual income in whole Helsinki</span><br>"},
                 domain = {'x': [0.5, 1], 'y': [0, .5]}
             )
         )
@@ -820,8 +819,8 @@ def init_callbacks(dash_app):
         household_basic_indicators.add_trace(go.Indicator(
             mode = "number+delta",
             value = int(households_total),
-            number = {"font":{"size":50}},
-            title = {"text": "Total Households<br><span style='font-size:0.8em;color:gray'>In Selected postal area</span><br>"},
+            number = {"font":{"size":40}},
+            title = {"text": "Total Households<br><span style='font-size:0.8em;color:gray'>In selected postal area</span><br>"},
             domain = {'x': [0, 1], 'y': [.5, 1]},
             )
         )
@@ -829,8 +828,8 @@ def init_callbacks(dash_app):
         household_basic_indicators.add_trace(go.Indicator(
             mode = "number",
             value = float(mean_household_size),
-            number = {"font":{"size":50}},
-            title = {"text": "Average Household Size<br><span style='font-size:0.8em;color:gray'>Average number of people in a single household</span><br>"},
+            number = {"font":{"size":40}},
+            title = {"text": "Average Household Size<br><span style='font-size:0.8em;color:gray'>Avg. number of people in a household</span><br>"},
             domain = {'x': [0, .5], 'y': [0, .5]},
             delta = {'reference': helsinki_mean_household_size, 'relative': True, 'position' : "top"}
             )
@@ -839,7 +838,7 @@ def init_callbacks(dash_app):
         household_basic_indicators.add_trace(go.Indicator(
             mode = "number",
             value = float(occupancy_rate),
-            number = {'suffix': ' m²',"font":{"size":50}},
+            number = {'suffix': ' m²',"font":{"size":40}},
             title = {"text": "Occupancy Rate<br><span style='font-size:0.8em;color:gray'>Total floor area / number of inhabitants.</span><br>"},
             domain = {'x': [.5, 1], 'y': [0, .5]},
             delta = {'reference': helsinki_mean_occupancy_rate, 'relative': True, 'position' : "top"}
@@ -904,7 +903,6 @@ def init_callbacks(dash_app):
             return privacy_notice(section_title, neighborhood)
 
         # mean values
-        one_person_mean = datum['One-person households, 2019 (TE)'].astype(int).mean()
         young_single_mean = datum['Young single persons, 2019 (TE)'].astype(int).mean()
         young_couples_no_children_mean = datum['Young couples without children, 2019 (TE)'].astype(int).mean()
         households_with_children_mean = datum['Households with children, 2019 (TE)'].astype(int).mean()
@@ -1068,8 +1066,8 @@ def init_callbacks(dash_app):
         income_indicators.add_trace(go.Indicator(
             mode = "number",
             value = int(mean_income),
-            number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Average Household Income<br><span style='font-size:0.8em;color:gray'>Average Household income in selected postal area</span><br>"},
+            number = {'prefix': "€", "font":{"size":40}},
+            title = {"text": "Avg.Household Income<br><span style='font-size:0.8em;color:gray'>Average Household income in postal area.</span><br>"},
             domain = {'x': [0, 0.5], 'y': [.5, 1]},
             )
         )
@@ -1077,8 +1075,8 @@ def init_callbacks(dash_app):
         income_indicators.add_trace(go.Indicator(
             mode = "number",
             value = int(median_income),
-            number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Median Household Income<br><span style='font-size:0.8em;color:gray'>Average Household income in Helsinki metropolitan area</span><br>"},
+            number = {'prefix': "€", "font":{"size":40}},
+            title = {"text": "Median Household Income<br><span style='font-size:0.8em;color:gray'>Median Household income in Helsinki</span><br>"},
             domain = {'x': [0, 0.5], 'y': [0, .5]}
             )
         )
@@ -1086,8 +1084,8 @@ def init_callbacks(dash_app):
         income_indicators.add_trace(go.Indicator(
             mode = "number",
             value = int(mean_income_helsinki),
-            number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Average Household Income<br><span style='font-size:0.8em;color:gray'>Median Household income in selected postal area</span><br>"},
+            number = {'prefix': "€", "font":{"size":40}},
+            title = {"text": "Avg. Household Income in Helsinki<br><span style='font-size:0.8em;color:gray'>Average for whole Helsinki</span><br>"},
             domain = {'x': [0.5, 1], 'y': [0.5, 1]}
             )
         )
@@ -1095,8 +1093,8 @@ def init_callbacks(dash_app):
         income_indicators.add_trace(go.Indicator(
             mode = "number",
             value = int(median_income_helsinki),
-            number = {'prefix': "€", "font":{"size":50}},
-            title = {"text": "Median Household Income<br><span style='font-size:0.8em;color:gray'>Median Household income in Helsinki metropolitan area</span><br>"},
+            number = {'prefix': "€", "font":{"size":40}},
+            title = {"text": "Median Household Income in Helsinki<br><span style='font-size:0.8em;color:gray'>Median Household income in Helsinki</span><br>"},
             domain = {'x': [0.5, 1], 'y': [0, .5]}
             )
         )
@@ -1270,7 +1268,7 @@ def init_callbacks(dash_app):
         rent_indicators.add_trace(go.Indicator(
             mode = "number",
             value = price_per_square,
-            number = {'prefix': "€", "font":{"size":50}},
+            number = {'prefix': "€", "font":{"size":40}},
             title = {"text": f"Rent per m² in {neighborhood}<br><span style='font-size:0.8em;color:gray'>Average monthly rent by square meter</span><br>"},
             domain = {'x': [0, 0.5], 'y': [0.5, 1]}
             )
@@ -1279,7 +1277,7 @@ def init_callbacks(dash_app):
         rent_indicators.add_trace(go.Indicator(
             mode = "number",
             value = hels_avg_price_per_square,
-            number = {'prefix': "€", "font":{"size":50}},
+            number = {'prefix': "€", "font":{"size":40}},
             title = {"text": "Average Rent in Helsinki<br><span style='font-size:0.8em;color:gray'>Average monthly rent by square meter for Helsinki </span><br>"},
             domain = {'x': [0.5, 1], 'y': [0.5, 1]},
             )
@@ -1288,16 +1286,16 @@ def init_callbacks(dash_app):
         rent_indicators.add_trace(go.Indicator(
             mode = "number",
             value = hels_avg_re_area,
-            number = {'suffix': " m²", "font":{"size":50}},
-            title = {"text": "Average Area in Helsinki<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
+            number = {'suffix': " m²", "font":{"size":40}},
+            title = {"text": "Average Area in Helsinki<br><span style='font-size:0.8em;color:gray'>All apartments average.</span><br>"},
             domain = {'x': [0.5, 1], 'y': [0, .5]},
             )
         )
         rent_indicators.add_trace(go.Indicator(
             mode = "number",
             value = average_area,
-            number = {'suffix': " m²", "font":{"size":50}},
-            title = {"text": f"Average area in {neighborhood}<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
+            number = {'suffix': " m²", "font":{"size":40}},
+            title = {"text": f"Average area in {neighborhood}<br><span style='font-size:0.8em;color:gray'>All apartments average.</span><br>"},
             domain = {'x': [0, 0.5], 'y': [0, 0.5]},
             )
         )
@@ -1403,7 +1401,7 @@ def init_callbacks(dash_app):
             mode = "number",
             value = hels_avg_re_area,
             number = {'suffix': " m²", "font":{"size":40}},
-            title = {"text": "Average Area in Helsinki<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
+            title = {"text": "Average Area in Helsinki<br><span style='font-size:0.8em;color:gray'>All apartments average.</span><br>"},
             domain = {'x': [0.5, 1], 'y': [0, .5]},
             )
         )
@@ -1412,7 +1410,7 @@ def init_callbacks(dash_app):
             mode = "number",
             value = average_area,
             number = {'suffix': " m²", "font":{"size":40}},
-            title = {"text": f"Average area in {neighborhood}<br><span style='font-size:0.8em;color:gray'>Compared to Median income in Helsinki </span><br>"},
+            title = {"text": f"Average area in {neighborhood}<br><span style='font-size:0.8em;color:gray'>All apartments average.</span><br>"},
             domain = {'x': [0, 0.5], 'y': [0, 0.5]},
             )
         )
