@@ -49,7 +49,7 @@ class BasicTests(unittest.TestCase):
         """
         Check if 404 page responds with status code 404.
         """
-        response = self.app.get('/404', follow_redirects=True)
+        response = self.app.get('/random_string', follow_redirects=True)
         self.assertEqual(response.status_code, 404)
     
 if __name__ == "__main__":
