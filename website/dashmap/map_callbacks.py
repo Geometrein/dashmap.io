@@ -1076,7 +1076,7 @@ def init_callbacks(dash_app):
             mode = "number",
             value = int(median_income),
             number = {'prefix': "€", "font":{"size":40}},
-            title = {"text": "Median Household Income<br><span style='font-size:0.8em;color:gray'>Median Household income in Helsinki</span><br>"},
+            title = {"text": "Median Household Income<br><span style='font-size:0.8em;color:gray'>Median Household income.</span><br>"},
             domain = {'x': [0, 0.5], 'y': [0, .5]}
             )
         )
