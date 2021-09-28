@@ -8,14 +8,6 @@ DashMap is an open source web platform that gathers, analyses and visualizes urb
 ### **Mission**
 **Open data should benefit everyone regardless of their background!** However, open data is often provided in JSON format and accessed through convoluted API requests. This is great for machines but looking at this data will make your eyes bleed. DashMap handles the data for you allowing you to focus on the insights!
 
-# **Sponsor**
-You can become a sponsor by joining this Patreon campaign. 
-
-[![Patreon](https://img.shields.io/badge/Sponsor-on_Patreon-0088CC?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/geometrein)
-
-#### **Why Patreon?**
-Finnish legislation does not allow individuals to accept donations from general public. Therefore, the only way for you to support Dashmap is to sign up to some exclusive content on Patreon. You can contribute as much as you want and all the contributions will go directly to maintain Dashmap. In return you will get access to monthly data visualizations of Helsinki Metropolitan area.
-
 # **Technical Overview**
 ### **What's its DashMap made of?**
  DashMap is an isolated Plot.ly.Dash app wrapped in a parent Flask app. This allows to utilize the highly customizable Flask app to serve the Plotly dashboards without paying a hefty fee for Dash Enterprise license. You basically get the best of both worlds. The ease of creating dashboards with Plotly and the rich features of Flask(Flask-Login, Flask-Admin, Flask-Assets). This structure also allows to modify, style and develop the apps separately!
@@ -35,9 +27,19 @@ Main data sources used are:
 
 [![Wiki](https://img.shields.io/badge/Dashmap-WIKI-0088CC?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Geometrein/dashmap.io/wiki)
 
+
+# **Sponsor**
+You can become a sponsor by joining this Patreon campaign. 
+
+[![Patreon](https://img.shields.io/badge/Sponsor-on_Patreon-0088CC?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/geometrein)
+
+#### **Why Patreon?**
+Finnish legislation does not allow individuals to accept donations from general public. Therefore, the only way for you to support Dashmap is to sign up to some exclusive content on Patreon. You can contribute as much as you want and all the contributions will go directly to maintain Dashmap. In return you will get access to monthly data visualizations of Helsinki Metropolitan area.
+
 # **Other Resources**
 Articles, News reports and additional resources.
 
 ### **More**
-[![Medium](https://img.shields.io/badge/Medium-Article-0088CC?style=for-the-badge&logo=medium&logoColor=white)]()
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Article-0088CC?style=for-the-badge&logo=linkedin&logoColor=white)]()
+[![Medium](https://img.shields.io/badge/Medium-Article-0088CC?style=for-the-badge&logo=medium&logoColor=white)](https://geometrein.medium.com/cities-maps-dashboards-792f247f8117)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Article-0088CC?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/pulse/dashmap-spatialized-intelligence-tigran-khachatryan/)
+

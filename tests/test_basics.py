@@ -44,13 +44,6 @@ class BasicTests(unittest.TestCase):
         """
         response = self.app.get('/support', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
-    
-    def test_support_page(self):
-        """
-        Check if 404 page responds with status code 404.
-        """
-        response = self.app.get('/random_string', follow_redirects=True)
-        self.assertEqual(response.status_code, 404)
-    
+        
 if __name__ == "__main__":
     unittest.main()
