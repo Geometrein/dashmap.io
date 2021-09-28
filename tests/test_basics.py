@@ -47,10 +47,10 @@ class BasicTests(unittest.TestCase):
     
     def test_support_page(self):
         """
-        Check if 404 page responds with status code 200.
+        Check if 404 page responds with status code 404.
         """
         response = self.app.get('/404', follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
     
 if __name__ == "__main__":
     unittest.main()
