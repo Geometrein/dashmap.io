@@ -452,10 +452,58 @@ def init_services_accordion():
     Returns: 
         services_accordion (object): dash html.Div that contains individual accordions
     """
+    accord_industries = dbc.Card(
+        [
+            dbc.CardHeader(
+                html.H2(
+                        dbc.Button(
+                            "Industry",
+                            color="#303030",
+                            id=f"tab-3-group-1-toggle",
+                            n_clicks=0,
+                        )
+                )
+            ),
+            dbc.Collapse(
+                dbc.CardBody(
+                    id='id_services_industries',
+                    children=[]
+                ),
+                id=f"tab-3-collapse-1",
+                is_open=False,
+            ),
+        ],
+        color="#1E1E1E"
+    )
+    accord_workplaces = dbc.Card(
+        [
+            dbc.CardHeader(
+                html.H2(
+                        dbc.Button(
+                            "Services",
+                            color="#303030",
+                            id=f"tab-3-group-2-toggle",
+                            n_clicks=0,
+                        )
+                )
+            ),
+            dbc.Collapse(
+                dbc.CardBody(
+                    id='id_services_workplaces',
+                    children=[]
+                ),
+                id=f"tab-3-collapse-2",
+                is_open=False,
+            ),
+        ],
+        color="#1E1E1E"
+    )
 
     services_accordion = html.Div(
         [
-
+            accord_industries,
+            accord_workplaces,
+            
         ],
         className="accordion"
     )
@@ -575,7 +623,6 @@ def tab_real_estate(real_estate_accordion, real_estate_scatter):
                 html.Div(real_estate_scatter),
                 html.Div(real_estate_accordion),
                 html.Hr(),
-                html.P(data_licence),
             ]
         ),
         className="mt-3",
@@ -602,13 +649,9 @@ def tab_services(service_accordion):
                     using resources, skill, ingenuity or experience.
                     """
                 ),
-                html.H5(
-                    """
-                    Comming Soon!
-                    """,
-                    className="card-text"
-                ),
-                html.Div(),
+                html.Div(service_accordion),
+                html.Hr(),
+                html.P(data_licence),
             ]
         ),
         className="mt-3",

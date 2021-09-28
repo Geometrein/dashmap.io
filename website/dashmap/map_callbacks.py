@@ -219,6 +219,37 @@ def init_callbacks(dash_app):
             return  False, False, not is_open4
 
         return  False, False, False
+    
+    # Tab Services Accordion CallBacks
+    @dash_app.callback(
+        [Output(f"tab-3-collapse-{i}", "is_open") for i in range(1, 3)],
+        [Input(f"tab-3-group-{i}-toggle", "n_clicks") for i in range(1, 3)],
+        [State(f"tab-3-collapse-{i}", "is_open") for i in range(1, 3)],
+    )
+    def toggle_accordion(n1, n2, is_open1, is_open2):
+        """
+        Toggle accordion collapse & expand.
+        ---
+        Args: 
+            n1 -> n2 (str): id of the trigger button  
+            is_open1 -> is_open2 (bool): Current state of the accordion. True for Open, False otherwise.
+
+        Returns: 
+            (bool): Boolean values for each accordion tab. True for Open, False otherwise. Default value is False.
+        """
+
+        ctx = dash.callback_context
+        if not ctx.triggered:
+            return False, False
+        else:
+            button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+
+        if button_id == "tab-3-group-1-toggle" and n1:
+            return not is_open1, False
+        elif button_id == "tab-3-group-2-toggle" and n2:
+            return False, not is_open2
+
+        return False, False
 
     # Tab 1 Section 1 Age Distribution CallBack
     @dash_app.callback(
@@ -1535,6 +1566,182 @@ def init_callbacks(dash_app):
                 however due to limited availability of data a precise estimate cannot be made.
                 """
             ),
+        ]
+
+        return children
+    
+    # Tab 3 Section 1 Workplaces Pie chart CallBack
+    @dash_app.callback(
+        Output('id_services_industries', 'children'),
+        Input('choropleth-map', 'clickData'))
+    def display_click_data(clickData):
+        """
+        Generates the graphs for Industries section.
+        ---
+        Args: 
+            clickData (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
+
+        Returns: 
+            children (list): List of html components to be displayed.
+        """
+        section_title = "Industry"
+
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
+
+        # Get df row based on postal number
+        result = datum.loc[postal_code]
+        neighborhood = result['neighborhood']
+
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
+
+        #columns = result.loc[:, 'start_column':'end_column']
+        work_total = result["Workplaces, 2018 (TP)"]
+
+        work_services = result["Services, 2018 (TP)"]
+        work_other = int(result["Primary production, 2018 (TP)"]) + int(result["Processing, 2018 (TP)"])
+
+
+        workplaces_values = [work_other, work_services]
+        workplaces_values = [int(i) for i in workplaces_values]
+
+        workplaces_labels = ["Processing & Production", "Services" ]
+
+        # Create Graph Object
+        workplaces = go.Figure()
+
+        workplaces.add_trace(go.Indicator(
+            mode = "number",
+            value = work_total,
+            title = {"text": f"Total Workplaces<br><span style='font-size:0.8em;color:gray'>Number of Workplaces in the area</span><br>"},
+            )
+        )
+        
+        workplaces.update_layout(
+            paper_bgcolor='#1E1E1E',
+            plot_bgcolor='#1E1E1E',
+            margin={"r":0,"t":0,"l":0,"b":0},
+            autosize=True,
+            font=dict(color="white")
+        )
+
+        # Create pie chart figure
+        workplaces_pie_chart = go.Figure(
+            data=
+            [
+                go.Pie(
+                    labels=workplaces_labels, 
+                    values=workplaces_values, 
+                    hole=0.7
+                )
+            ]
+        )
+
+        workplaces_pie_chart.update_layout(
+            showlegend=True,
+            legend=dict(
+                orientation="h",
+                yanchor="middle",
+                y=-0.1,
+                xanchor="center",
+                x=.5
+            ),
+            font=dict(
+                size=14,
+                color="#fff"
+            ),
+            paper_bgcolor='#1E1E1E', 
+            plot_bgcolor='#1E1E1E', 
+            margin={"r":30,"t":30,"l":30,"b":30}, 
+            autosize=True
+        )
+
+        workplaces_pie_chart.update_traces(
+            hoverinfo='label+percent',
+            marker=dict(colors=colors,
+                line=dict(
+                    color='#1E1E1E',
+                    width=2
+                )
+            )
+        )
+        intro = f"""
+        Most developed countries have service oriented economy and Finland is no exception. 
+        In service oriented economies economic activity is
+        a collaborative process wherein all parties co-create value through reciprocal service provision.
+        Whereas in goods dominated economies tangible products are the primary focus of economic exchange.
+        Services are the primary economic activity in {neighborhood} neighborhood.
+        """
+        processing_production = """
+        Agriculture, forestry and fishing.
+        Processing includes mining, manufacturing, 
+        electricity, gas, steam and air conditioning supply
+        water supply; sewerage, waste management and remediation activities,
+        construction
+        """
+        services = """
+        Services include wholesale and retail trade, transportation and storage,
+        accommodation and food service activities, information and communication,
+        financial and insurance activities, real estate activities,
+        professional, scientific and technical activities,
+        administrative and support service activities,
+        public administration and defence, education,
+        human health and social work activities,
+        arts, entertainment and recreation, other service activities,
+        activities of households as employers,
+        activities of extraterritorial organizations and bodies.
+        """
+        children=[
+            html.H4(section_title),
+            dcc.Graph(id='injected1', figure=workplaces, config={'displayModeBar': False}),
+            html.H5("Economic Structure"),
+            html.P(intro),
+            dcc.Graph(id='injected2', figure=workplaces_pie_chart, config={'displayModeBar': False}),
+            html.Br(),
+            html.H5("Services"),
+            html.P(services),
+            html.Br(),           
+            html.H5("Processing & Production"),
+            html.P(processing_production),
+        ]
+
+        return children
+
+# Tab 3 Section 2 Workplaces Pie chart CallBack
+    @dash_app.callback(
+        Output('id_services_workplaces', 'children'),
+        Input('choropleth-map', 'clickData'))
+    def display_click_data(clickData):
+        """
+        Generates the graphs for Workplaces section.
+        ---
+        Args: 
+            clickData (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
+
+        Returns: 
+            children (list): List of html components to be displayed.
+        """
+        section_title = "Workplaces"
+
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
+
+        # Get df row based on postal number
+        result = datum.loc[postal_code]
+        neighborhood = result['neighborhood']
+
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
+
+        temp = """
+        Comming Soon!
+        """
+        children=[
+            html.H4(section_title),
+            html.P(temp),
         ]
 
         return children
