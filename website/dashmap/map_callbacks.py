@@ -274,14 +274,17 @@ def init_callbacks(dash_app):
         result = datum.loc[postal_code]
         neighborhood = result['neighborhood']
 
-        age_bins = result.tolist()[7:27]
+        index_start = 7
+        index_end = 27
+
+        age_bins = result.tolist()[index_start:index_end]
 
         # Get Helsinki Averages
         mean_age = result['Average age of inhabitants, 2019 (HE)']
         age_bins = [int(i) for i in age_bins]
 
         x = list(range(len(age_bins)))
-        x = result.index.tolist()[7:27]
+        x = result.index.tolist()[index_start:index_end]
         x = [i.split(' ')[0] for i in x]
 
         columns_list = datum.columns[7:27]
@@ -493,11 +496,14 @@ def init_callbacks(dash_app):
         if privacy_check(postal_code):
             return privacy_notice(section_title, neighborhood)
 
-        education_values = result.tolist()[28:34]
+        index_start = 28
+        index_end = 34
+
+        education_values = result.tolist()[index_start:index_end]
         education_values.pop(1) # remove "With Education" column
         education_values = [int(i) for i in education_values]
 
-        education_labels = result.index.tolist()[28:34]
+        education_labels = result.index.tolist()[index_start:index_end]
         education_labels.pop(1)
         education_labels = [i.split(',')[0] for i in education_labels]
 
@@ -1584,7 +1590,7 @@ def init_callbacks(dash_app):
         Returns: 
             children (list): List of html components to be displayed.
         """
-        section_title = "Industry"
+        section_title = "Economic Structure"
 
         # Get the postal code based on clicked area
         postal_code = get_postal_code(clickData)
@@ -1597,9 +1603,6 @@ def init_callbacks(dash_app):
         if privacy_check(postal_code):
             return privacy_notice(section_title, neighborhood)
 
-        #columns = result.loc[:, 'start_column':'end_column']
-        work_total = result["Workplaces, 2018 (TP)"]
-
         work_services = result["Services, 2018 (TP)"]
         work_other = int(result["Primary production, 2018 (TP)"]) + int(result["Processing, 2018 (TP)"])
 
@@ -1608,24 +1611,6 @@ def init_callbacks(dash_app):
         workplaces_values = [int(i) for i in workplaces_values]
 
         workplaces_labels = ["Processing & Production", "Services" ]
-
-        # Create Graph Object
-        workplaces = go.Figure()
-
-        workplaces.add_trace(go.Indicator(
-            mode = "number",
-            value = work_total,
-            title = {"text": f"Total Workplaces<br><span style='font-size:0.8em;color:gray'>Number of Workplaces in the area</span><br>"},
-            )
-        )
-        
-        workplaces.update_layout(
-            paper_bgcolor='#1E1E1E',
-            plot_bgcolor='#1E1E1E',
-            margin={"r":0,"t":0,"l":0,"b":0},
-            autosize=True,
-            font=dict(color="white")
-        )
 
         # Create pie chart figure
         workplaces_pie_chart = go.Figure(
@@ -1695,8 +1680,6 @@ def init_callbacks(dash_app):
         """
         children=[
             html.H4(section_title),
-            dcc.Graph(id='injected1', figure=workplaces, config={'displayModeBar': False}),
-            html.H5("Economic Structure"),
             html.P(intro),
             dcc.Graph(id='injected2', figure=workplaces_pie_chart, config={'displayModeBar': False}),
             html.Br(),
@@ -1711,7 +1694,7 @@ def init_callbacks(dash_app):
 
 # Tab 3 Section 2 Workplaces Pie chart CallBack
     @dash_app.callback(
-        Output('id_services_workplaces', 'children'),
+        Output('id_workplaces', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(clickData):
         """
@@ -1736,12 +1719,91 @@ def init_callbacks(dash_app):
         if privacy_check(postal_code):
             return privacy_notice(section_title, neighborhood)
 
-        temp = """
-        Comming Soon!
+        work_total = result["Workplaces, 2018 (TP)"]
+
+        # Create Graph Object
+        workplaces = go.Figure()
+
+        workplaces.add_trace(go.Indicator(
+            mode = "number",
+            value = work_total,
+            title = {"text": f"Total Workplaces<br><span style='font-size:0.8em;color:gray'>Number of Workplaces in the area</span><br>"},
+            )
+        )
+        
+        workplaces.update_layout(
+            paper_bgcolor='#1E1E1E',
+            plot_bgcolor='#1E1E1E',
+            margin={"r":0,"t":0,"l":0,"b":0},
+            autosize=True,
+            font=dict(color="white")
+        )
+        # Set column indeses
+        index_start = 77
+        index_end = 99
+
+        # Filter the dataframe based on column indeses
+        industry_bins = result.tolist()[index_start:index_end]
+        industry_bins = [int(i) for i in industry_bins]
+
+        # Create Histugram Bins
+        x = list(range(len(industry_bins)))
+        x = result.index.tolist()[index_start:index_end]
+        x = [i.split(' ')[0] for i in x]
+
+        # Create pie chart figure object
+        workplace_hist = go.Figure(
+            data=
+            [
+                go.Bar(
+                    name=neighborhood,
+                    x=x, 
+                    y=industry_bins,
+                    marker_color='#4182C8',
+                )
+                
+            ]
+        )
+
+        workplace_hist.update_layout(
+            font=dict(
+                size=14,
+                color="#fff"
+            ),
+            legend=dict(
+                orientation="v",
+                yanchor="bottom",
+                y=-0.25,
+                xanchor="center",
+                x= 0.5,
+            ),
+            paper_bgcolor='#1E1E1E', 
+            plot_bgcolor='#1E1E1E', 
+            margin={"r":30,"t":30,"l":30,"b":30}, 
+            autosize=True
+        )
+        workplace_hist.update_traces(
+            hoverinfo='text',
+
+        )
+
+        workplace_legend = result.index.tolist()[index_start:index_end]
+        workplace_legend = [i.replace('2018 (TP)', '') for i in workplace_legend]
+        workplace_legend = [i.split(';')[0] for i in workplace_legend]
+
+        text = f"""
+        The graph below illustrates the number of workplaces in the {neighborhood} area by the industry sector.
         """
+        by_industry = "Workplaces by Industry"
+
         children=[
             html.H4(section_title),
-            html.P(temp),
+            dcc.Graph(id='injected1', figure=workplaces, config={'displayModeBar': False}),
+            html.H4(by_industry),
+            html.Hr(),
+            html.P(text),
+            dcc.Graph(id='injected2', figure=workplace_hist, config={'displayModeBar': False}),
+            html.Ul(id='legend-list', children=[html.Li(i) for i in workplace_legend])
         ]
 
         return children

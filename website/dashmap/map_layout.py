@@ -480,7 +480,7 @@ def init_services_accordion():
             dbc.CardHeader(
                 html.H2(
                         dbc.Button(
-                            "Services",
+                            "Workplaces",
                             color="#303030",
                             id=f"tab-3-group-2-toggle",
                             n_clicks=0,
@@ -489,7 +489,7 @@ def init_services_accordion():
             ),
             dbc.Collapse(
                 dbc.CardBody(
-                    id='id_services_workplaces',
+                    id='id_workplaces',
                     children=[]
                 ),
                 id=f"tab-3-collapse-2",
