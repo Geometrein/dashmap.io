@@ -35,7 +35,7 @@ def init_navbar():
                             dbc.ModalBody(
                                 children=[
                                     html.Img(
-                                        src='/assets/help.gif', 
+                                        src='assets/help.gif', 
                                         style = {
                                             'display': 'block',
                                             'margin-left': 'auto',
