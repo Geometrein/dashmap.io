@@ -31,7 +31,7 @@ Main data sources used are:
 # **Sponsor**
 You can become a sponsor by joining this Patreon campaign. 
 
-[![Patreon](https://img.shields.io/badge/Sponsor-on_Patreon-0088CC?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/geometrein)
+[![Patreon](https://img.shields.io/badge/Sponsor-on_Patreon-0088CC?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/geometrein_)
 
 #### **Why Patreon?**
 Finnish legislation does not allow individuals to accept donations from general public. Therefore, the only way for you to support Dashmap is to sign up to some exclusive content on Patreon. You can contribute as much as you want and all the contributions will go directly to maintain Dashmap. In return you will get access to monthly data visualizations of Helsinki Metropolitan area.
