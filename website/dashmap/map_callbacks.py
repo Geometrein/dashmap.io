@@ -274,6 +274,10 @@ def init_callbacks(dash_app):
         result = datum.loc[postal_code]
         neighborhood = result['neighborhood']
 
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
+
         index_start = 7
         index_end = 27
 
@@ -349,25 +353,12 @@ def init_callbacks(dash_app):
             If the bins on the left side are higher it means that the population is young and growing. 
             """
 
-        # list of postcodes where the data should be private
-        private_list = ['00230', '02290', '01770']
-        if postal_code not in private_list:
-            children=[
-                html.H5(section_title),
-                dcc.Graph(id='injected', figure=age_dist_hist, config={'displayModeBar': False}),
-                html.P(text)
-            ]
-        else:
-            no_data_text=f"""
-            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield statistically significant insights.
-            For these reason the data available for {neighborhood} neighborhood will not be displayed.
-            """
-            children=[
-                html.H5(section_title),
-                html.P(no_data_text),
-                html.P("Check out the other postal areas!")
-            ]
+        children=[
+            html.H5(section_title),
+            dcc.Graph(id='injected', figure=age_dist_hist, config={'displayModeBar': False}),
+            html.P(text)
+        ]
+
         return children
 
     #  Tab 1 Section 1 Gender Distribution CallBack
@@ -576,6 +567,7 @@ def init_callbacks(dash_app):
             children (list): List of html components to be displayed.
         """
         section_title = "Individual Income Levels"
+        section_description = "Disposable income is the income remaining after deduction of taxes and social security charges, available to be spent"
 
         # Get the postal code based on clicked area
         postal_code = get_postal_code(clickData)
@@ -703,17 +695,10 @@ def init_callbacks(dash_app):
         The average income of an individual in {neighborhood} is {mean_income}€ per year.
         While the median income is {median_income}€ per year.
         """
-        no_data_text=f"""
-            The statistical data about postal areas where less than 30 citizens live is private due to possible privacy violations.
-            Additionally the data representing such a small population will not yield statistically significant insights.
-            For these reason the data available for {neighborhood} neighborhood will not be displayed.
-            """
-
-
-
 
         children=[
             html.H5(section_title),
+            html.P(section_description),
             dcc.Graph(id='injected-indicators', figure=income_indicators, config={'displayModeBar': False},),
             html.P(text_2),
             dcc.Graph(id='injected', figure=income_pie_chart, config={'displayModeBar': False},),
@@ -1157,7 +1142,8 @@ def init_callbacks(dash_app):
         children=[
             html.H5(section_title),
             html.P("""
-            Household income is generally defined as the combined gross income of all members of a household.
+            Disposable household income is generally defined as the combined monetary income remaining after deduction of taxes and social security charges.
+            Income of all members of a household is taken into account.
             Note that individuals do not have to be related in any way to be considered members of the same household.
             Household income is an important risk measure used by lenders for underwriting loans and is a useful economic indicator of an area's standard of living.
             """),
@@ -1692,7 +1678,7 @@ def init_callbacks(dash_app):
 
         return children
 
-# Tab 3 Section 2 Workplaces Pie chart CallBack
+    # Tab 3 Section 2 Workplaces Pie chart CallBack
     @dash_app.callback(
         Output('id_workplaces', 'children'),
         Input('choropleth-map', 'clickData'))
