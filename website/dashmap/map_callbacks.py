@@ -1331,6 +1331,43 @@ def init_callbacks(dash_app):
                 font=dict(color="white")
             )
 
+        # Area VS Rent Scatter Plot
+        rental_df = real_estate[real_estate['deal_type']=='rent']
+        rental_df = rental_df[rental_df['price']<5000]
+        rental_df = rental_df[rental_df['area']<310]
+
+        y = rental_df['price']
+        x = rental_df['area']
+
+        scatter_chart_rent = go.Figure(
+            data=go.Scattergl(
+                x = x,
+                y = y,
+                mode='markers',
+                hovertemplate =
+                '<b>Price</b>: €%{y:.2f}'+
+                '<br><b>Area</b>: %{x}m²<br>',
+                marker=dict(
+                    size=8,
+                    color=rental_df['rooms'],
+                    colorscale='OrYel', # one of plotly colorscales
+                    showscale= True,
+                ),
+            )
+        )
+
+        scatter_chart_rent.update_layout(
+            showlegend=False,
+            paper_bgcolor='#1E1E1E',
+            plot_bgcolor='#1E1E1E',
+            margin={"r":50,"t":50,"l":50,"b":50},
+            autosize=True,
+        )
+
+        scatter_chart_rent.update_traces(marker=dict(line=dict(color='#1E1E1E', width=3)))
+        scatter_chart_rent.update_xaxes(color='#fff', gridcolor='#D3D3D3')
+        scatter_chart_rent.update_yaxes(color='#fff', gridcolor='#D3D3D3')
+
         children=[
             html.H5(section_title),
             html.P(
@@ -1353,6 +1390,13 @@ def init_callbacks(dash_app):
                 If there is not enough data on the neighborhood all values will be 0.
                 Average square meters of the apartment can be used to compare the average size of the
                 apartments in {neighborhood} to the average size of apartment is Helsinki metropolitan region.
+                """
+            ),
+            dcc.Graph(id='injected2', figure=scatter_chart_rent, config={'displayModeBar': False}),
+            html.P(
+                """
+                Scatterplots above illustrates the relationships between apartment square meters and monthly rent in Helsinki Metropolitan area.
+                The graph helps us understand how the change in apartment square meters affects the monthly rent.
                 """
             ),
         ]
@@ -1446,6 +1490,41 @@ def init_callbacks(dash_app):
             font=dict(color="white")
             )
         
+        selling_df = real_estate[real_estate['deal_type']=='sell']
+        selling_df = selling_df[selling_df['price']<2000000]
+        selling_df = selling_df[selling_df['area']<310]
+
+        x = selling_df['area']
+        y = selling_df['price']
+
+        scatter_chart_sell = go.Figure(
+            data=go.Scattergl(
+                x = x,
+                y = y,
+                mode='markers',
+                hovertemplate =
+                '<b>Price</b>: €%{y:.2f}'+
+                '<br><b>Area</b>: %{x}m²<br>',
+                marker=dict(
+                    size=8,
+                    color=selling_df['rooms'],
+                    colorscale='tealgrn',
+                    showscale= True,
+                )
+            )
+        )
+
+        scatter_chart_sell.update_layout(
+            showlegend=False,
+            paper_bgcolor='#1E1E1E',
+            plot_bgcolor='#1E1E1E',
+            margin={"r":50,"t":50,"l":50,"b":50},
+            autosize=True
+        )
+        scatter_chart_sell.update_traces(marker=dict(line=dict(color='#1E1E1E', width=3)))
+        scatter_chart_sell.update_xaxes(color='#fff', gridcolor='#D3D3D3')
+        scatter_chart_sell.update_yaxes(color='#fff', gridcolor='#D3D3D3')
+        
         children=[
             html.H5("Own Apartments"),
             html.P(
@@ -1473,6 +1552,16 @@ def init_callbacks(dash_app):
                 The amount of shares per apartment is proportional to the size of the apartment.
                 """
             ),
+            dcc.Graph(id='injected2',
+                figure=scatter_chart_sell,
+                config={'displayModeBar': False}
+            ),
+            html.P(
+                """
+                Scatterplots above illustrates the relationships between apartment square meters and apartment price in Helsinki Metropolitan area.
+                The graph helps us understand how the change in apartment square meters affects the buying/selling price of the apartments.
+                """
+            ),            
         ]
 
         return children

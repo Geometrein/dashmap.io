@@ -590,7 +590,7 @@ def tab_census(census_individuals_accordion, census_households_accordion):
     )
     return census_tab_content
 
-def tab_real_estate(real_estate_accordion, real_estate_scatter):
+def tab_real_estate(real_estate_accordion):
     """
     Initialize the real estate tab.
     Args: 
@@ -620,7 +620,6 @@ def tab_real_estate(real_estate_accordion, real_estate_scatter):
                     """,
                     className="card-text"
                 ),
-                html.Div(real_estate_scatter),
                 html.Div(real_estate_accordion),
                 html.Hr(),
             ]
@@ -776,7 +775,6 @@ def main():
         layout (object): Main layout of the app
     """
     datum, real_estate  = load_datum()
-    real_estate_scatter = real_estate_scatter_plots(real_estate)
     choropleth = init_choropleth(datum)
 
     navbar = init_navbar()
@@ -786,7 +784,7 @@ def main():
     census_tab_content = tab_census(census_individuals_accordion, census_households_accordion)
 
     real_estate_accordion = init_real_estate_accordion()
-    real_estate_tab_content = tab_real_estate(real_estate_accordion, real_estate_scatter)
+    real_estate_tab_content = tab_real_estate(real_estate_accordion)
 
     service_accordion = init_services_accordion()
     services_tab_content = tab_services(service_accordion)
