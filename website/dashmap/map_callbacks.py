@@ -1406,7 +1406,7 @@ def init_callbacks(dash_app):
             mode = "number",
             value = price_per_square,
             number = {'prefix': "€", "font":{"size":40}},
-            title = {"text": f"Rent per m² in {neighborhood}<br><span style='font-size:0.8em;color:gray'>Average monthly rent by square meter</span><br>"},
+            title = {"text": f"Price per m² in {neighborhood}<br><span style='font-size:0.8em;color:gray'>Average price per square meter</span><br>"},
             domain = {'x': [0, 0.5], 'y': [0.5, 1]}
             )
         )
@@ -1415,7 +1415,7 @@ def init_callbacks(dash_app):
             mode = "number",
             value = hels_avg_price_per_square,
             number = {'prefix': "€", "font":{"size":40}},
-            title = {"text": "Average Rent in Helsinki<br><span style='font-size:0.8em;color:gray'>Average monthly rent by square meter for Helsinki </span><br>"},
+            title = {"text": "Average price in Helsinki<br><span style='font-size:0.8em;color:gray'>Average price per square meter for Helsinki </span><br>"},
             domain = {'x': [0.5, 1], 'y': [0.5, 1]},
             )
         )
@@ -1447,14 +1447,12 @@ def init_callbacks(dash_app):
             )
         
         children=[
-            html.H5("Rental Apartments"),
+            html.H5("Own Apartments"),
             html.P(
                 """
-                Residential rental property refers to homes that are purchased by an 
-                investor and inhabited by tenants on a lease or other type of rental agreement. 
-                Residential property is property zoned specifically for living or dwelling for 
-                individuals or households; it may include standalone single-family dwellings to large, 
-                multi-unit apartment buildings.
+                Own apartment refers to homes that are inhabited by the owners. Residential property is property zoned
+                specifically for living or dwelling for individuals or households; it may include standalone 
+                single-family dwellings to large, multi-unit apartment buildings.
                 """
             ),
             dcc.Graph(id='injected',
@@ -1464,13 +1462,15 @@ def init_callbacks(dash_app):
             html.P(
                 f"""
                 Indicators above demonstrate the Average buying price per square meter in {neighborhood} neighborhood
-                compared to average monthly rent per square meter in Helsinki metropolitan region. 
+                compared to the average price per square meter in Helsinki metropolitan region. 
                 Average price per square meter in {neighborhood} is {price_per_square:.2f}€. 
                 This means that the average price of a 30m² apartment will be approximately {(price_per_square * 35):.2f}€, 
                 60m² apartment will cost {(price_per_square * 65):.2f}€ and 90m² apartment will cost {(price_per_square * 95):.2f}€.
                 If there is not enough data on the neighborhood all values will be 0.
                 Average square meters of the apartment can be used to compare the average size of the
-                apartments in {neighborhood} to the average size of apartment is Helsinki metropolitan region.
+                apartments in {neighborhood} to the average size of apartment is Helsinki metropolitan region. Note that In Finland,
+                when you "buy an apartment" what you are actually buying are shares in a housing company (asunto-osakeyhtiö).
+                The amount of shares per apartment is proportional to the size of the apartment.
                 """
             ),
         ]
@@ -1555,7 +1555,7 @@ def init_callbacks(dash_app):
             html.P(
                 """
                 *This is an experimental metric. The actual number of saunas is dramatically higher!
-                however due to limited availability of data a precise estimate cannot be made.
+                However, due to limited availability of data a precise estimate cannot be made.
                 """
             ),
         ]

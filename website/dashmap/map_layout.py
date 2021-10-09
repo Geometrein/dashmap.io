@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 # Plotly Graph Objects
 from .map_graphs import *
 
-data_licence = """Data Source: PAAVO, Statistics Finland, Creative Commons Attribution 4.0 Internationa"""
+data_licence = """Data Source: PAAVO, Statistics Finland, Creative Commons Attribution 4.0 International"""
 
 def init_navbar():
     """
@@ -607,7 +607,7 @@ def tab_real_estate(real_estate_accordion, real_estate_scatter):
                 html.P(
                     """
                     Real estate is a type of real property consisting of land along with any permanent improvements attached to the land.
-                    The included resources can be mane made or natural. They can include water, trees, crops minerals and built structures. 
+                    The included resources can be man made or natural. They can include water, trees, crops minerals and built structures. 
                     Often the value of real estate is one of the key indicators of an economy’s health.
                     """,
                     className="card-text"
