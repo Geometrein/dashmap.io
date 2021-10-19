@@ -567,7 +567,7 @@ def init_callbacks(dash_app):
             children (list): List of html components to be displayed.
         """
         section_title = "Individual Income Levels"
-        section_description = "Disposable income is the income remaining after deduction of taxes and social security charges, available to be spent"
+        section_description = "Disposable income is the income remaining after deduction of taxes and social security charges."
 
         # Get the postal code based on clicked area
         postal_code = get_postal_code(clickData)
