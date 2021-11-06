@@ -18,12 +18,14 @@ Main data sources used are:
 
 [![Paavo](https://img.shields.io/badge/Paavo-Statistics_Finland-0088CC?style=for-the-badge&logo=&logoColor=white)](https://www.stat.fi/tup/paavo/index_en.html)
 
+[![Grid_Database](https://img.shields.io/badge/Grid_Database-Statistics_Finland-0088CC?style=for-the-badge&logo=&logoColor=white)](https://stat.fi/tup/ruututietokanta/index_en.html)
+
 [![Helsinki Region Inforshare](https://img.shields.io/badge/HRI-Helsinki_Region_Inforshare-0088CC?style=for-the-badge&logo=&logoColor=white)](https://hri.fi/en_gb/)
 
 [![OSM](https://img.shields.io/badge/OSM-Open_Street_Map-0088CC?style=for-the-badge&logo=openstreetmap&logoColor=white)](https://www.openstreetmap.org/#map=6/65.453/26.069)
 
 ### **Dashmap Wiki**
-### For more technical details and contributing guidelines check the wiki page:
+### For more technical details and contributing guidelines check the wiki page: 
 
 [![Wiki](https://img.shields.io/badge/Dashmap-WIKI-0088CC?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Geometrein/dashmap.io/wiki)
 
@@ -36,8 +38,8 @@ You can become a sponsor by joining this Patreon campaign.
 #### **Why Patreon?**
 Finnish legislation does not allow individuals to accept donations from general public. Therefore, the only way for you to support Dashmap is to sign up to some exclusive content on Patreon. You can contribute as much as you want and all the contributions will go directly to maintain Dashmap. In return you will get access to monthly data visualizations of Helsinki Metropolitan area.
 
-# **Other Resources**
-Articles, News reports and additional resources.
+# **Other Resources** 
+Articles, News reports and additional resources. 
 
 ### **More**
 [![Medium](https://img.shields.io/badge/Medium-Article-0088CC?style=for-the-badge&logo=medium&logoColor=white)](https://geometrein.medium.com/cities-maps-dashboards-792f247f8117)
