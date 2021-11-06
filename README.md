@@ -18,6 +18,8 @@ Main data sources used are:
 
 [![Paavo](https://img.shields.io/badge/Paavo-Statistics_Finland-0088CC?style=for-the-badge&logo=&logoColor=white)](https://www.stat.fi/tup/paavo/index_en.html)
 
+[![Grid_Database](https://img.shields.io/badge/Grid_Database-Statistics_Finland-0088CC?style=for-the-badge&logo=&logoColor=white)](https://stat.fi/tup/ruututietokanta/index_en.html)
+
 [![Helsinki Region Inforshare](https://img.shields.io/badge/HRI-Helsinki_Region_Inforshare-0088CC?style=for-the-badge&logo=&logoColor=white)](https://hri.fi/en_gb/)
 
 [![OSM](https://img.shields.io/badge/OSM-Open_Street_Map-0088CC?style=for-the-badge&logo=openstreetmap&logoColor=white)](https://www.openstreetmap.org/#map=6/65.453/26.069)
