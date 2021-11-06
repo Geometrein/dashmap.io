@@ -39,9 +39,11 @@ def load_datum():
     real_estate = pd.read_csv('website/data/real-estate/real-estate.csv')
     real_estate.set_index('postcode', inplace=True)
 
-    return datum, real_estate
+    bus_stops = gpd.read_file(open("website/data/mobility/HSL_stations.geojson"), crs="WGS84")
 
-def init_choropleth(datum):
+    return datum, real_estate, bus_stops
+
+def init_choropleth(datum, bus_stops):
     """
     Initialize the main choropleth map.
     ---
@@ -211,6 +213,21 @@ def init_choropleth(datum):
             hovertext = datum.index,
             text = datum['neighborhood'],
             hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Avg. Household size:</b> %{z}<br><extra></extra>"
+        )
+    )
+
+    # Adding Mobility Nodes
+    choropleth.add_trace(
+        go.Scattermapbox(
+            name="Mobility Network",
+            lat = bus_stops['geometry'].y,
+            lon = bus_stops['geometry'].x,
+            hovertext = bus_stops['NAMN1'],
+            marker = go.scattermapbox.Marker(color=colors[1],size=5),
+            marker_opacity=.6,
+            visible='legendonly',
+            text = bus_stops['NAMN1'],
+            hovertemplate = "<b>Name:</b> %{text}<br><extra></extra>"
         )
     )
 

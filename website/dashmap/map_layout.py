@@ -17,61 +17,61 @@ def init_navbar():
         navbar (object): dash bootstrap component NavbarSimple()
     """
     navbar = dbc.NavbarSimple(
-                children=[
-                    dbc.NavItem(dbc.NavLink("Home", href="/", external_link=True)),
-                    dbc.NavItem(dbc.NavLink("Support", href="/support", external_link=True)),
-                    
-                    dbc.Button(
-                        "Help", 
-                        id="help-open-centered",
-                        color="link",
-                        size="sm",
-                        className="mr-1",
-                        outline=True,
+        children=[
+            dbc.NavItem(dbc.NavLink("Home", href="/", external_link=True)),
+            dbc.NavItem(dbc.NavLink("Support", href="/support", external_link=True)),
+            
+            dbc.Button(
+                "Help", 
+                id="help-open-centered",
+                color="link",
+                size="sm",
+                className="mr-1",
+                outline=True,
+            ),
+            dbc.Modal(
+                [
+                    dbc.ModalHeader("🎊 Welcome to Dashmap! 🎊 "),
+                    dbc.ModalBody(
+                        children=[
+                            html.Img(
+                                src='assets/help.gif', 
+                                style = {
+                                    'display': 'block',
+                                    'margin-left': 'auto',
+                                    'margin-right': 'auto',
+                                    'width': '100%'
+                                }
+                            ),
+                            html.P(
+                                """
+                                Use the map to filter the data by postal area.
+                                You can select a postal area by clicking on it on the map. Double click will select all postal areas.
+                                The data displayed on the map can be filtered too. Click on the legend of the map to show/Hide different layers.
+                                """
+                            )
+                        ]
                     ),
-                    dbc.Modal(
-                        [
-                            dbc.ModalHeader("🎊 Welcome to Dashmap! 🎊 "),
-                            dbc.ModalBody(
-                                children=[
-                                    html.Img(
-                                        src='assets/help.gif', 
-                                        style = {
-                                            'display': 'block',
-                                            'margin-left': 'auto',
-                                            'margin-right': 'auto',
-                                            'width': '100%'
-                                        }
-                                    ),
-                                    html.P(
-                                        """
-                                        Use the map to filter the data by postal area.
-                                        You can select a postal area by clicking on it on the map. Double click will select all postal areas.
-                                        The data displayed on the map can be filtered too. Click on the legend of the map to show/Hide different layers.
-                                        """
-                                    )
-                                ]
-                            ),
-                            dbc.ModalFooter(
-                                dbc.Button(
-                                    "Got it!",
-                                    id="help-close-centered",
-                                    className="ml-auto",
-                                    n_clicks=0,
-                                )
-                            ),
-                        ],
-                        id="help-modal-centered",
-                        size="lg",
-                        centered=True,
-                        is_open=False,
-                    ), 
+                    dbc.ModalFooter(
+                        dbc.Button(
+                            "Got it!",
+                            id="help-close-centered",
+                            className="ml-auto",
+                            n_clicks=0,
+                        )
+                    ),
                 ],
-                brand="Dashmap",
-                brand_href="/",
-                color="#1a1c22",
-                dark=True,
-                fluid =True
+                id="help-modal-centered",
+                size="lg",
+                centered=True,
+                is_open=False,
+            ), 
+        ],
+        brand="Dashmap",
+        brand_href="/",
+        color="#1a1c22",
+        dark=True,
+        fluid =True
     )
 
     return navbar
@@ -517,10 +517,108 @@ def init_mobility_accordion():
     Returns: 
         mobility_accordion (object): dash html.Div that contains individual accordions
     """
+    accord_bus = dbc.Card(
+        [
+            dbc.CardHeader(
+                html.H2(
+                        dbc.Button(
+                            "Bus",
+                            color="#303030",
+                            id=f"tab-4-group-1-toggle",
+                            n_clicks=0,
+                        )
+                )
+            ),
+            dbc.Collapse(
+                dbc.CardBody(
+                    id='id_buses',
+                    children=[]
+                ),
+                id=f"tab-4-collapse-1",
+                is_open=False,
+            ),
+        ],
+        color="#1E1E1E"
+    )
+
+    accord_metro = dbc.Card(
+        [
+            dbc.CardHeader(
+                html.H2(
+                        dbc.Button(
+                            "Metro",
+                            color="#303030",
+                            id=f"tab-4-group-2-toggle",
+                            n_clicks=0,
+                        )
+                )
+            ),
+            dbc.Collapse(
+                dbc.CardBody(
+                    id='id_metro',
+                    children=[]
+                ),
+                id=f"tab-4-collapse-2",
+                is_open=False,
+            ),
+        ],
+        color="#1E1E1E"
+    )
+
+    accord_tram = dbc.Card(
+        [
+            dbc.CardHeader(
+                html.H2(
+                        dbc.Button(
+                            "Tram",
+                            color="#303030",
+                            id=f"tab-4-group-3-toggle",
+                            n_clicks=0,
+                        )
+                )
+            ),
+            dbc.Collapse(
+                dbc.CardBody(
+                    id='id_tram',
+                    children=[]
+                ),
+                id=f"tab-4-collapse-3",
+                is_open=False,
+            ),
+        ],
+        color="#1E1E1E"
+    )
+
+    accord_city_bikes = dbc.Card(
+        [
+            dbc.CardHeader(
+                html.H2(
+                        dbc.Button(
+                            "Bikes",
+                            color="#303030",
+                            id=f"tab-4-group-4-toggle",
+                            n_clicks=0,
+                        )
+                )
+            ),
+            dbc.Collapse(
+                dbc.CardBody(
+                    id='id_city_bikes',
+                    children=[]
+                ),
+                id=f"tab-4-collapse-4",
+                is_open=False,
+            ),
+        ],
+        color="#1E1E1E"
+    )
 
     mobility_accordion = html.Div(
         [
-
+            accord_bus,
+            accord_metro,
+            accord_tram,
+            accord_city_bikes
         ],
         className="accordion"
     )
@@ -534,6 +632,7 @@ def init_environment_accordion():
     Returns: 
         environment_accordion (object): dash html.Div that contains individual accordions
     """
+    
 
     environment_accordion = html.Div(
         [
@@ -684,11 +783,12 @@ def tab_mobility(mobility_accordion):
                     """,
                     className="card-text"
                 ),
-                html.Div(mobility_accordion),
+                html.Div(), # add mobility_accordion
             ]
         ),
         className="mt-3",
     )
+    
     return mobility_tab_content
 
 def tab_environment(environment_accordion):
@@ -766,7 +866,7 @@ def layout_main(navbar, tabs, choropleth):
     )
     return layout
 
-def main():
+def init_layout():
     """
     Initialize the navbar and all tabs.
     Args: None
@@ -774,8 +874,8 @@ def main():
     Returns: 
         layout (object): Main layout of the app
     """
-    datum, real_estate  = load_datum()
-    choropleth = init_choropleth(datum)
+    datum, real_estate, bus_stops  = load_datum()
+    choropleth = init_choropleth(datum, bus_stops)
 
     navbar = init_navbar()
 
@@ -807,4 +907,4 @@ def main():
 
     return layout_main(navbar, tabs, choropleth)
 
-layout = main()
+layout = init_layout()

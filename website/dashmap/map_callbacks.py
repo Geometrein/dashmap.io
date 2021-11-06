@@ -14,7 +14,7 @@ from dash.dependencies import Input, Output, State
 from .map_graphs import *
 
 # Load datasets
-datum, real_estate  = load_datum()
+datum, real_estate, bus_stops  = load_datum()
 
 def get_postal_code(clickData):
     """
@@ -251,6 +251,43 @@ def init_callbacks(dash_app):
 
         return False, False
 
+    # Tab Mobility Section  Accordion CallBacks
+    @dash_app.callback(
+        [Output(f"tab-4-collapse-{i}", "is_open") for i in range(1, 5)],
+        [Input(f"tab-4-group-{i}-toggle", "n_clicks") for i in range(1, 5)],
+        [State(f"tab-4-collapse-{i}", "is_open") for i in range(1, 5)],
+    )
+    def toggle_accordion(n1, n2, n3, n4, is_open1, is_open2, is_open3, is_open4):
+        """
+        Toggle accordion collapse & expand.
+        ---
+        Args: 
+            n1 -> n4 (str): id of the trigger button  
+            is_open1 -> is_open4 (bool): Current state of the accordion. True for Open, False otherwise.
+
+        Returns: 
+            (bool): Boolean values for each accordion tab. True for Open, False otherwise. Default value is False.
+        """
+
+        ctx = dash.callback_context
+
+        if not ctx.triggered:
+            return False, False, False, False
+        else:
+            button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+
+        if button_id == "tab-4-group-1-toggle" and n1:
+            return not is_open1, False, False , False
+        elif button_id == "tab-4-group-2-toggle" and n2:
+            return False, not is_open2, False, False
+        elif button_id == "tab-4-group-3-toggle" and n3:
+            return False, False, not is_open3, False
+        elif button_id == "tab-4-group-4-toggle" and n4:
+            return False, False, False, not is_open4
+
+        return False, False, False, False
+
+        
     # Tab 1 Section 1 Age Distribution CallBack
     @dash_app.callback(
         Output('id_age_dist_hist', 'children'),
@@ -1237,7 +1274,7 @@ def init_callbacks(dash_app):
             Due to a number of economic and cultural factors some households live in rental apartments while other own an apartment.
             This section illustrates the ratio of households that own or rent their primary residence.
             """),
-            dcc.Graph(id='injected', figure=dwellings_pie_chart, config={'displayModeBar': False},),
+            dcc.Graph(id='injected', figure=dwellings_pie_chart, config={'displayModeBar': False}),
             html.P(text),
         ]
 
@@ -1881,4 +1918,31 @@ def init_callbacks(dash_app):
             html.Ul(id='legend-list', children=[html.Li(i) for i in workplace_legend])
         ]
 
+        return children
+
+    # Tab 4 Section 1 Bus CallBack
+    @dash_app.callback(
+        Output('id_buses', 'children'),
+        Input('choropleth-map', 'clickData'))
+    def display_click_data(clickData):
+        """
+        Generates the graphs for Bus section.
+        ---
+        Args: 
+            clickData (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
+
+        Returns: 
+            children (list): List of html components to be displayed.
+        """
+        section_title = "Buses"
+
+        text = f"""
+        Comming Soon!
+        """
+
+        children=[
+            html.H4(section_title),
+            html.Hr(),
+            html.P(text),
+        ]
         return children
