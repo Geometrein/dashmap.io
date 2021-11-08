@@ -287,7 +287,39 @@ def init_callbacks(dash_app):
 
         return False, False, False, False
 
-        
+
+    # Tab Environment Section Accordion CallBacks
+    @dash_app.callback(
+        [Output(f"tab-5-collapse-{i}", "is_open") for i in range(1, 3)],
+        [Input(f"tab-5-group-{i}-toggle", "n_clicks") for i in range(1, 3)],
+        [State(f"tab-5-collapse-{i}", "is_open") for i in range(1, 3)],
+    )
+    def toggle_accordion(n1, n2, is_open1, is_open2):
+        """
+        Toggle accordion collapse & expand.
+        ---
+        Args: 
+            n1 -> n2 (str): id of the trigger button  
+            is_open1 -> is_open2 (bool): Current state of the accordion. True for Open, False otherwise.
+
+        Returns: 
+            (bool): Boolean values for each accordion tab. True for Open, False otherwise. Default value is False.
+        """
+
+        ctx = dash.callback_context
+        if not ctx.triggered:
+            return False, False
+        else:
+            button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+
+        if button_id == "tab-5-group-1-toggle" and n1:
+            return not is_open1, False
+        elif button_id == "tab-5-group-1-toggle" and n2:
+            return False, not is_open2
+
+        return False, False
+
+
     # Tab 1 Section 1 Age Distribution CallBack
     @dash_app.callback(
         Output('id_age_dist_hist', 'children'),
@@ -1937,12 +1969,97 @@ def init_callbacks(dash_app):
         section_title = "Buses"
 
         text = f"""
-        Comming Soon!
+        Comming Soon! 
+
         """
 
         children=[
             html.H4(section_title),
             html.Hr(),
+            html.P(text),
+        ]
+        return children
+        
+
+    # Tab 4 Section 1 Bus CallBack
+    @dash_app.callback(
+        Output('id_windrose', 'children'),
+        Input('choropleth-map', 'clickData'))
+    def display_click_data(clickData):
+        """
+        Generates the graphs for Bus section.
+        ---
+        Args: 
+            clickData (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
+
+        Returns: 
+            children (list): List of html components to be displayed.
+        """
+        section_title = "Wind Patterns"
+
+        text = f"""
+        Wind is the natural movement of air or other gases relative to a planet's surface.
+        They are commonly classified by their spatial scale, their speed and direction, the forces that cause them, the regions in which they occur, and their effect.
+        Regional wind patterns could either facilitate or hinder some of the social and biological processes, depending on the alignment of winds with other spatial climate patterns.
+        """
+
+        df = pd.read_csv("website/data/environment/air-temperature-wind/wind_data.csv")
+
+        r_1 = df['r_1'].to_list()
+        r_2 = df['r_2'].to_list()
+        r_3 = df['r_3'].to_list()
+        r_4 = df['r_4'].to_list()
+
+        fig = go.Figure()
+        fig.add_trace(go.Barpolar(
+            r=r_1,
+            name='< 5 m/s',
+            marker_color=colors[3]
+        ))
+        fig.add_trace(go.Barpolar(
+            r=r_2,
+            name='5-8 m/s',
+            marker_color=colors[2]
+        ))
+        fig.add_trace(go.Barpolar(
+            r=r_3,
+            name='8-10 m/s',
+            marker_color=colors[1]
+        ))
+        fig.add_trace(go.Barpolar(
+            r=r_4,
+            name='> 11 m/s',
+            marker_color=colors[8]
+        ))
+
+        #dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+            #"S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+        #fig.update_traces(text=dirs)
+        
+        fig.update_layout(
+            font=dict(
+                size=14,
+                color="#fff"
+            ),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.25,
+                xanchor="center",
+                x= 0.5,
+            ),
+            legend_font_size=12,
+            polar_radialaxis_ticksuffix='%',
+            polar_angularaxis_rotation=0,
+            paper_bgcolor='#1E1E1E', 
+            plot_bgcolor='#1E1E1E', 
+            margin={"r":30,"t":30,"l":30,"b":30}, 
+            autosize=True
+        )
+
+        children=[
+            html.H4(section_title),
+            dcc.Graph(id='injected5', figure=fig, config={'displayModeBar': False}),
             html.P(text),
         ]
         return children

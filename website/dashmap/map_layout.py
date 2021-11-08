@@ -6,7 +6,7 @@ import dash_bootstrap_components as dbc
 # Plotly Graph Objects
 from .map_graphs import *
 
-data_licence = """Data Source: PAAVO, Statistics Finland, Creative Commons Attribution 4.0 International"""
+data_license = """Data Source: PAAVO, Statistics Finland, Creative Commons Attribution 4.0 International"""
 
 def init_navbar():
     """
@@ -632,11 +632,60 @@ def init_environment_accordion():
     Returns: 
         environment_accordion (object): dash html.Div that contains individual accordions
     """
+
+    wind_rose = dbc.Card(
+        [
+            dbc.CardHeader(
+                html.H2(
+                        dbc.Button(
+                            "Wind Patterns",
+                            color="#303030",
+                            id=f"tab-5-group-1-toggle",
+                            n_clicks=0,
+                        )
+                )
+            ),
+            dbc.Collapse(
+                dbc.CardBody(
+                    id='id_windrose',
+                    children=[]
+                ),
+                id=f"tab-5-collapse-1",
+                is_open=False,
+            ),
+        ],
+        color="#1E1E1E"
+    )
+
+    test = dbc.Card(
+        [
+            dbc.CardHeader(
+                html.H2(
+                        dbc.Button(
+                            "Other",
+                            color="#303030",
+                            id=f"tab-5-group-2-toggle",
+                            n_clicks=0,
+                        )
+                )
+            ),
+            dbc.Collapse(
+                dbc.CardBody(
+                    id='id_test',
+                    children=[]
+                ),
+                id=f"tab-5-collapse-2",
+                is_open=False,
+            ),
+        ],
+        color="#1E1E1E"
+    )
     
 
     environment_accordion = html.Div(
         [
-
+            wind_rose,
+            test
         ],
         className="accordion"
     )
@@ -682,7 +731,7 @@ def tab_census(census_individuals_accordion, census_households_accordion):
                 ),
                 html.Div(census_households_accordion),
                 html.Hr(),
-                html.P(data_licence),
+                html.P(data_license),
             ]
         ),
         className="mt-3",
@@ -749,7 +798,7 @@ def tab_services(service_accordion):
                 ),
                 html.Div(service_accordion),
                 html.Hr(),
-                html.P(data_licence),
+                html.P(data_license),
             ]
         ),
         className="mt-3",
@@ -783,7 +832,7 @@ def tab_mobility(mobility_accordion):
                     """,
                     className="card-text"
                 ),
-                html.Div(), # add mobility_accordion
+                html.Div(), #TODO add mobility_accordion
             ]
         ),
         className="mt-3",
@@ -809,13 +858,7 @@ def tab_environment(environment_accordion):
                 It includes metrics like pollution, noise, wind patterns and radiation levels.
                 """
                 , className="card-text"),
-                html.H5(
-                    """
-                    Comming Soon!
-                    """,
-                    className="card-text"
-                ),
-                html.Div(),
+                html.Div(environment_accordion),
             ]
         ),
         className="mt-3",
