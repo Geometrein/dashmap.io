@@ -657,12 +657,12 @@ def init_environment_accordion():
         color="#1E1E1E"
     )
 
-    test = dbc.Card(
+    avg_air_temp = dbc.Card(
         [
             dbc.CardHeader(
                 html.H2(
                         dbc.Button(
-                            "Other",
+                            "Air Temperature",
                             color="#303030",
                             id=f"tab-5-group-2-toggle",
                             n_clicks=0,
@@ -671,7 +671,7 @@ def init_environment_accordion():
             ),
             dbc.Collapse(
                 dbc.CardBody(
-                    id='id_test',
+                    id='id_avg_air_temp',
                     children=[]
                 ),
                 id=f"tab-5-collapse-2",
@@ -685,7 +685,7 @@ def init_environment_accordion():
     environment_accordion = html.Div(
         [
             wind_rose,
-            test
+            avg_air_temp
         ],
         className="accordion"
     )

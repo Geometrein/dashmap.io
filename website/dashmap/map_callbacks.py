@@ -314,7 +314,7 @@ def init_callbacks(dash_app):
 
         if button_id == "tab-5-group-1-toggle" and n1:
             return not is_open1, False
-        elif button_id == "tab-5-group-1-toggle" and n2:
+        elif button_id == "tab-5-group-2-toggle" and n2:
             return False, not is_open2
 
         return False, False
@@ -2060,6 +2060,65 @@ def init_callbacks(dash_app):
         children=[
             html.H4(section_title),
             dcc.Graph(id='injected5', figure=fig, config={'displayModeBar': False}),
+            html.P(text),
+        ]
+        return children
+    
+    # Tab 5 Section 1 Bus CallBack
+    @dash_app.callback(
+        Output('id_avg_air_temp', 'children'),
+        Input('choropleth-map', 'clickData'))
+    def display_click_data(clickData):
+        """
+        Generates the graphs for Bus section.
+        ---
+        Args: 
+            clickData (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
+
+        Returns: 
+            children (list): List of html components to be displayed.
+        """
+        section_title = "Average Air Temperature"
+
+        text = f"""
+        Comming Soon! 
+        """
+        df = pd.read_csv("website/data/environment/air-temperature-wind/air_temp_data.csv")
+
+        fig = go.Figure()
+
+        fig.add_trace(go.Scatter(
+            x=df['month'],
+            y=df['air_temp'],
+            line=dict(color=colors[5], width=6)
+            )
+        )
+
+        fig.update_layout(
+                xaxis = dict(
+                tickmode = 'array',
+                tickvals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                ticktext = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            ),
+            font=dict(size=14, color="#fff"),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.25,
+                xanchor="center",
+                x= 0.5,
+            ),
+            legend_font_size=12,
+            paper_bgcolor='#1E1E1E', 
+            plot_bgcolor='#1E1E1E', 
+            margin={"r":30,"t":30,"l":30,"b":30}, 
+            autosize=True
+        )
+
+        children=[
+            html.H4(section_title),
+            html.Hr(),
+            dcc.Graph(id='injected99', figure=fig, config={'displayModeBar': False}),
             html.P(text),
         ]
         return children
