@@ -293,11 +293,11 @@ def init_callbacks(dash_app: object) -> None:
 
     # Tab Environment Section Accordion CallBacks
     @dash_app.callback(
-        [Output(f"tab-5-collapse-{i}", "is_open") for i in range(1, 3)],
-        [Input(f"tab-5-group-{i}-toggle", "n_clicks") for i in range(1, 3)],
-        [State(f"tab-5-collapse-{i}", "is_open") for i in range(1, 3)],
+        [Output(f"tab-5-collapse-{i}", "is_open") for i in range(1, 4)],
+        [Input(f"tab-5-group-{i}-toggle", "n_clicks") for i in range(1, 4)],
+        [State(f"tab-5-collapse-{i}", "is_open") for i in range(1, 4)],
     )
-    def toggle_accordion(n1, n2, is_open1, is_open2):
+    def toggle_accordion(n1, n2, n3, is_open1, is_open2, is_open3):
         """
         Toggle accordion collapse & expand.
         ---
@@ -311,16 +311,18 @@ def init_callbacks(dash_app: object) -> None:
 
         ctx = dash.callback_context
         if not ctx.triggered:
-            return False, False
+            return False, False, False
         else:
             button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
         if button_id == "tab-5-group-1-toggle" and n1:
-            return not is_open1, False
+            return not is_open1, False, False
         elif button_id == "tab-5-group-2-toggle" and n2:
-            return False, not is_open2
+            return False, not is_open2, False
+        elif button_id == "tab-5-group-3-toggle" and n3:
+            return False, False, not is_open3
 
-        return False, False
+        return False, False, False
 
 
     # Tab 1 Section 1 Age Distribution CallBack
@@ -2082,9 +2084,9 @@ def init_callbacks(dash_app: object) -> None:
         return children
     
 
-    # Tab 5 Section 1 Bus CallBack
+    # Tab 5 Section 1 air temp CallBack
     @dash_app.callback(
-        Output('id_avg_air_temp', 'children'),
+        Output('id_air_temperature', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(clickData):
         """
@@ -2137,6 +2139,33 @@ def init_callbacks(dash_app: object) -> None:
             html.H4(section_title),
             html.Hr(),
             dcc.Graph(id='injected99', figure=fig, config={'displayModeBar': False}),
+            html.P(text),
+        ]
+        return children
+
+    
+    # Tab 5 Section 2 air pollution CallBack
+    @dash_app.callback(
+        Output('id_air_pollution', 'children'),
+        Input('choropleth-map', 'clickData'))
+    def display_click_data(clickData):
+        """
+        Generates the graphs for Bus section.
+        ---
+        Args: 
+            clickData (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
+
+        Returns: 
+            children (list): List of html components to be displayed.
+        """
+        section_title = "Air Pollution"
+
+        text = f"""
+        Comming Soon! 
+        """
+        children=[
+            html.H4(section_title),
+            html.Hr(),
             html.P(text),
         ]
         return children

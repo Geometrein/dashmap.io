@@ -20,7 +20,6 @@ def init_environment_accordion():
         id='id_air_temperature',
         tab_n=5,
         group_n=2
-    
     )
 
     air_pollution = init_accordion_element(

@@ -21,7 +21,7 @@ def degrees_to_cardinal(degree: float):
     return dirs[index % 16]
 
 
-def get_values(df: object, column : str = 'direction'):
+def get_values(df: object, column : str = 'direction') -> dict:
     """
     This function calculates what percentage of speed-range was from a given direction.
     For example 20% of all 10-15 m/s wind records was from North.
@@ -33,7 +33,7 @@ def get_values(df: object, column : str = 'direction'):
     return result
 
 
-def sorting(result: dict):
+def sorting(result: dict) -> list:
     """
     This function returns a list of the percentage values in the order defined in "dirs" list.
     """
@@ -48,7 +48,7 @@ def sorting(result: dict):
         lst.append(value)
     return lst
 
-def export_csv(r_1: list, r_2: list, r_3: list, r_4: list):
+def export_csv(r_1: list, r_2: list, r_3: list, r_4: list) -> None:
     """
     Export extracted values to to CSV
     """
@@ -57,7 +57,7 @@ def export_csv(r_1: list, r_2: list, r_3: list, r_4: list):
     df.to_csv('website/data/environment/air-temperature-wind/wind_data.csv',index=False)
 
 
-def create_windrose_graph(r_1: list, r_2: list, r_3: list, r_4: list):
+def create_windrose_graph(r_1: list, r_2: list, r_3: list, r_4: list) -> None:
     """
     Create a standalone Graph object.
     Can be used for testing.
@@ -96,7 +96,7 @@ def create_windrose_graph(r_1: list, r_2: list, r_3: list, r_4: list):
     )
     fig.show()
 
-def extract_weather_data():
+def extract_weather_data() -> object:
     """
     """
     df = pd.read_csv("website/data/environment/air-temperature-wind/raw_air_temp.csv")

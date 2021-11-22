@@ -15,7 +15,7 @@ from .layouts.tab_environment.main_environment import init_tab_environment
 
 from .layouts.navbar.navbar import init_navbar
 
-def layout_main(navbar, tabs, choropleth):
+def layout_main(navbar: object, tabs: object, choropleth: object) -> object:
     """
     Create the main app layout.
     Args: 
@@ -59,7 +59,7 @@ def layout_main(navbar, tabs, choropleth):
     )
     return layout
 
-def init_layout():
+def init_layout() -> object:
     """
     Initialize the navbar and all tabs.
     Args: None
@@ -89,5 +89,3 @@ def init_layout():
     )
 
     return layout_main(navbar, tabs, choropleth)
-
-layout = init_layout()

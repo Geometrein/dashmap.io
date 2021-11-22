@@ -26,8 +26,9 @@ def load_datum():
     Args: None
 
     Returns: 
-        datum (object): main geodataframe
-        real_estate (object): dataframe with real estate data
+        datum (object: geopandas geodataframe): main geodataframe
+        real_estate (object: pandas dataframe): dataframe with real estate data
+        bus_stops (object: geopandas geodataframe): dataframe with real estate data
     """
     datum = gpd.read_file(open("website/data/datum/datum.geojson"), crs="WGS84")
     datum.rename(columns = {'index': 'postal_code'}, inplace = True)
@@ -41,7 +42,7 @@ def load_datum():
 
     return datum, real_estate, bus_stops
 
-def init_choropleth(datum, bus_stops):
+def init_choropleth(datum: object, bus_stops: object) -> object:
     """
     Initialize the main choropleth map.
     ---

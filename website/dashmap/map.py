@@ -2,13 +2,13 @@
 from dash import Dash
 
 # Main layouts for the dashboards
-from .map_layout import layout
+from .map_layout import init_layout
 
 # Dash Callbacks
 from .map_callbacks import init_callbacks
 
 
-def index_string(app):
+def index_string(app: object) -> object:
     """
     The function edits the default dash index string and adds Google analytics.
     ---
@@ -48,7 +48,7 @@ def index_string(app):
     return app
 
 
-def init_dashboard(server):
+def init_dashboard(server: object) -> object:
     """
     Initialize the dashboard.
     ---
@@ -69,7 +69,7 @@ def init_dashboard(server):
     dash_app = index_string(dash_app)
 
     # Create the App Layout
-    dash_app.layout = layout
+    dash_app.layout = init_layout()
 
     # Initialize callbacks after our app is loaded
     init_callbacks(dash_app)
