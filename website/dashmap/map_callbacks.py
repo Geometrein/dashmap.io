@@ -3,10 +3,8 @@ pd.options.mode.chained_assignment = None
 
 # Dash & Plotly
 import dash
-from dash import Dash
 from dash import html
 from dash import dcc
-import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
 
@@ -114,6 +112,7 @@ def init_callbacks(dash_app):
             return not is_open
         return is_open
 
+
     # Tab Census Section individuals Accordion CallBacks
     @dash_app.callback(
         [Output(f"tab-1-collapse-{i}", "is_open") for i in range(1, 6)],
@@ -152,6 +151,7 @@ def init_callbacks(dash_app):
 
         return False, False, False, False, False
 
+
     # Tab Census Section Households Accordion CallBacks
     @dash_app.callback(
         [Output(f"tab-1-2-collapse-{i}", "is_open") for i in range(1, 5)],
@@ -187,6 +187,7 @@ def init_callbacks(dash_app):
 
         return False, False, False, False
 
+
     # Tab Real Estate Accordion CallBacks
     @dash_app.callback(
         [Output(f"tab-2-collapse-{i}", "is_open") for i in range(2, 5)],
@@ -220,6 +221,7 @@ def init_callbacks(dash_app):
 
         return  False, False, False
     
+
     # Tab Services Accordion CallBacks
     @dash_app.callback(
         [Output(f"tab-3-collapse-{i}", "is_open") for i in range(1, 3)],
@@ -250,6 +252,7 @@ def init_callbacks(dash_app):
             return False, not is_open2
 
         return False, False
+
 
     # Tab Mobility Section  Accordion CallBacks
     @dash_app.callback(
@@ -430,6 +433,7 @@ def init_callbacks(dash_app):
 
         return children
 
+
     #  Tab 1 Section 1 Gender Distribution CallBack
     @dash_app.callback(
         Output('id_gender_pie_chart', 'children'),
@@ -529,6 +533,7 @@ def init_callbacks(dash_app):
 
         return children
 
+
     # Tab 1 Section 1 Education Pie chart CallBack
     @dash_app.callback(
         Output('id_education_pie_chart', 'children'),
@@ -620,6 +625,7 @@ def init_callbacks(dash_app):
         ]
 
         return children
+
 
     # Tab 1 Section 1 Income CallBack
     @dash_app.callback(
@@ -776,6 +782,7 @@ def init_callbacks(dash_app):
 
         return children
 
+
     # Tab 1 Section 1 Employment CallBack
     @dash_app.callback(
         Output('id_employment_pie_chart', 'children'),
@@ -869,6 +876,7 @@ def init_callbacks(dash_app):
         ]
 
         return children
+
 
     # Tab 1 Section 2 Household Size
     @dash_app.callback(
@@ -965,6 +973,7 @@ def init_callbacks(dash_app):
         ]
 
         return children
+
 
     # Tab 1 Section 2 Household Structure
     @dash_app.callback(
@@ -1070,6 +1079,7 @@ def init_callbacks(dash_app):
         ]
 
         return children
+
 
     # Tab 1 Section 2 Household Income
     @dash_app.callback(
@@ -1224,6 +1234,7 @@ def init_callbacks(dash_app):
 
         return children
 
+
     # Tab 1 Section 2 Household Dwellings
     @dash_app.callback(
         Output('id_household_dwellings', 'children'),
@@ -1311,6 +1322,7 @@ def init_callbacks(dash_app):
         ]
 
         return children
+
 
     # Tab 2 Section 1 Rental Dwellings
     @dash_app.callback(
@@ -1471,6 +1483,7 @@ def init_callbacks(dash_app):
         ]
 
         return children
+
 
     # Tab 2 Section 1 Owned Dwellings
     @dash_app.callback(
@@ -1635,6 +1648,7 @@ def init_callbacks(dash_app):
 
         return children
 
+
     # Tab 2 Section 1 Sauna Index
     @dash_app.callback(
         Output('id_re_sauna', 'children'),
@@ -1720,6 +1734,7 @@ def init_callbacks(dash_app):
 
         return children
     
+
     # Tab 3 Section 1 Workplaces Pie chart CallBack
     @dash_app.callback(
         Output('id_services_industries', 'children'),
@@ -1835,6 +1850,7 @@ def init_callbacks(dash_app):
         ]
 
         return children
+
 
     # Tab 3 Section 2 Workplaces Pie chart CallBack
     @dash_app.callback(
@@ -1952,6 +1968,7 @@ def init_callbacks(dash_app):
 
         return children
 
+
     # Tab 4 Section 1 Bus CallBack
     @dash_app.callback(
         Output('id_buses', 'children'),
@@ -2064,6 +2081,7 @@ def init_callbacks(dash_app):
         ]
         return children
     
+
     # Tab 5 Section 1 Bus CallBack
     @dash_app.callback(
         Output('id_avg_air_temp', 'children'),

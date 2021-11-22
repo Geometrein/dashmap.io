@@ -4,8 +4,6 @@ import pandas as pd
 import geopandas as gpd
 
 # Dash & Plotly
-from dash import html
-from dash import dcc
 import plotly.graph_objects as go
 
 # Environment Variables

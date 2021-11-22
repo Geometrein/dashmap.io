@@ -1,15 +1,12 @@
-import os
 # Dash and Plotly
 from dash import Dash
-from dash import html
-from dash import dcc
-import dash_bootstrap_components as dbc
 
 # Main layouts for the dashboards
 from .map_layout import layout
 
 # Dash Callbacks
-from  .map_callbacks import init_callbacks
+from .map_callbacks import init_callbacks
+
 
 def index_string(app):
     """
@@ -47,8 +44,9 @@ def index_string(app):
             </footer>
         </body>
     </html>"""
-    
+
     return app
+
 
 def init_dashboard(server):
     """
@@ -77,7 +75,3 @@ def init_dashboard(server):
     init_callbacks(dash_app)
 
     return dash_app.server
-
-
-
-    
