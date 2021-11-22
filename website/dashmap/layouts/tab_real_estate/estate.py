@@ -1,4 +1,4 @@
-from templates.templates import init_accordion_element, assemble_accordion
+from ..templates.templates import init_accordion_element, assemble_accordion
 
 def init_real_estate_accordion():
     """
@@ -29,10 +29,10 @@ def init_real_estate_accordion():
         group_n=4
     )
 
-    accordions = list(
+    accordions = [
         accord_re_owning, 
         accord_re_renting,
         accord_re_sauna,
-    )
+    ]
 
     return assemble_accordion(accordions)

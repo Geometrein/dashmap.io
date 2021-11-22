@@ -4,6 +4,15 @@ import dash_bootstrap_components as dbc
 
 def init_accordion_element(title:str, id: str, tab_n: int, group_n: int) -> object:
     """
+    This function defines the template for the acccordion cards.
+    Args:
+        title (str): Title of the card
+        id (str): id of the collapse
+        tab_n (int): Number of the card
+        group_n (int): Number of the group
+
+    Returns: 
+        accordion (object)
     """
     accordion = dbc.Card(
         [
@@ -43,4 +52,5 @@ def assemble_accordion(accordions: list) -> object:
         accordions,
         className="accordion"
     )
+    
     return accordions_div

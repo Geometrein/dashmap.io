@@ -1,4 +1,4 @@
-from templates.templates import init_accordion_element, assemble_accordion
+from ..templates.templates import init_accordion_element, assemble_accordion
 
 def init_environment_accordion():
     """
@@ -30,10 +30,10 @@ def init_environment_accordion():
         group_n=3
     )
 
-    accordions = list(
+    accordions = [
         wind_rose, 
         avg_air_temp,
         air_pollution,
-    )
+    ]
 
     return assemble_accordion(accordions)

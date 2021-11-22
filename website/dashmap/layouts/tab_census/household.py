@@ -1,12 +1,12 @@
-from templates.templates import init_accordion_element, assemble_accordion
+from ..templates.templates import init_accordion_element, assemble_accordion
 
-def init_census_household_accordion():
+def init_census_household_accordion() -> object:
     """
     Initialize the accordion for census tab.
     Args: None
 
     Returns: 
-        census_household_accordion (object): dash html.Div that contains individual accordions
+        (object): dash html.Div that contains individual accordions
     """
     accord_household_size = init_accordion_element(
         title="Household Size", 
@@ -20,8 +20,8 @@ def init_census_household_accordion():
         id='id_household_structure',
         tab_n='1-2',
         group_n=2
-    
     )
+    
     accord_household_income = init_accordion_element(
         title="Household Income",
         id='id_household_income',
@@ -36,11 +36,11 @@ def init_census_household_accordion():
         group_n=4
     )
 
-    accordions = list(
+    accordions = [
         accord_household_size, 
         accord_household_structure,
         accord_household_income,
         accord_household_dwell,
-    )
+    ]
 
     return assemble_accordion(accordions)

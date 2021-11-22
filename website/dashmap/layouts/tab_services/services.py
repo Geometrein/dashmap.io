@@ -1,4 +1,4 @@
-from templates.templates import init_accordion_element, assemble_accordion
+from ..templates.templates import init_accordion_element, assemble_accordion
 
 def init_services_accordion():
     """
@@ -20,12 +20,11 @@ def init_services_accordion():
         id='id_workplaces',
         tab_n=3,
         group_n=2
-    
     )
 
-    accordions = list(
+    accordions = [
         accord_industries, 
         accord_workplaces,
-    )
+    ]
 
     return assemble_accordion(accordions)

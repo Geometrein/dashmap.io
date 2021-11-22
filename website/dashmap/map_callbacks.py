@@ -14,7 +14,7 @@ from .map_graphs import *
 # Load datasets
 datum, real_estate, bus_stops  = load_datum()
 
-def get_postal_code(clickData):
+def get_postal_code(clickData: dict) -> str:
     """
     Helper function for the callbacks
     Gets postal code from map clickdata.
@@ -34,7 +34,7 @@ def get_postal_code(clickData):
 
     return postal_code
 
-def privacy_check(postal_code):
+def privacy_check(postal_code: str) -> bool:
     """
     Helper function for the callbacks.
     Checks if postal code is private.
@@ -54,7 +54,7 @@ def privacy_check(postal_code):
     else:
         return False
 
-def privacy_notice(section_title, neighborhood):
+def privacy_notice(section_title: str, neighborhood: str) -> list:
     """
     Helper function for the callbacks.
     ---
@@ -82,7 +82,7 @@ def privacy_notice(section_title, neighborhood):
 
 
 # CallBacks
-def init_callbacks(dash_app):
+def init_callbacks(dash_app: object) -> None:
     """
     Initialize Dash callbacks.
     ---
@@ -96,7 +96,7 @@ def init_callbacks(dash_app):
     [Input("help-open-centered", "n_clicks"), Input("help-close-centered", "n_clicks")],
     [State("help-modal-centered", "is_open")],
     )
-    def toggle_modal(n1, n2, is_open):
+    def toggle_modal(n1: str, n2: str, is_open: bool):
         """
         Toggle modal pop-ups.
         ---

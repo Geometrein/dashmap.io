@@ -2,16 +2,22 @@
 from dash import html
 import dash_bootstrap_components as dbc
 
-def tab_census(census_individuals_accordion, census_households_accordion):
+from .individual import init_census_individual_accordion
+from .household import init_census_household_accordion
+
+
+def init_tab_census() -> object:
     """
     Initialize the census tab.
-    Args: 
-        census_individuals_accordion (object): individual accordion
-        census_households_accordion (object): household accordion
+    Args: None
 
     Returns: 
         census_tab_content (object): dash dbc.Card() that contains all relevant accordions
     """
+    # Get accordion contents
+    census_individuals_accordion = init_census_individual_accordion()
+    census_households_accordion = init_census_household_accordion()
+
     census_tab_content = dbc.Card(
         dbc.CardBody(
             [   
