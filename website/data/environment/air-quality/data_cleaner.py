@@ -1,7 +1,4 @@
-# µg/m3 is micrograms of gaseous pollutant per cubic meter of ambient air
 import pandas as pd
-import numpy as np
-
 import plotly.graph_objects as go
 
 # Colors used by graphs
@@ -13,25 +10,26 @@ colors = [
     '#7D4C94', '#5B61AE'
 ]
 
+
 def cleaner():
     """
     """
     df = pd.read_csv("website/data/environment/air-quality/air_quality_2020.csv")
 
     df = df.rename(columns={'Year': 'year', 'm': 'month', 'd': 'day'})
-    #df = df[df['year']==2021]
+    df = df[df['year']==2020]
     #df = df[df['month']==11]
     df['Date'] = pd.to_datetime(df[['year','month','day']])
 
     df.drop(['year', 'month', 'day'], axis=1, inplace=True)
     df.dropna(axis=1, how='all', inplace=True)
-    #print(df.head(60))
+    #print(df.head(30))
 
     x = df.groupby(df.Date.dt.date).mean().reset_index()
     print(x.describe())
-    #print(x.head(60))
+    #print(x.head(30))
+    x.to_csv('website/data/environment/air-quality/air_quality_2020_clean.csv', index=False)
     return x
-
 
 
 def create_temp_graph(df):

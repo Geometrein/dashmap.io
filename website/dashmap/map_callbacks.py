@@ -2101,7 +2101,9 @@ def init_callbacks(dash_app: object) -> None:
         section_title = "Average Air Temperature"
 
         text = f"""
-        Comming Soon! 
+        Air temperature inderectly affects functioning, growth, and reproduction of a wide range of biological and societal processes,
+        Air temperature also affects nearly all other weather parameters including, air temperature affects the rate of evaporation, 
+        relative humidity, wind patterns.
         """
         df = pd.read_csv("website/data/environment/air-temperature-wind/air_temp_data.csv")
 
@@ -2160,12 +2162,73 @@ def init_callbacks(dash_app: object) -> None:
         """
         section_title = "Air Pollution"
 
+        df = pd.read_csv("website/data/environment/air-quality/air_quality_2020_clean.csv")
+
+        fig = go.Figure()
+
+        fig.add_trace(go.Scatter(
+            x=df['Date'],
+            y=df['Nitrogen dioxide (ug/m3)'],
+            mode='lines',
+            line_shape='spline',
+            name='Nitrogen dioxide (ug/m3)'
+            )
+        )
+
+        fig.add_trace(go.Scatter(
+            x=df['Date'],
+            y=df['Nitrogen monoxide (ug/m3)'],
+            mode='lines',
+            line_shape='spline',
+            name='Nitrogen monoxide (ug/m3)'
+            )
+        )
+
+        fig.add_trace(go.Scatter(
+            x=df['Date'],
+            y=df['Particulate matter < 10 µm (ug/m3)'],
+            mode='lines',
+            line_shape='spline',
+            name='Particulate matter < 10 µm (ug/m3)'
+            )
+        )
+
+        fig.add_trace(go.Scatter(
+            x=df['Date'],
+            y=df['Particulate matter < 2.5 µm (ug/m3)'],
+            mode='lines',
+            line_shape='spline',
+            name='Particulate matter < 2.5 µm (ug/m3)'
+            )
+        )
+
+        fig.update_layout(
+            font=dict(size=14, color="#fff"),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.5,
+                xanchor="center",
+                x= 0.5,
+            ),
+            legend_font_size=12,
+            paper_bgcolor='#1E1E1E', 
+            plot_bgcolor='#1E1E1E', 
+            margin={"r":30,"t":30,"l":30,"b":30}, 
+            autosize=True
+        )
+
         text = f"""
-        Comming Soon! 
+        Air pollution refers to the release of pollutants into the air.
+        High level of pollutants in ambient air are detrimental to human health and the planet as a whole.
+        Pollutants are measured in micrograms of gaseous pollutant per cubic meter of ambient air (µg/m3).
         """
+
         children=[
             html.H4(section_title),
             html.Hr(),
+            dcc.Graph(id='injected99', figure=fig, config={'displayModeBar': False}),
             html.P(text),
         ]
+
         return children

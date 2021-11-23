@@ -54,7 +54,7 @@ def export_csv(r_1: list, r_2: list, r_3: list, r_4: list) -> None:
     """
     export = {'r_1':r_1, 'r_2': r_2, 'r_3': r_3, 'r_4': r_4}
     df = pd.DataFrame.from_dict(export)
-    df.to_csv('website/data/environment/air-temperature-wind/wind_data.csv',index=False)
+    df.to_csv('website/data/environment/air-temperature-wind/wind_data.csv', index=False)
 
 
 def create_windrose_graph(r_1: list, r_2: list, r_3: list, r_4: list) -> None:
