@@ -2050,10 +2050,6 @@ def init_callbacks(dash_app: object) -> None:
             name='> 11 m/s',
             marker_color=colors[8]
         ))
-
-        #dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
-            #"S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
-        #fig.update_traces(text=dirs)
         
         fig.update_layout(
             font=dict(
@@ -2071,10 +2067,12 @@ def init_callbacks(dash_app: object) -> None:
             polar_radialaxis_ticksuffix='%',
             polar_angularaxis_rotation=0,
             paper_bgcolor='#1E1E1E', 
-            plot_bgcolor='#1E1E1E', 
+            plot_bgcolor='#1E1E1E',
             margin={"r":30,"t":30,"l":30,"b":30}, 
             autosize=True
         )
+
+        fig.update_polars(bgcolor='#1E1E1E')
 
         children=[
             html.H4(section_title),
@@ -2112,7 +2110,8 @@ def init_callbacks(dash_app: object) -> None:
         fig.add_trace(go.Scatter(
             x=df['month'],
             y=df['air_temp'],
-            line=dict(color=colors[5], width=6)
+            line=dict(color=colors[5], width=4),
+            line_shape='spline',
             )
         )
 
