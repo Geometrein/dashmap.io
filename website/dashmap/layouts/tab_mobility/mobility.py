@@ -9,31 +9,31 @@ def init_mobility_accordion():
         mobility_accordion (object): dash html.Div that contains individual accordions
     """
     accord_1 = init_accordion_element(
-        title="Bus", 
-        id='id_bus_accordion', 
-        tab_n=4, 
+        title="Mobility Index", 
+        id='id_mobility_index',
+        tab_n=4,
         group_n=1
     )
 
     accord_2 = init_accordion_element(
-        title="Metro", 
+        title="Comming Soon!", 
         id='id_metro_accordion', 
         tab_n=4, 
         group_n=2
     )
 
     accord_3 = init_accordion_element(
-        title="Tram", 
+        title="Comming Soon!", 
         id='id_tram_accordion', 
         tab_n=4,
         group_n=3
     )
 
     accord_4 = init_accordion_element(
-        title="Bikes", 
+        title="Comming Soon!", 
         id='id_bikes_accordion', 
         tab_n=4,
-        group_n=3
+        group_n=4
     )
 
     mobility_accordion = [

@@ -1971,13 +1971,13 @@ def init_callbacks(dash_app: object) -> None:
         return children
 
 
-    # Tab 4 Section 1 Bus CallBack
+    # Tab 4 Section 1 mobility CallBack
     @dash_app.callback(
-        Output('id_buses', 'children'),
+        Output('id_mobility_index', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(clickData):
         """
-        Generates the graphs for Bus section.
+        Generates the graphs for mobility index section.
         ---
         Args: 
             clickData (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
@@ -1985,22 +1985,70 @@ def init_callbacks(dash_app: object) -> None:
         Returns: 
             children (list): List of html components to be displayed.
         """
-        section_title = "Buses"
+        section_title = "Mobility Index"
 
-        text = f"""
-        Comming Soon! 
+        # Get the postal code based on clicked area
+        postal_code = get_postal_code(clickData)
+
+        # Get df row based on postal number
+        result = datum.loc[postal_code]
+        neighborhood = result['neighborhood']
+
+        mobility_data = pd.read_csv('website/data/mobility/mobility.csv', dtype='str')
+        mobility_data.set_index('index', inplace=True)
+
+        mobility_data = mobility_data.loc[postal_code]
+        mobility_index = float(mobility_data['mobility_index'])
+        surface_area = float(mobility_data['Surface area'])/1000
+        mobility_nodes = float(mobility_data['mobility_nodes'])
+
+        # Data privacy check
+        if privacy_check(postal_code):
+            return privacy_notice(section_title, neighborhood)
+
+        fig = go.Figure()
+
+        fig.add_trace(go.Indicator(
+            mode = "number",
+            value = mobility_index,
+            number = {'prefix': "",},
+            title = {"text": f"Mobility Index<br><span style='font-size:0.8em;color:gray'>index is a value between 1 and 0</span><br>"},
+            )
+        )
+        
+        fig.update_layout(
+            paper_bgcolor='#1E1E1E',
+            plot_bgcolor='#1E1E1E',
+            margin={"r":0,"t":0,"l":0,"b":0},
+            autosize=True,
+            font=dict(color="white")
+        )
+
+        text_pre = f"""
+        Dashmap mobility index is a composite index that indicates how well the given area is connected to other areas within the city.
+        The index takes into account various factors including the surface area of the region, number of public transit routes and their relationships with each other.
+        The higher the index the better the connectivity of the given area.
+        """
+
+        text_post = f"""
+        Dashmap mobility index for {neighborhood} neighborhood is {mobility_index:.3f}.
+        Dashmap mobility index is a composite index that indicates how well is the area connected to other areas within the city.
+        The index takes into account various factors including the surface area, number of bus, tram and metro stations and their relationships with each other.
+        {neighborhood} neighborhood has a surface area of {surface_area:.1f} km²  and {mobility_nodes:.0f} mobility nodes.
 
         """
 
         children=[
             html.H4(section_title),
             html.Hr(),
-            html.P(text),
+            html.P(text_pre),
+            dcc.Graph(id='injected5', figure=fig, config={'displayModeBar': False}),
+            html.P(text_post),
         ]
         return children
         
 
-    # Tab 4 Section 1 Bus CallBack
+    # Tab 5 Section 1 Windrose CallBack
     @dash_app.callback(
         Output('id_windrose', 'children'),
         Input('choropleth-map', 'clickData'))

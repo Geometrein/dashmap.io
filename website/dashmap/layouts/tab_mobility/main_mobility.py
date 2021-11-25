@@ -27,13 +27,7 @@ def init_tab_mobility() -> object:
                     """,
                     className="card-text"
                 ),
-                html.H5(
-                    """
-                    Comming Soon!
-                    """,
-                    className="card-text"
-                ),
-                html.Div(), #TODO add mobility_accordion
+                html.Div(mobility_accordion),
             ]
         ),
         className="mt-3",
