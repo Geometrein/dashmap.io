@@ -42,55 +42,66 @@ def load_datum():
 
     return datum, real_estate, bus_stops
 
-def init_choropleth(datum: object, bus_stops: object) -> object:
+def add_postal_areas(fig: object, df: object) -> None:
     """
-    Initialize the main choropleth map.
+    This function adds a trace with postal districts
+    for plotly figure object.
     ---
-    Args: None
+    Args: 
+        fig (object): plotly graph object
+        df (object): dataframe or geodataframe
 
     Returns: 
-        choropleth (object): Plotly Graph Object
+        None
     """
-    # Initializing the Figure
-    choropleth = go.Figure()
-
-    # Adding postal districts trace
-    choropleth.add_trace(
+    fig.add_trace(
         go.Choroplethmapbox(
             name="Postal Areas",
-            geojson=json.loads(datum.to_json()), 
-            locations=datum.index,
-            z=datum['Inhabitants, total, 2019 (HE)'],
+            geojson=json.loads(df.to_json()), 
+            locations=df.index,
+            z=df['Inhabitants, total, 2019 (HE)'],
             colorscale=["#A9A9A9", "#A9A9A9"],
             colorbar=dict(
-                len=1, 
-                x=0.95,
+                len=0.5, 
+                x=0.93,
                 y=0.5, 
                 tickfont=dict(
-                    size=10, 
+                    size=1, 
                     color= "white"
                 )
             ),
             marker_line_width=1,
             marker_opacity=.3,
             marker_line_color= '#fff',
-            hovertext = datum.index,
-            text = datum['neighborhood'],
+            hovertext = df.index,
+            text = df['neighborhood'],
             hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><extra></extra>"
         )
     )
 
-    # Adding Population
-    choropleth.add_trace(
+
+def add_population(fig: object, df: object) -> None:
+    """
+    This function adds a trace with population
+    for plotly figure object.
+    ---
+    Args: 
+        fig (object): plotly graph object
+        df (object): dataframe or geodataframe
+
+    Returns: 
+        None
+    """
+    fig.add_trace(
         go.Choroplethmapbox(
             name="Population",
-            geojson=json.loads(datum.to_json()), 
-            locations=datum.index,
-            z=datum['Inhabitants, total, 2019 (HE)'],
+            geojson=json.loads(df.to_json()), 
+            locations=df.index,
+            z=df['Inhabitants, total, 2019 (HE)'],
             colorscale='blues',
             colorbar=dict(
-                len=1, 
-                x=0.95,
+                len=0.5, 
+                x=0.93,
                 y=0.5, 
                 tickfont=dict(
                     size=10, 
@@ -101,23 +112,36 @@ def init_choropleth(datum: object, bus_stops: object) -> object:
             marker_opacity=.4,
             marker_line_color= '#fff',
             visible='legendonly',
-            hovertext = datum.index,
-            text = datum['neighborhood'],
+            hovertext = df.index,
+            text = df['neighborhood'],
             hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Population:</b> %{z}<br><extra></extra>"
         )
     )
 
+
+def add_income(fig: object, df: object) -> None:
+    """
+    This function adds a trace with Avg. Individual Income
+    for plotly figure object.
+    ---
+    Args: 
+        fig (object): plotly graph object
+        df (object): dataframe or geodataframe
+
+    Returns: 
+        None
+    """
     # Adding Average income by postal code trace
-    choropleth.add_trace(
+    fig.add_trace(
         go.Choroplethmapbox(
             name="Avg. Individual Income",
-            geojson=json.loads(datum.to_json()), 
-            locations=datum.index,
-            z=datum['Average income of inhabitants, 2019 (HR)'],
+            geojson=json.loads(df.to_json()), 
+            locations=df.index,
+            z=df['Average income of inhabitants, 2019 (HR)'],
             colorscale="Bluered",
             colorbar=dict(
-                len=1, 
-                x=0.95,
+                len=0.5, 
+                x=0.93,
                 y=0.5, 
                 tickfont=dict(
                     size=10, 
@@ -128,23 +152,35 @@ def init_choropleth(datum: object, bus_stops: object) -> object:
             marker_opacity=.4,
             marker_line_color= '#fff',
             visible='legendonly',
-            hovertext = datum.index,
-            text = datum['neighborhood'],
+            hovertext = df.index,
+            text = df['neighborhood'],
             hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Avg. Individual Income:</b> %{z}<br><extra><extra></extra>"
         )
     )
 
-    # Adding Avg. Households Income by postal code trace
-    choropleth.add_trace(
+
+def add_household_income(fig: object, df: object) -> None:
+    """
+    This function adds a trace with Avg. Households Income
+    for plotly figure object.
+    ---
+    Args: 
+        fig (object): plotly graph object
+        df (object): dataframe or geodataframe
+
+    Returns: 
+        None
+    """
+    fig.add_trace(
         go.Choroplethmapbox(
             name="Avg. Households Income",
-            geojson=json.loads(datum.to_json()), 
-            locations=datum.index,
-            z=datum['Average income of households, 2019 (TR)'],
+            geojson=json.loads(df.to_json()), 
+            locations=df.index,
+            z=df['Average income of households, 2019 (TR)'],
             colorscale="hot",
             colorbar=dict(
-                len=1, 
-                x=0.95,
+                len=0.5, 
+                x=0.93,
                 y=0.5, 
                 tickfont=dict(
                     size=10, 
@@ -155,23 +191,35 @@ def init_choropleth(datum: object, bus_stops: object) -> object:
             marker_opacity=.4,
             marker_line_color= '#fff',
             visible='legendonly',
-            hovertext = datum.index,
-            text = datum['neighborhood'],
+            hovertext = df.index,
+            text = df['neighborhood'],
             hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Avg. Households Income:</b> %{z}<br><extra></extra>"
         )
     )
 
-    # Adding Avg. Inhabitant Age by postal code trace
-    choropleth.add_trace(
+
+def add_avg_age(fig: object, df: object) -> None:
+    """
+    This function adds a trace with Avg. Inhabitant Age
+    for plotly figure object.
+    ---
+    Args: 
+        fig (object): plotly graph object
+        df (object): dataframe or geodataframe
+
+    Returns: 
+        None
+    """
+    fig.add_trace(
         go.Choroplethmapbox(
             name="Avg. Inhabitant Age",
-            geojson=json.loads(datum.to_json()), 
-            locations=datum.index,
-            z=datum['Average age of inhabitants, 2019 (HE)'],
+            geojson=json.loads(df.to_json()), 
+            locations=df.index,
+            z=df['Average age of inhabitants, 2019 (HE)'],
             colorscale="tealgrn",
             colorbar=dict(
-                len=1, 
-                x=0.95,
+                len=0.5, 
+                x=0.93,
                 y=0.5, 
                 tickfont=dict(
                     size=10, 
@@ -182,23 +230,35 @@ def init_choropleth(datum: object, bus_stops: object) -> object:
             marker_opacity=.4,
             marker_line_color= '#fff',
             visible='legendonly',
-            hovertext = datum.index,
-            text = datum['neighborhood'],
+            hovertext = df.index,
+            text = df['neighborhood'],
             hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Avg. Age:</b> %{z}<br><extra></extra>"
         )
     )
 
-    # Adding Avg. Household Size by postal code trace
-    choropleth.add_trace(
+
+def add_avg_household_size(fig: object, df: object) -> None:
+    """
+    This function adds a trace with Avg. Household Size
+    for plotly figure object.
+    ---
+    Args: 
+        fig (object): plotly graph object
+        df (object): dataframe or geodataframe
+
+    Returns: 
+        None
+    """
+    fig.add_trace(
         go.Choroplethmapbox(
             name="Avg. Household Size",
-            geojson=json.loads(datum.to_json()), 
-            locations=datum.index,
-            z=datum['Average size of households, 2019 (TE)'],
+            geojson=json.loads(df.to_json()), 
+            locations=df.index,
+            z=df['Average size of households, 2019 (TE)'],
             colorscale="aggrnyl",
             colorbar=dict(
-                len=1, 
-                x=0.95,
+                len=0.5, 
+                x=0.93,
                 y=0.5, 
                 tickfont=dict(
                     size=10, 
@@ -209,29 +269,53 @@ def init_choropleth(datum: object, bus_stops: object) -> object:
             marker_opacity=.4,
             marker_line_color= '#fff',
             visible='legendonly',
-            hovertext = datum.index,
-            text = datum['neighborhood'],
+            hovertext = df.index,
+            text = df['neighborhood'],
             hovertemplate = "<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Avg. Household size:</b> %{z}<br><extra></extra>"
         )
     )
+    return fig
 
-    # Adding Mobility Nodes
-    choropleth.add_trace(
+
+def add_mobility_nodes(fig: object, df: object) -> None:
+    """
+    This function adds a trace with Mobility Nodes
+    for plotly figure object.
+    ---
+    Args: 
+        fig (object): plotly graph object
+        df (object): dataframe or geodataframe
+
+    Returns: 
+        None
+    """
+    fig.add_trace(
         go.Scattermapbox(
             name="Mobility Network",
-            lat = bus_stops['geometry'].y,
-            lon = bus_stops['geometry'].x,
-            hovertext = bus_stops['NAMN1'],
+            lat = df['geometry'].y,
+            lon = df['geometry'].x,
+            hovertext = df['NAMN1'],
             marker = go.scattermapbox.Marker(color=colors[1],size=5),
             marker_opacity=.6,
             visible='legendonly',
-            text = bus_stops['NAMN1'],
+            text = df['NAMN1'],
             hovertemplate = "<b>Name:</b> %{text}<br><extra></extra>"
         )
     )
 
-    # Update layout preferences
-    choropleth.update_layout(
+
+def update_layout_and_traces(fig: object) -> object:
+    """
+    This function updates layout preferences
+    for plotly figure object.
+    ---
+    Args: 
+        fig (object): plotly graph object
+
+    Returns: 
+        fig (object): Plotly Graph Object
+    """
+    fig.update_layout(
         clickmode='event+select',
         mapbox_style="dark",
         
@@ -259,12 +343,60 @@ def init_choropleth(datum: object, bus_stops: object) -> object:
     )
 
     # Update Trace preferences
-    choropleth.update_traces(
+    fig.update_traces(
         showlegend=True,
         selector=dict(type='choroplethmapbox'),
         unselected= dict(marker={'opacity': 0.2}),
         selected= dict(marker={'opacity': 0.5})
     )
+
+    return fig
+
+
+def save_image(fig, width: int = 3840, height: int = 2160) -> None:
+    """
+    Save figure as an image file
+    ---
+    Args: 
+        fig (object): plotly graph object
+        width (int): width in pixels
+        height (int): height in pixels
+
+    Returns: 
+        None
+    """
+    fig.write_image("fig.png",
+        width=width,
+        height=height,
+        scale = 1,
+        engine ='kaleido'
+    )
+
+
+def init_choropleth(df: object, df2: object) -> object:
+    """
+    Initialize the main choropleth map.
+    ---
+    df (object):
+    df2(object):
+
+    Returns: 
+        choropleth (object): Plotly Graph Object
+    """
+    # Initializing an empty graph object
+    choropleth = go.Figure()
+
+    # Adding traces
+    add_postal_areas(choropleth, df)
+    add_population(choropleth, df)
+    add_income(choropleth, df)
+    add_household_income(choropleth, df)
+    add_avg_age(choropleth, df)
+    add_avg_household_size(choropleth, df)
+    add_mobility_nodes(choropleth, df2)
+
+    # Update Layout
+    update_layout_and_traces(choropleth)
 
     return choropleth
 
