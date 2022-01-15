@@ -254,11 +254,11 @@ def init_callbacks(dash_app: dash.callback_context) -> None:
 
     # Tab Mobility Section  Accordion CallBacks
     @dash_app.callback(
-        [Output(f"tab-4-collapse-{i}", "is_open") for i in range(1, 5)],
-        [Input(f"tab-4-group-{i}-toggle", "n_clicks") for i in range(1, 5)],
-        [State(f"tab-4-collapse-{i}", "is_open") for i in range(1, 5)],
+        [Output(f"tab-4-collapse-{i}", "is_open") for i in range(1, 3)],
+        [Input(f"tab-4-group-{i}-toggle", "n_clicks") for i in range(1, 3)],
+        [State(f"tab-4-collapse-{i}", "is_open") for i in range(1, 3)],
     )
-    def toggle_accordion(n1, n2, n3, n4, is_open1, is_open2, is_open3, is_open4):
+    def toggle_accordion(n1, n2, is_open1, is_open2):
         """
         Toggle accordion collapse & expand.
         ---
@@ -273,20 +273,16 @@ def init_callbacks(dash_app: dash.callback_context) -> None:
         ctx = dash.callback_context
 
         if not ctx.triggered:
-            return False, False, False, False
+            return False, False
         else:
             button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
         if button_id == "tab-4-group-1-toggle" and n1:
-            return not is_open1, False, False, False
+            return not is_open1, False
         elif button_id == "tab-4-group-2-toggle" and n2:
-            return False, not is_open2, False, False
-        elif button_id == "tab-4-group-3-toggle" and n3:
-            return False, False, not is_open3, False
-        elif button_id == "tab-4-group-4-toggle" and n4:
-            return False, False, False, not is_open4
+            return False, not is_open2
 
-        return False, False, False, False
+        return False, False
 
     # Tab Environment Section Accordion CallBacks
     @dash_app.callback(

@@ -23,25 +23,10 @@ def init_mobility_accordion():
         group_n=2
     )
 
-    accord_3 = init_accordion_element(
-        title="Coming Soon!",
-        graph_id='id_tram_accordion',
-        tab_n=4,
-        group_n=3
-    )
-
-    accord_4 = init_accordion_element(
-        title="Coming Soon!",
-        graph_id='id_bikes_accordion',
-        tab_n=4,
-        group_n=4
-    )
-
     mobility_accordion = [
         accord_1,
         accord_2,
-        accord_3,
-        accord_4
+
     ]
 
     return assemble_accordion(mobility_accordion)

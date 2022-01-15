@@ -22,8 +22,9 @@ def init_tab_mobility() -> object:
                 html.P(
                     """
                     Geographic mobility is the measure of how populations and goods move over time.
-                    Population mobility has a large impact on many sociological factors in a society and has implications ranging
-                    from impacts on local economic growth to housing markets and demand for regional services.
+                    Population mobility has a large impact on many sociological factors in a society and has
+                    implications ranging from impacts on local economic growth to housing markets and demand
+                    for regional services.
                     """,
                     className="card-text"
                 ),
