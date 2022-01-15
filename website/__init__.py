@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template
 
+
 # Create the Flask app
 def create_app():
     """
@@ -27,4 +28,3 @@ def create_app():
     app = init_dashboard(app)
 
     return app
-

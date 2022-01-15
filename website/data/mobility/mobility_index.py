@@ -2,18 +2,16 @@ import geopandas as gpd
 from shapely.geometry import shape, Point
 
 
-
 def load_data():
     """
     This function loads the necessary data.
     Args: None
 
     Returns: 
-        regions, stations (object: gpd.GeoDataFrame): Geodataframes
+        regions, stations (object: gpd.GeoDataFrame): Geodataframe
     """
     regions = gpd.read_file(open("website/data/datum/datum.geojson"), crs="WGS84")
     stations = gpd.read_file(open("website/data/mobility/HSL_stations.geojson"), crs="WGS84")
-    #print(stations.head(), regions.head())
     return regions, stations
 
 
@@ -41,7 +39,7 @@ def count_points(regions: gpd.GeoDataFrame, points: gpd.GeoDataFrame) -> list:
     return num_of_stations
 
 
-def get_mobility_index(num_of_stations: list, gdf: gpd.GeoDataFrame)-> gpd.GeoDataFrame:
+def get_mobility_index(num_of_stations: list, gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """
     Calculates the Mobility Index.
     #TODO add more parameters to the index.
@@ -58,7 +56,7 @@ def get_mobility_index(num_of_stations: list, gdf: gpd.GeoDataFrame)-> gpd.GeoDa
     return regions
 
 
-def min_max_normalize(gdf, column: str = 'mobility_index') -> gpd.GeoDataFrame:
+def min_max_normalize(gdf: gpd.GeoDataFrame, column: str = 'mobility_index') -> gpd.GeoDataFrame:
     """
     This function normalizes the values in a given column
     Args: 
@@ -83,6 +81,6 @@ def main():
     print(regions.head(), regions.describe())
     regions.to_csv('website/data/mobility/mobility.csv', index=False)
 
+
 if __name__ == '__main__':
     main()
-

@@ -4,13 +4,14 @@ import inspect
 
 import unittest
 
+from website import create_app
+
 # Import from parent folder
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir) 
 
-from website import create_app
-  
+
 class BasicTests(unittest.TestCase):
 
     # Executed before to each test
@@ -44,6 +45,7 @@ class BasicTests(unittest.TestCase):
         """
         response = self.app.get('/support', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
-        
+
+
 if __name__ == "__main__":
     unittest.main()

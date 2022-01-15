@@ -2,12 +2,11 @@
 # on a map with its traces.
 import os
 import sys
-
-dirname = os.path.dirname(__file__)
-dirname = dirname.replace('data/datum', '' )
-sys.path.insert(0, dirname)
 from dashmap import map_graphs
 
+dirname = os.path.dirname(__file__)
+dirname = dirname.replace('data/datum', '')
+sys.path.insert(0, dirname)
 
 
 def main():
@@ -21,4 +20,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

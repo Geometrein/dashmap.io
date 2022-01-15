@@ -21,12 +21,13 @@ def init_tab_census() -> object:
     census_tab_content = dbc.Card(
         dbc.CardBody(
             [   
-                html.H2("Census", style={'marginBottom': 10, 'marginTop':1}),
+                html.H2("Census", style={'marginBottom': 10, 'marginTop': 1}),
                 html.P(
                         """
                         A census is a complete enumeration of population and its vital characteristics.
-                        Censuses are created by systematic recording and aggregation of data about the members of a given population.
-                        The purpose populations census is to understand the basic structure of the society and identify emerging patterns and trends.
+                        Censuses are created by systematic recording and aggregation of data about the
+                        members of a given population. The purpose populations census is to understand the
+                        basic structure of the society and identify emerging patterns and trends.
                         """,
                         className="card-text"
                     ),

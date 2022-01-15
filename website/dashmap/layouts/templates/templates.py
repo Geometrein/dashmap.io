@@ -2,12 +2,13 @@
 from dash import html
 import dash_bootstrap_components as dbc
 
-def init_accordion_element(title:str, id: str, tab_n: int, group_n: int) -> object:
+
+def init_accordion_element(title: str, graph_id: str, tab_n: int, group_n: int) -> object:
     """
-    This function defines the template for the acccordion cards.
+    This function defines the template for the accordion cards.
     Args:
         title (str): Title of the card
-        id (str): id of the collapse
+        graph_id (str): id of the collapse
         tab_n (int): Number of the card
         group_n (int): Number of the group
 
@@ -29,7 +30,7 @@ def init_accordion_element(title:str, id: str, tab_n: int, group_n: int) -> obje
             
             dbc.Collapse(
                 dbc.CardBody(
-                    id = id,
+                    id=graph_id,
                     children=[]
                 ),
                 id=f"tab-{tab_n}-collapse-{group_n}",

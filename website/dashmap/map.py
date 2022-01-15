@@ -48,7 +48,7 @@ def index_string(app: object) -> object:
     return app
 
 
-def init_dashboard(server: object) -> object:
+def init_dashboard(server):
     """
     Initialize the dashboard.
     ---

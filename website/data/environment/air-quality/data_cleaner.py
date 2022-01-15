@@ -17,17 +17,14 @@ def cleaner():
     df = pd.read_csv("website/data/environment/air-quality/air_quality_2020.csv")
 
     df = df.rename(columns={'Year': 'year', 'm': 'month', 'd': 'day'})
-    df = df[df['year']==2020]
-    #df = df[df['month']==11]
-    df['Date'] = pd.to_datetime(df[['year','month','day']])
+    df = df[df['year'] == 2020]
+    df['Date'] = pd.to_datetime(df[['year', 'month', 'day']])
 
     df.drop(['year', 'month', 'day'], axis=1, inplace=True)
     df.dropna(axis=1, how='all', inplace=True)
-    #print(df.head(30))
 
     x = df.groupby(df.Date.dt.date).mean().reset_index()
     print(x.describe())
-    #print(x.head(30))
     x.to_csv('website/data/environment/air-quality/air_quality_2020_clean.csv', index=False)
     return x
 
@@ -72,7 +69,6 @@ def create_temp_graph(df):
         )
     )
 
-
     fig.update_layout(
         font=dict(size=14, color="#fff"),
         legend=dict(
@@ -80,20 +76,22 @@ def create_temp_graph(df):
             yanchor="bottom",
             y=-0.25,
             xanchor="center",
-            x= 0.5,
+            x=0.5,
         ),
         legend_font_size=12,
         paper_bgcolor='#1E1E1E', 
         plot_bgcolor='#1E1E1E', 
-        margin={"r":30,"t":30,"l":30,"b":30}, 
+        margin={"r": 30, "t": 30, "l": 30, "b": 30},
         autosize=True
     )
     fig.show()
+
 
 def main():
     """
     """
     df = cleaner()
     create_temp_graph(df)
+
 
 main()

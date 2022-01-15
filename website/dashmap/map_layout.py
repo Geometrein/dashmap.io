@@ -15,7 +15,8 @@ from .layouts.tab_environment.main_environment import init_tab_environment
 
 from .layouts.navbar.navbar import init_navbar
 
-def layout_main(navbar: object, tabs: object, choropleth: object) -> object:
+
+def layout_main(navbar: dbc.NavbarSimple, tabs: object, choropleth: object) -> html.Div:
     """
     Create the main app layout.
     Args: 
@@ -39,8 +40,8 @@ def layout_main(navbar: object, tabs: object, choropleth: object) -> object:
                     dbc.Col(
                         html.Div(
                             tabs, 
-                            style={'height':'100vh', "overflow-y": "scroll", "overflow-x": "hidden"}),
-                            width=4,
+                            style={'height': '100vh', "overflow-y": "scroll", "overflow-x": "hidden"}),
+                        width=4,
                         ),
                     dbc.Col(
                         html.Div(
@@ -48,7 +49,7 @@ def layout_main(navbar: object, tabs: object, choropleth: object) -> object:
                                 id='choropleth-map',
                                 figure=choropleth,
                                 config={'displayModeBar': False},
-                                style={ 'height':'100vh'}
+                                style={'height': '100vh'}
                             )
                         ),
                         width=8
@@ -59,6 +60,7 @@ def layout_main(navbar: object, tabs: object, choropleth: object) -> object:
     )
     return layout
 
+
 def init_layout() -> object:
     """
     Initialize the navbar and all tabs.
@@ -67,14 +69,14 @@ def init_layout() -> object:
     Returns: 
         layout (object): Main layout of the app
     """
-    datum, real_estate, bus_stops  = load_datum()
+    datum, real_estate, bus_stops = load_datum()
     choropleth = init_choropleth(datum, bus_stops)
 
     navbar = init_navbar()
 
     census_tab_content = init_tab_census()
     real_estate_tab_content = init_tab_real_estate()
-    services_tab_content =  init_tab_services()
+    services_tab_content = init_tab_services()
     mobility_tab_content = init_tab_mobility()
     environment_tab_content = init_tab_environment()
 

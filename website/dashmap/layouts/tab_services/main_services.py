@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 
 from .services import init_services_accordion
 
+
 def init_tab_services() -> object:
     """
     Initialize the services tab.
@@ -17,12 +18,12 @@ def init_tab_services() -> object:
     services_tab_content = dbc.Card(
         dbc.CardBody(
             [
-                html.H2("Services", style={'marginBottom': 10, 'marginTop':1}),
+                html.H2("Services", style={'marginBottom': 10, 'marginTop': 1}),
                 html.P(
                     """
                     A service is a transaction in which no physical goods are transferred from the seller to the buyer.
-                    Services may be defined as acts or performances whereby the service provider provides value to the customer
-                    using resources, skill, ingenuity or experience.
+                    Services may be defined as acts or performances whereby the service provider provides value to the
+                    customer using resources, skill, ingenuity or experience.
                     """
                 ),
                 html.Div(service_accordion),

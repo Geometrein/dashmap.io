@@ -1,5 +1,6 @@
 from ..templates.templates import init_accordion_element, assemble_accordion
 
+
 def init_environment_accordion():
     """
     Initialize the accordion for environment tab.
@@ -10,21 +11,21 @@ def init_environment_accordion():
     """
     wind_rose = init_accordion_element(
         title="Wind Patterns", 
-        id='id_windrose',
+        graph_id='id_windrose',
         tab_n=5, 
         group_n=1
     )
 
     avg_air_temp = init_accordion_element(
         title="Air Temperature",
-        id='id_air_temperature',
+        graph_id='id_air_temperature',
         tab_n=5,
         group_n=2
     )
 
     air_pollution = init_accordion_element(
         title="Air Pollution",
-        id='id_air_pollution',
+        graph_id='id_air_pollution',
         tab_n=5,
         group_n=3
     )

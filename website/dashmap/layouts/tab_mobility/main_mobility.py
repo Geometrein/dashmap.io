@@ -18,7 +18,7 @@ def init_tab_mobility() -> object:
     mobility_tab_content = dbc.Card(
         dbc.CardBody(
             [
-                html.H2("Mobility", style={'marginBottom': 10, 'marginTop':1}),
+                html.H2("Mobility", style={'marginBottom': 10, 'marginTop': 1}),
                 html.P(
                     """
                     Geographic mobility is the measure of how populations and goods move over time.

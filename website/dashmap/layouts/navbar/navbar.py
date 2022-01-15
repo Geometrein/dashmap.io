@@ -1,6 +1,7 @@
 from dash import html
 import dash_bootstrap_components as dbc
 
+
 def init_navbar():
     """
     Initialize the navbar inside te dash app.
@@ -29,7 +30,7 @@ def init_navbar():
                         children=[
                             html.Img(
                                 src='assets/help.gif', 
-                                style = {
+                                style={
                                     'display': 'block',
                                     'margin-left': 'auto',
                                     'margin-right': 'auto',
@@ -39,8 +40,9 @@ def init_navbar():
                             html.P(
                                 """
                                 Use the map to filter the data by postal area.
-                                You can select a postal area by clicking on it on the map. Double click will select all postal areas.
-                                The data displayed on the map can be filtered too. Click on the legend of the map to show/Hide different layers.
+                                You can select a postal area by clicking on it on the map. Double click will
+                                select all postal areas. The data displayed on the map can be filtered too.
+                                Click on the legend of the map to show/Hide different layers.
                                 """
                             )
                         ]
@@ -64,7 +66,7 @@ def init_navbar():
         brand_href="/",
         color="#1a1c22",
         dark=True,
-        fluid =True
+        fluid=True
     )
 
     return navbar
