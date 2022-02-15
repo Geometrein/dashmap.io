@@ -51,8 +51,7 @@ def layout_main(navbar: dbc.NavbarSimple, tabs: object, choropleth: object) -> h
                                 config={'displayModeBar': False},
                                 style={'height': '100vh'}
                             )
-                        ),
-                        width=8
+                        ), width=8
                     ),
                 ]
             ), 
