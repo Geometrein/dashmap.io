@@ -1,7 +1,7 @@
 from dash import html
 from dash import dcc
 import plotly.graph_objects as go
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output
 
 from ...callbacks.util.helpers import privacy_check, privacy_notice, get_postal_code
 
@@ -13,11 +13,11 @@ colors = [
     '#7D4C94', '#5B61AE'
 ]
 
-def init_census_callbacks(dash_app, datum):
+def init_census_callbacks(app, datum):
     """
     """
    # Tab 1 Section 1 Age Distribution CallBack
-    @dash_app.callback(
+    @app.callback(
         Output('id_age_dist_hist', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(click_data):
@@ -55,7 +55,7 @@ def init_census_callbacks(dash_app, datum):
         x = result.index.tolist()[index_start:index_end]
         x = [i.split(' ')[0] for i in x]
 
-        columns_list = datum.columns[7:27]
+        columns_list = datum.columns[index_start:index_end]
         y2 = [datum[column].astype(float).mean() for column in columns_list]
 
         # Create pie chart figure object
@@ -67,7 +67,6 @@ def init_census_callbacks(dash_app, datum):
                     y=age_bins,
                     marker_color='#4182C8',
                 )
-                
             ]
         )
 
@@ -99,11 +98,8 @@ def init_census_callbacks(dash_app, datum):
             margin={"r": 30, "t": 30, "l": 30, "b": 30},
             autosize=True
         )
-        age_dist_hist.update_traces(
-            hoverinfo='text',
-
-
-        )
+        
+        age_dist_hist.update_traces(hoverinfo='text')
         
         text = f"""
             Age distribution, also called Age Composition, is the proportionate numbers 
@@ -126,7 +122,7 @@ def init_census_callbacks(dash_app, datum):
         return children
 
     # Tab 1 Section 1 Gender Distribution CallBack
-    @dash_app.callback(
+    @app.callback(
         Output('id_gender_pie_chart', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(click_data):
@@ -227,7 +223,7 @@ def init_census_callbacks(dash_app, datum):
         return children
 
     # Tab 1 Section 1 Education Pie chart CallBack
-    @dash_app.callback(
+    @app.callback(
         Output('id_education_pie_chart', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(click_data):
@@ -319,7 +315,7 @@ def init_census_callbacks(dash_app, datum):
         return children
 
     # Tab 1 Section 1 Income CallBack
-    @dash_app.callback(
+    @app.callback(
         Output('id_income_pie_chart', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(click_data):
@@ -480,7 +476,7 @@ def init_census_callbacks(dash_app, datum):
         return children
 
     # Tab 1 Section 1 Employment CallBack
-    @dash_app.callback(
+    @app.callback(
         Output('id_employment_pie_chart', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(click_data):
@@ -573,7 +569,7 @@ def init_census_callbacks(dash_app, datum):
         return children
 
     # Tab 1 Section 2 Household Size
-    @dash_app.callback(
+    @app.callback(
         Output('id_household_size', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(click_data):
@@ -672,7 +668,7 @@ def init_census_callbacks(dash_app, datum):
         return children
 
     # Tab 1 Section 2 Household Structure
-    @dash_app.callback(
+    @app.callback(
         Output('id_household_structure', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(click_data):
@@ -781,7 +777,7 @@ def init_census_callbacks(dash_app, datum):
         return children
 
     # Tab 1 Section 2 Household Income
-    @dash_app.callback(
+    @app.callback(
         Output('id_household_income', 'children'),
         Input('choropleth-map', 'clickData')
     )
@@ -940,7 +936,7 @@ def init_census_callbacks(dash_app, datum):
         return children
 
     # Tab 1 Section 2 Household Dwellings
-    @dash_app.callback(
+    @app.callback(
         Output('id_household_dwellings', 'children'),
         Input('choropleth-map', 'clickData'))
     def display_click_data(click_data):
