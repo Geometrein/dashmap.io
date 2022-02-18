@@ -13,6 +13,7 @@ colors = [
     '#7D4C94', '#5B61AE'
 ]
 
+
 def init_services_callbacks(app, datum):
     """
     """
@@ -36,15 +37,17 @@ def init_services_callbacks(app, datum):
         postal_code = get_postal_code(click_data)
 
         # Get df row based on postal number
-        result = datum.loc[postal_code]
-        neighborhood = result['neighborhood']
+        row = datum.loc[postal_code]
+
+        # Get neighborhood name and mean age 
+        neighborhood = str(row.iloc[0])
 
         # Data privacy check
         if privacy_check(postal_code):
             return privacy_notice(section_title, neighborhood)
 
-        work_services = result["Services, 2018 (TP)"]
-        work_other = int(result["Primary production, 2018 (TP)"]) + int(result["Processing, 2018 (TP)"])
+        work_services = int(row.iloc[77])  # Services, 20XX (TP)
+        work_other = int(row.iloc[75]) + int(row.iloc[76])  # Primary Production + Processing
 
         workplaces_values = [work_other, work_services]
         workplaces_values = [int(i) for i in workplaces_values]
@@ -151,14 +154,16 @@ def init_services_callbacks(app, datum):
         postal_code = get_postal_code(click_data)
 
         # Get df row based on postal number
-        result = datum.loc[postal_code]
-        neighborhood = result['neighborhood']
+        row = datum.loc[postal_code]
+
+        # Get neighborhood name and mean age 
+        neighborhood = str(row.iloc[0])
 
         # Data privacy check
         if privacy_check(postal_code):
             return privacy_notice(section_title, neighborhood)
 
-        work_total = result["Workplaces, 2018 (TP)"]
+        work_total = int(row.iloc[74]) # Workplaces, 2018 (TP)
 
         # Create Graph Object
         workplaces = go.Figure()
@@ -179,24 +184,23 @@ def init_services_callbacks(app, datum):
             font=dict(color="white")
         )
         # Set column indexes
-        index_start = 77
-        index_end = 99
+        index_start = 78
+        index_end = 99 + 1
 
         # Filter the dataframe based on column indexes
-        industry_bins = result.tolist()[index_start:index_end]
-        industry_bins = [int(i) for i in industry_bins]
+        industry_y = row[index_start:index_end].astype(int).tolist()
 
         # Create Histogram Bins
-        x = result.index.tolist()[index_start:index_end]
-        x = [i.split(' ')[0] for i in x]
+        x = row.index.tolist()[index_start:index_end]
+        industry_x = [i.split(' ')[0] for i in x]
 
         # Create pie chart figure object
         workplace_hist = go.Figure(
             data=[
                 go.Bar(
                     name=neighborhood,
-                    x=x, 
-                    y=industry_bins,
+                    x=industry_x, 
+                    y=industry_y,
                     marker_color='#4182C8',
                 )
                 
@@ -225,9 +229,8 @@ def init_services_callbacks(app, datum):
 
         )
 
-        workplace_legend = result.index.tolist()[index_start:index_end]
-        workplace_legend = [i.replace('2018 (TP)', '') for i in workplace_legend]
-        workplace_legend = [i.split(';')[0] for i in workplace_legend]
+        workplace_legend = row.index[index_start:index_end].tolist()
+        workplace_legend = [i.split(',')[0] for i in workplace_legend]
 
         text = f"""
         The graph below illustrates the number of workplaces in the {neighborhood} area by the industry sector.

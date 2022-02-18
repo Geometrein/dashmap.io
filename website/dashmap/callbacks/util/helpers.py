@@ -71,6 +71,7 @@ def privacy_notice(section_title: str, neighborhood: str) -> list:
 
     return children
 
+
 def init_modal_popup(app):
     """
     """

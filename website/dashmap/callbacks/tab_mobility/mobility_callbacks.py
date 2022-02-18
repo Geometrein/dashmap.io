@@ -1,4 +1,7 @@
 import pandas as pd
+import geopandas as gpd
+
+import dash
 from dash import html
 from dash import dcc
 import plotly.graph_objects as go
@@ -14,19 +17,29 @@ colors = [
     '#7D4C94', '#5B61AE'
 ]
 
-def init_mobility_callbacks(app, datum):
+
+def init_mobility_callbacks(app: dash.Dash, datum: gpd.GeoDataFrame) -> None:
     """
+    Initializes mobility callbacks
+    ---
+    Args:
+        app (dash.Dash): Main dash app to which callbacks are registered.
+        datum (gpd.GeoDataFrame): Geodataframe containing data for postal areas.
+
+    Returns:
+        children (list): List containing html components.
     """
-    # Tab 4 Section 1 mobility CallBack
     @app.callback(
         Output('id_mobility_index', 'children'),
-        Input('choropleth-map', 'clickData'))
-    def display_click_data(click_data):
+        Input('choropleth-map', 'clickData')
+    )
+    def display_click_data(click_data: dict) -> list:
         """
         Generates the graphs for mobility index section.
         ---
         Args: 
-            click_data (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
+            click_data (dict): dictionary returned by dcc.Graph component.
+            Triggered by user-interaction with the map.
 
         Returns: 
             children (list): List of html components to be displayed.
@@ -96,12 +109,11 @@ def init_mobility_callbacks(app, datum):
         ]
         return children
 
-
     # Tab 5 Section 1 Windrose CallBack
     @app.callback(
         Output('id_windrose', 'children'),
         Input('choropleth-map', 'clickData'))
-    def display_click_data(click_data):
+    def display_click_data(click_data: dict) -> list:
         """
         Generates the graphs for Bus section.
         ---

@@ -2,7 +2,6 @@ import os
 from flask import Flask, render_template
 
 
-# Create the Flask app
 def create_app():
     """
     Create the main Flask app.
@@ -11,7 +10,6 @@ def create_app():
 
     Returns: Flask object
     """
-    # Initiate the Flask object
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.urandom(24).hex()
 

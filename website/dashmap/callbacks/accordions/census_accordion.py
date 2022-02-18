@@ -1,18 +1,27 @@
+from typing import Tuple
+
 import dash
 from dash.dependencies import Input, Output, State
 
 
+def init_individual_census_accordion(dash_app: dash.Dash) -> None:
+    """
+    Initiates TAB: Census Section: individuals  accordion callbacks.
+    ---
+    Args:
+        dash_app (dash.Dash): Dash application to which the callback is registered to.
 
-def init_individual_census_accordion(dash_app):
+    Returns: None
     """
-    """
-    # Tab Census Section individuals Accordion CallBacks
     @dash_app.callback(
         [Output(f"tab-1-collapse-{i}", "is_open") for i in range(1, 6)],
         [Input(f"tab-1-group-{i}-toggle", "n_clicks") for i in range(1, 6)],
         [State(f"tab-1-collapse-{i}", "is_open") for i in range(1, 6)],
     )
-    def toggle_accordion(n1, n2, n3, n4, n5, is_open1, is_open2, is_open3, is_open4, is_open5):
+    def toggle_accordion(
+            n1: str, n2: str, n3: str, n4: str, n5: str,
+            is_open1: bool, is_open2: bool, is_open3: bool, is_open4: bool, is_open5: bool
+    ) -> Tuple[bool, bool, bool, bool, bool]:
         """
         Toggle accordion collapse & expand.
         ---
@@ -21,9 +30,9 @@ def init_individual_census_accordion(dash_app):
             is_open1 -> is_open5 (bool): Current state of the accordion. True for Open, False otherwise.
 
         Returns: 
-            (bool): Boolean values for each accordion tab. True for Open, False otherwise. Default value is False.
+            (Tuple): tuple of Boolean values for each accordion tab.
+            True for Open, False otherwise. Default value is False.
         """
-
         ctx = dash.callback_context
 
         if not ctx.triggered:
@@ -45,15 +54,24 @@ def init_individual_census_accordion(dash_app):
         return False, False, False, False, False
 
 
-def init_household_census_accordion(dash_app):
+def init_household_census_accordion(dash_app: dash.Dash) -> None:
     """
+    Initiates TAB: Census Section: Household accordion callbacks.
+    ---
+    Args:
+        dash_app (dash.Dash): Dash application to which the callback is registered to.
+
+    Returns: None
     """
     @dash_app.callback(
         [Output(f"tab-1-2-collapse-{i}", "is_open") for i in range(1, 5)],
         [Input(f"tab-1-2-group-{i}-toggle", "n_clicks") for i in range(1, 5)],
         [State(f"tab-1-2-collapse-{i}", "is_open") for i in range(1, 5)],
     )
-    def toggle_accordion(n1, n2, n3, n4, is_open1, is_open2, is_open3, is_open4):
+    def toggle_accordion(
+            n1: str, n2: str, n3: str, n4: str,
+            is_open1: bool, is_open2: bool, is_open3: bool, is_open4: bool
+    ) -> Tuple[bool, bool, bool, bool]:
         """
         Toggle accordion collapse & expand.
         ---
@@ -62,9 +80,9 @@ def init_household_census_accordion(dash_app):
             is_open1 -> is_open4 (bool): Current state of the accordion. True for Open, False otherwise.
 
         Returns: 
-            (bool): Boolean values for each accordion tab. True for Open, False otherwise. Default value is False.
+            (bool): Boolean values for each accordion tab.
+            True for Open, False otherwise. Default value is False.
         """
-
         ctx = dash.callback_context
         if not ctx.triggered:
             return False, False, False, False
@@ -83,8 +101,14 @@ def init_household_census_accordion(dash_app):
         return False, False, False, False
 
 
-def init_census_accordions(dash_app):
+def init_census_accordions(dash_app: dash.Dash) -> None:
     """
+    Initiates TAB: Census Section: Individual & Household accordion callbacks.
+    ---
+    Args:
+        dash_app (dash.Dash): Dash application to which the callback is registered to.
+
+    Returns: None
     """
     init_individual_census_accordion(dash_app)
     init_household_census_accordion(dash_app)

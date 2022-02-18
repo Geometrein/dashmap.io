@@ -1,19 +1,24 @@
 import pandas as pd
+
+import dash
 from dash import html
 from dash import dcc
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 
 from ...callbacks.util.helpers import privacy_check, privacy_notice, get_postal_code
+pd.options.mode.chained_assignment = None
 
-def init_re_callbacks(app, real_estate: pd.DataFrame):
+
+def init_re_callbacks(app: dash.Dash, real_estate: pd.DataFrame) -> None:
     """
     """
     # Tab 2 Section 1 Rental Dwellings
     @app.callback(
         Output('id_re_renting', 'children'),
-        Input('choropleth-map', 'clickData'))
-    def display_click_data(click_data):
+        Input('choropleth-map', 'clickData')
+    )
+    def display_click_data(click_data: dict) -> list:
         """
         Generates the graphs for rental Dwellings section.
         ---
@@ -53,33 +58,36 @@ def init_re_callbacks(app, real_estate: pd.DataFrame):
 
         rent_indicators = go.Figure()
 
-        rent_indicators.add_trace(go.Indicator(
-            mode="number",
-            value=price_per_square,
-            number={'prefix': "€", "font": {"size": 40}},
-            title={"text": f"Rent per m² in {neighborhood}<br><span style='font-size:0.8em;color:gray'>" +
-                           "Average monthly rent by square meter</span><br>"},
-            domain={'x': [0, 0.5], 'y': [0.5, 1]}
+        rent_indicators.add_trace(
+            go.Indicator(
+                mode="number",
+                value=price_per_square,
+                number={'prefix': "€", "font": {"size": 40}},
+                title={"text": f"Rent per m² in {neighborhood}<br><span style='font-size:0.8em;color:gray'>" +
+                               "Average monthly rent by square meter</span><br>"},
+                domain={'x': [0, 0.5], 'y': [0.5, 1]}
             )
         )
 
-        rent_indicators.add_trace(go.Indicator(
-            mode="number",
-            value=hels_avg_price_per_square,
-            number={'prefix': "€", "font": {"size": 40}},
-            title={"text": "Average Rent in Helsinki<br><span style='font-size:0.8em;color:gray'>" +
-                           "Average monthly rent by square meter for Helsinki </span><br>"},
-            domain={'x': [0.5, 1], 'y': [0.5, 1]},
+        rent_indicators.add_trace(
+            go.Indicator(
+                mode="number",
+                value=hels_avg_price_per_square,
+                number={'prefix': "€", "font": {"size": 40}},
+                title={"text": "Average Rent in Helsinki<br><span style='font-size:0.8em;color:gray'>" +
+                               "Average monthly rent by square meter for Helsinki </span><br>"},
+                domain={'x': [0.5, 1], 'y': [0.5, 1]},
             )
         )
 
-        rent_indicators.add_trace(go.Indicator(
-            mode="number",
-            value=hels_avg_re_area,
-            number={'suffix': " m²", "font": {"size": 40}},
-            title={"text": "Average Area in Helsinki<br><span style='font-size:0.8em;color:gray'>" +
-                           "All apartments average.</span><br>"},
-            domain={'x': [0.5, 1], 'y': [0, .5]},
+        rent_indicators.add_trace(
+            go.Indicator(
+                mode="number",
+                value=hels_avg_re_area,
+                number={'suffix': " m²", "font": {"size": 40}},
+                title={"text": "Average Area in Helsinki<br><span style='font-size:0.8em;color:gray'>" +
+                               "All apartments average.</span><br>"},
+                domain={'x': [0.5, 1], 'y': [0, .5]},
             )
         )
         rent_indicators.add_trace(
@@ -347,8 +355,9 @@ def init_re_callbacks(app, real_estate: pd.DataFrame):
     # Tab 2 Section 1 Sauna Index
     @app.callback(
         Output('id_re_sauna', 'children'),
-        Input('choropleth-map', 'clickData'))
-    def display_click_data(click_data):
+        Input('choropleth-map', 'clickData')
+    )
+    def display_click_data(click_data: dict) -> list:
         """
         Generates the graphs for sauna index section.
         ---

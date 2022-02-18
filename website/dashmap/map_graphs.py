@@ -40,8 +40,59 @@ def load_datum():
     real_estate.set_index('postcode', inplace=True)
 
     bus_stops = gpd.read_file(open("website/data/mobility/HSL_stations.geojson"), crs="WGS84")
-
     return datum, real_estate, bus_stops
+
+
+def add_choropleth_layer(
+        name: str, fig: go.Figure, df: pd.DataFrame, z_index: int,
+        colorscale: str, ticksize: int, visible: str = 'legendonly') -> None:
+    """
+    This function adds a trace
+    for plotly figure object.
+    ---
+    Args:
+        name (str): Name of the trace
+        fig (go.Figure): plotly graph object
+        df (pd.DataFrame): dataframe or geodataframe
+        z_index (int): Choropleth color value
+        colorscale (str): Color map of color bar
+        ticksize (int): Size of color bar ticks
+        visible (str): Trace visibility on load. Default is 'legendonly'
+
+    Returns: 
+        None
+    """
+    geojson = json.loads(df.to_json())
+    locations = df.index
+    neighborhood = df['neighborhood']
+    z = df.iloc[:, z_index]
+
+    fig.add_trace(
+        go.Choroplethmapbox(
+            name=name,
+            geojson=geojson,
+            locations=locations,
+            z=z,
+            colorscale=colorscale,
+            colorbar=dict(
+                len=0.5,
+                x=0.93,
+                y=0.5,
+                tickfont=dict(
+                    size=ticksize,
+                    color="white"
+                )
+            ),
+            marker_line_width=1,
+            marker_opacity=.3,
+            marker_line_color='#fff',
+            visible=visible,
+            hovertext=locations,
+            text=neighborhood,
+            hovertemplate="<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: " +
+                          "%{hovertext}<br>" + f"<b>{name}: </b>" + "%{z}<br><extra></extra>"
+        )
+    )
 
 
 def add_postal_areas(fig: go.Figure, df: pd.DataFrame) -> None:
@@ -215,12 +266,13 @@ def add_avg_age(fig: go.Figure, df: pd.DataFrame) -> None:
     Returns: 
         None
     """
+    z = df['Average age of inhabitants, 2019 (HE)']
     fig.add_trace(
         go.Choroplethmapbox(
             name="Avg. Inhabitant Age",
             geojson=json.loads(df.to_json()),
             locations=df.index,
-            z=df['Average age of inhabitants, 2019 (HE)'],
+            z=z,
             colorscale="tealgrn",
             colorbar=dict(
                 len=0.5,
@@ -303,7 +355,7 @@ def add_mobility_nodes(fig: go.Figure, df: pd.DataFrame) -> None:
             lon=df['geometry'].x,
             hovertext=df['NAMN1'],
             marker=go.scattermapbox.Marker(color=colors[1], size=5),
-            marker_opacity=.6,
+            marker_opacity=.65,
             visible='legendonly',
             text=df['NAMN1'],
             hovertemplate="<b>Name:</b> %{text}<br><extra></extra>"
@@ -382,27 +434,66 @@ def save_image(fig: go.Figure, width: int = 3840, height: int = 2160) -> None:
     )
 
 
-def init_choropleth(df: pd.DataFrame, df2: pd.DataFrame) -> object:
+def init_choropleth(df: pd.DataFrame, df_mobility: pd.DataFrame) -> object:
     """
     Initialize the main choropleth map.
     ---
-    df (object):
-    df2(object):
-
+    Args:
+        df (pd.DataFrame): DataFrame containing census data
+        df_mobility (pd.DataFrame): DataFrame containing bus stops data
     Returns: 
-        choropleth (object): Plotly Graph Object
+        choropleth (go.Figure): Plotly Graph Object
     """
     # Initializing an empty graph object
     choropleth = go.Figure()
 
-    # Adding traces
-    add_postal_areas(choropleth, df)
-    add_population(choropleth, df)
-    add_income(choropleth, df)
-    add_household_income(choropleth, df)
-    add_avg_age(choropleth, df)
-    add_avg_household_size(choropleth, df)
-    add_mobility_nodes(choropleth, df2)
+    add_choropleth_layer(
+        name="Postal Areas",
+        fig=choropleth,
+        df=df,
+        z_index=3,
+        colorscale=["#A9A9A9", "#A9A9A9"], 
+        ticksize=1,
+        visible=True
+    )
+
+    add_choropleth_layer(
+        name="Population",
+        fig=choropleth,
+        df=df,
+        z_index=3,
+        colorscale='blues', 
+        ticksize=10,
+    )
+
+    add_choropleth_layer(
+        name="Avg. Individual Income",
+        fig=choropleth,
+        df=df,
+        z_index=35,
+        colorscale='Bluered',
+        ticksize=10,
+    )
+
+    add_choropleth_layer(
+        name="Avg. Households Income",
+        fig=choropleth,
+        df=df,
+        z_index=59,
+        colorscale='hot',
+        ticksize=10,
+    )
+
+    add_choropleth_layer(
+        name="Avg. Household Size",
+        fig=choropleth,
+        df=df,
+        z_index=42,
+        colorscale='aggrnyl',
+        ticksize=10,
+    )
+
+    add_mobility_nodes(choropleth, df_mobility)
 
     # Update Layout
     update_layout_and_traces(choropleth)

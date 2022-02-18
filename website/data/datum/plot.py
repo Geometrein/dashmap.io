@@ -9,8 +9,12 @@ dirname = dirname.replace('data/datum', '')
 sys.path.insert(0, dirname)
 
 
-def main():
+def main() -> None:
     """
+    Plots the datum json on a map.
+    ---
+    Args: None
+    Returns: None
     """
     df1, df2, df3 = map_graphs.load_datum()
     choropleth = map_graphs.init_choropleth(df1, df3)

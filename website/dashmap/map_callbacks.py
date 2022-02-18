@@ -1,10 +1,5 @@
-import pandas as pd
-# Dash
 import dash
-from dash import html
-from dash import dcc
-import plotly.graph_objects as go
-from dash.dependencies import Input, Output, State
+
 # Plotly Graph Objects
 from .map_graphs import *
 
@@ -17,13 +12,11 @@ from .callbacks.tab_services.services_callbacks import init_services_callbacks
 from .callbacks.tab_mobility.mobility_callbacks import init_mobility_callbacks
 from .callbacks.tab_environment.environment_callbacks import init_env_callbacks
 
-pd.options.mode.chained_assignment = None
 
 # Load datasets
 datum, real_estate, bus_stops = load_datum()
 
 
-# CallBacks
 def init_callbacks(dash_app: dash.callback_context) -> None:
     """
     Initialize Dash callbacks.
@@ -32,10 +25,11 @@ def init_callbacks(dash_app: dash.callback_context) -> None:
 
     Returns: None
     """
-    
+    # Modals & Accordions
     init_modal_popup(dash_app)
     init_all_accordions(dash_app)
 
+    # Dashboards
     init_census_callbacks(dash_app, datum)
     init_re_callbacks(dash_app, real_estate)
     init_services_callbacks(dash_app, datum)

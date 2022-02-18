@@ -8,7 +8,7 @@ from .map_layout import init_layout
 from .map_callbacks import init_callbacks
 
 
-def index_string(app: object) -> object:
+def edit_index_string(app) -> object:
     """
     The function edits the default dash index string and adds Google analytics.
     ---
@@ -55,7 +55,7 @@ def init_dashboard(server):
     Args:
         server: the main Flask app
 
-    Returns: a hug ༼ つ ◕_◕ ༽つ 
+    Returns: ༼ つ ◕_◕ ༽つ 
     """
     # Initialize the Dash app
     dash_app = Dash(
@@ -65,13 +65,10 @@ def init_dashboard(server):
         url_base_pathname='/helsinki/'
     )
 
-    # Edit default index string
-    dash_app = index_string(dash_app)
+    dash_app = edit_index_string(dash_app)
 
-    # Create the App Layout
     dash_app.layout = init_layout()
 
-    # Initialize callbacks after our app is loaded
     init_callbacks(dash_app)
 
     return dash_app.server

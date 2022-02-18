@@ -1,21 +1,27 @@
+from typing import Tuple
 
-import pandas as pd
-# Dash
 import dash
 from dash.dependencies import Input, Output, State
 
 
+def init_basic_re_accordion(app: dash.Dash) -> None:
+    """
+    Initiates TAB: Real Estate accordion callbacks.
+    ---
+    Args:
+        app (dash.Dash): Dash application to which the callback is registered to.
 
-def init_basic_re_accordion(dash_app):
+    Returns: None
     """
-    """
-    # Tab Real Estate Accordion CallBacks
-    @dash_app.callback(
-        [Output(f"tab-2-collapse-{i}", "is_open") for i in range(2, 5)],
-        [Input(f"tab-2-group-{i}-toggle", "n_clicks") for i in range(2, 5)],
-        [State(f"tab-2-collapse-{i}", "is_open") for i in range(2, 5)],
+    @app.callback(
+        [Output(f"tab-2-collapse-{i}", "is_open") for i in range(1, 4)],
+        [Input(f"tab-2-group-{i}-toggle", "n_clicks") for i in range(1, 4)],
+        [State(f"tab-2-collapse-{i}", "is_open") for i in range(1, 4)],
     )
-    def toggle_accordion(n2, n3, n4, is_open2, is_open3, is_open4):
+    def toggle_accordion(
+            n1: str, n2: str, n3: str,
+            is_open1: bool, is_open2: bool, is_open3: bool
+    ) -> Tuple[bool, bool, bool]:
         """
         Toggle accordion collapse & expand.
         ---
@@ -24,7 +30,8 @@ def init_basic_re_accordion(dash_app):
             is_open1 -> is_open4 (bool): Current state of the accordion. True for Open, False otherwise.
 
         Returns: 
-            (bool): Boolean values for each accordion tab. True for Open, False otherwise. Default value is False.
+            (Tuple): Tuple of Boolean values for each accordion tab.
+            True for Open, False otherwise. Default value is False.
         """
         ctx = dash.callback_context
 
@@ -33,17 +40,23 @@ def init_basic_re_accordion(dash_app):
         else:
             button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
-        if button_id == "tab-2-group-2-toggle" and n2:
-            return not is_open2, False, False
+        if button_id == "tab-2-group-1-toggle" and n1:
+            return not is_open1, False, False
+        elif button_id == "tab-2-group-2-toggle" and n2:
+            return False, not is_open2, False
         elif button_id == "tab-2-group-3-toggle" and n3:
-            return False, not is_open3, False
-        elif button_id == "tab-2-group-4-toggle" and n4:
-            return False, False, not is_open4
+            return False, False, not is_open3
 
         return False, False, False
 
 
-def init_real_estate_accordions(dash_app):
+def init_real_estate_accordions(app: dash.Dash) -> None:
     """
+    Initiates TAB: Real Estate Section accordion callbacks.
+    ---
+    Args:
+        app (dash.Dash): Dash application to which the callback is registered to.
+
+    Returns: None
     """
-    init_basic_re_accordion(dash_app)
+    init_basic_re_accordion(app)

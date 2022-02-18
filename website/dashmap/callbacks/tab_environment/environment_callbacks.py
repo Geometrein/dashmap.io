@@ -1,4 +1,6 @@
 import pandas as pd
+
+import dash
 from dash import html
 from dash import dcc
 import plotly.graph_objects as go
@@ -12,21 +14,23 @@ colors = [
     '#7D4C94', '#5B61AE'
 ]
 
-def init_env_callbacks(app):
+
+def init_env_callbacks(app: dash.Dash):
     """
+    Tab 5 Section 1 air temp CallBack
     """
-   # Tab 5 Section 1 air temp CallBack
     @app.callback(
         Output('id_air_temperature', 'children'),
-        Input('choropleth-map', 'clickData'))
-    def display_click_data(click_data):
+        Input('choropleth-map', 'clickData')
+    )
+    def display_click_data(click_data: dict) -> list:
         """
         Generates the graphs for Bus section.
         ---
-        Args: 
+        Args:
             click_data (dict): dictionary returned by dcc.Graph component triggered by user-interaction.
 
-        Returns: 
+        Returns:
             children (list): List of html components to be displayed.
         """
         section_title = "Average Air Temperature"
