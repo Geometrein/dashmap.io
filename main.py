@@ -1,3 +1,6 @@
+"""
+This module runs the main Dashmap.io app
+"""
 from website import create_app
 
 

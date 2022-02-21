@@ -1,3 +1,6 @@
+"""
+This module registers flask app views.
+"""
 from flask import Blueprint, render_template
 
 views = Blueprint('views', __name__)
@@ -9,8 +12,8 @@ def base() -> str:
     ---
     Args: None
 
-    Returns: 
-        base.html: base html template 
+    Returns:
+        base.html: base html template.
     """
     return render_template("base.html")
 
@@ -23,8 +26,8 @@ def home() -> str:
     ---
     Args: None
 
-    Returns: 
-        home.html: home html template
+    Returns:
+        home.html: home html template.
     """
     return render_template("home.html")
 
@@ -36,7 +39,7 @@ def about() -> str:
     ---
     Args: None
 
-    Returns: 
+    Returns:
         support.html: support html template
     """
     return render_template("support.html")

@@ -1,3 +1,6 @@
+"""
+Main Unit Tests.
+"""
 import os
 import sys
 import inspect
@@ -9,22 +12,23 @@ from website import create_app
 # Import from parent folder
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir) 
+sys.path.insert(0, parentdir)
 
 
 class BasicTests(unittest.TestCase):
-
+    """
+    Basic test case class.
+    """
     # Executed before to each test
     def setUp(self):
         app = create_app()
         app.config['TESTING'] = True
         app.config['DEBUG'] = False
         self.app = app.test_client()
-    
-    # Executed after each test
+
     def tearDown(self):
         pass
-    
+
     def test_main_page_get_response(self):
         """
         Check if home page responds with status code 200.

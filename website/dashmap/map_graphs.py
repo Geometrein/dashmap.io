@@ -1,3 +1,6 @@
+"""
+This module creates the main Graph objects.
+"""
 import os
 import json
 import pandas as pd
@@ -27,10 +30,10 @@ def load_datum():
     Load the main data sources.
     Args: None
 
-    Returns: 
-        datum (object: geopandas geodataframe): main geodataframe
-        real_estate (object: pandas dataframe): dataframe with real estate data
-        bus_stops (object: geopandas geodataframe): dataframe with real estate data
+    Returns:
+        datum (object: gpd.GeoDataFrame): main geodataframe
+        real_estate (object: pd.DataFrame): dataframe with real estate data
+        bus_stops (object: gpd.GeoDataFrame): dataframe with real estate data
     """
     datum = gpd.read_file(open("website/data/datum/datum.geojson"), crs="WGS84")
     datum.rename(columns={'index': 'postal_code'}, inplace=True)
@@ -59,7 +62,7 @@ def add_choropleth_layer(
         ticksize (int): Size of color bar ticks
         visible (str): Trace visibility on load. Default is 'legendonly'
 
-    Returns: 
+    Returns:
         None
     """
     geojson = json.loads(df.to_json())
@@ -100,11 +103,11 @@ def add_postal_areas(fig: go.Figure, df: pd.DataFrame) -> None:
     This function adds a trace with postal districts
     for plotly figure object.
     ---
-    Args: 
+    Args:
         fig (object): plotly graph object
         df (object): dataframe or geodataframe
 
-    Returns: 
+    Returns:
         None
     """
     fig.add_trace(
@@ -116,7 +119,7 @@ def add_postal_areas(fig: go.Figure, df: pd.DataFrame) -> None:
             colorscale=["#A9A9A9", "#A9A9A9"],
             colorbar=dict(
                 len=0.5,
-                x=0.93,
+                x=0.70,
                 y=0.5,
                 tickfont=dict(
                     size=1,
@@ -128,7 +131,8 @@ def add_postal_areas(fig: go.Figure, df: pd.DataFrame) -> None:
             marker_line_color='#fff',
             hovertext=df.index,
             text=df['neighborhood'],
-            hovertemplate="<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><extra></extra>"
+            hovertemplate="<b>Neighborhood:</b> %{text}<br>" +
+                          "<b>Postal Area</b>: %{hovertext}<br><extra></extra>"
         )
     )
 
@@ -138,11 +142,11 @@ def add_population(fig: go.Figure, df: pd.DataFrame) -> None:
     This function adds a trace with population
     for plotly figure object.
     ---
-    Args: 
+    Args:
         fig (object): plotly graph object
         df (object): dataframe or geodataframe
 
-    Returns: 
+    Returns:
         None
     """
     fig.add_trace(
@@ -178,11 +182,11 @@ def add_income(fig: go.Figure, df: pd.DataFrame) -> None:
     This function adds a trace with Avg. Individual Income
     for plotly figure object.
     ---
-    Args: 
+    Args:
         fig (object): plotly graph object
         df (object): dataframe or geodataframe
 
-    Returns: 
+    Returns:
         None
     """
     # Adding Average income by postal code trace
@@ -208,7 +212,8 @@ def add_income(fig: go.Figure, df: pd.DataFrame) -> None:
             visible='legendonly',
             hovertext=df.index,
             text=df['neighborhood'],
-            hovertemplate="<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Avg." +
+            hovertemplate="<b>Neighborhood:</b> %{text}<br>" +
+                          "<b>Postal Area</b>: %{hovertext}<br><b>Avg." +
                           "Individual Income:</b> %{z}<br><extra><extra></extra>"
         )
     )
@@ -219,11 +224,11 @@ def add_household_income(fig: go.Figure, df: pd.DataFrame) -> None:
     This function adds a trace with Avg. Households Income
     for plotly figure object.
     ---
-    Args: 
+    Args:
         fig (object): plotly graph object
         df (object): dataframe or geodataframe
 
-    Returns: 
+    Returns:
         None
     """
     fig.add_trace(
@@ -248,7 +253,8 @@ def add_household_income(fig: go.Figure, df: pd.DataFrame) -> None:
             visible='legendonly',
             hovertext=df.index,
             text=df['neighborhood'],
-            hovertemplate="<b>Neighborhood:</b> %{text}<br><b>Postal Area</b>: %{hovertext}<br><b>Avg." +
+            hovertemplate="<b>Neighborhood:</b> %{text}<br>" +
+                          "<b>Postal Area</b>: %{hovertext}<br><b>Avg." +
                           "Households Income:</b> %{z}<br><extra></extra>"
         )
     )
@@ -259,11 +265,11 @@ def add_avg_age(fig: go.Figure, df: pd.DataFrame) -> None:
     This function adds a trace with Avg. Inhabitant Age
     for plotly figure object.
     ---
-    Args: 
+    Args:
         fig (object): plotly graph object
         df (object): dataframe or geodataframe
 
-    Returns: 
+    Returns:
         None
     """
     z = df['Average age of inhabitants, 2019 (HE)']
@@ -300,11 +306,11 @@ def add_avg_household_size(fig: go.Figure, df: pd.DataFrame) -> None:
     This function adds a trace with Avg. Household Size
     for plotly figure object.
     ---
-    Args: 
+    Args:
         fig (object): plotly graph object
         df (object): dataframe or geodataframe
 
-    Returns: 
+    Returns:
         None
     """
     fig.add_trace(
@@ -341,11 +347,11 @@ def add_mobility_nodes(fig: go.Figure, df: pd.DataFrame) -> None:
     This function adds a trace with Mobility Nodes
     for plotly figure object.
     ---
-    Args: 
+    Args:
         fig (object): plotly graph object
         df (object): dataframe or geodataframe
 
-    Returns: 
+    Returns:
         None
     """
     fig.add_trace(
@@ -368,10 +374,10 @@ def update_layout_and_traces(fig: go.Figure) -> object:
     This function updates layout preferences
     for plotly figure object.
     ---
-    Args: 
+    Args:
         fig (object): plotly graph object
 
-    Returns: 
+    Returns:
         fig (object): Plotly Graph Object
     """
     fig.update_layout(
@@ -417,12 +423,12 @@ def save_image(fig: go.Figure, width: int = 3840, height: int = 2160) -> None:
     """
     Save figure as an image file
     ---
-    Args: 
+    Args:
         fig (object): plotly graph object
         width (int): width in pixels
         height (int): height in pixels
 
-    Returns: 
+    Returns:
         None
     """
     fig.write_image(
@@ -441,7 +447,7 @@ def init_choropleth(df: pd.DataFrame, df_mobility: pd.DataFrame) -> object:
     Args:
         df (pd.DataFrame): DataFrame containing census data
         df_mobility (pd.DataFrame): DataFrame containing bus stops data
-    Returns: 
+    Returns:
         choropleth (go.Figure): Plotly Graph Object
     """
     # Initializing an empty graph object
@@ -452,7 +458,7 @@ def init_choropleth(df: pd.DataFrame, df_mobility: pd.DataFrame) -> object:
         fig=choropleth,
         df=df,
         z_index=3,
-        colorscale=["#A9A9A9", "#A9A9A9"], 
+        colorscale=["#A9A9A9", "#A9A9A9"],
         ticksize=1,
         visible=True
     )
@@ -462,7 +468,7 @@ def init_choropleth(df: pd.DataFrame, df_mobility: pd.DataFrame) -> object:
         fig=choropleth,
         df=df,
         z_index=3,
-        colorscale='blues', 
+        colorscale='blues',
         ticksize=10,
     )
 
