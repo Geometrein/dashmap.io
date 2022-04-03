@@ -11533,3 +11533,11 @@ iframe {
   border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
   background: red;
 }
+
+.chaos {
+  padding: 5px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 20px;
+}
