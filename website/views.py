@@ -30,16 +30,3 @@ def home() -> str:
         home.html: home html template.
     """
     return render_template("home.html")
-
-
-@views.route('/support', methods=['GET'])
-def about() -> str:
-    """
-    Loads the about html template.
-    ---
-    Args: None
-
-    Returns:
-        support.html: support html template
-    """
-    return render_template("support.html")

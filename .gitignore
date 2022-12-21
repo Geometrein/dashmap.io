@@ -134,4 +134,3 @@ website/dashmap/test.py
 .idea
 .vscode
 docker-commands.md
-Dockerfile

@@ -43,13 +43,6 @@ class BasicTests(unittest.TestCase):
         response = self.app.get('/helsinki', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
-    def test_support_page_get_response(self):
-        """
-        Check if support page responds with status code 200.
-        """
-        response = self.app.get('/support', follow_redirects=True)
-        self.assertEqual(response.status_code, 200)
-
     def test_404_response(self):
         """
         Check if random endpoint responds with status code 404.

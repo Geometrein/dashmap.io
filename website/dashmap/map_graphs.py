@@ -9,12 +9,6 @@ import geopandas as gpd
 # Dash & Plotly
 import plotly.graph_objects as go
 
-# Environment Variables
-from dotenv import load_dotenv
-
-load_dotenv()
-MAPBOX_TOKEN = os.getenv('MAPBOX_TOKEN')
-
 # Colors used by graphs
 colors = [
     '#4182C8', '#2E94B2',
@@ -400,7 +394,7 @@ def update_layout_and_traces(fig: go.Figure) -> object:
             )
         ),
         mapbox=dict(
-            accesstoken=MAPBOX_TOKEN,
+            accesstoken='pk.eyJ1IjoiZ2VvbWV0cmVpbiIsImEiOiJja3J4a2RpaWwwbjFzMzFtazhkdnBmdDgyIn0.K2CjYCQBBdJKsbS1dec6TA',
             bearing=0,
             center=dict(lat=60.192059, lon=24.945831),
             pitch=3,
