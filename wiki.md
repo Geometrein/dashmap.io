@@ -16,6 +16,27 @@ DashMap is an isolated Plot.ly.Dash app wrapped in a parent Flask app. This allo
 ---
 
 ### Installation
+
+#### **With Docker Compose**
+Navigate to projects root directory and run:
+```
+docker-compose up
+```
+### You're all set 🚀
+
+---
+
+If you like making things more difficult be my guest and go ahead with these methods:
+#### **With Docker**
+Navigate to projects parent directory and run:
+```
+docker build --no-cache dashmap.io -t dashmap
+docker run -p  80:80  dashmap
+```
+Done!
+
+And if you just want to have more commands to blaze away in the terminal, then I have this for you:
+#### **Old School Way**
 Set up a virtual environment:
 ```
 python3 -m venv venv
@@ -31,10 +52,7 @@ Install requirements.txt
 ```
 pip install -r requirements.txt
 ```
-
-Create a .env file with variable "MAPBOX_TOKEN" and assign your [Mapbox](https://docs.mapbox.com/help/getting-started/access-tokens/) token to it. 
-
-You're all set 🚀
+Done!
 
 ---
 
@@ -42,8 +60,7 @@ You're all set 🚀
 ```
 dashmap.io
 │   README.md
-│   main.py                       # Main app
-│   gunicorn_config.py            # gunicorn configuration file
+│   app.py                       # Main app
 │   requirements.txt
 │   LICENSE
 └───tests                         # Unittests
